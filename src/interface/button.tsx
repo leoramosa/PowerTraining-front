@@ -7,3 +7,8 @@ export interface ButtonActionsProps {
   tooltip?: string;
   className?: string;
 }
+
+export interface ButtonPrimaryProps {
+  text: string;
+  onClick: () => void;
+}
