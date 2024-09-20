@@ -4,13 +4,11 @@ import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
 import AvatarCircle from "@/components/images/AvatarUser/AvatarUser";
 import InputForm from "@/components/inputs/InputForm/InputForm";
 import ItemInfo from "@/components/ItemInfo/ItemInfo";
-import Login from "@/components/loginForm/loginForm";
-export default function Home() {
+export default function Dashboard() {
   return (
     <main className="">
-      
       <ContainerWeb>
-        <Login />
+        <h1>DASHBOARD</h1>
         <InputForm label="Name" placeholder="Enter your name" />
         <InputForm label="Email" placeholder="Enter your email" />
         <InputForm label="Password" placeholder="Enter your password" />

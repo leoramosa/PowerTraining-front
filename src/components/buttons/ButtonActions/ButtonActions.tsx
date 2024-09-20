@@ -8,6 +8,7 @@ const ButtonDelete: React.FC<ButtonActionsProps> = ({
   onClick,
   status = "delete",
   tooltip,
+  onClick
 }) => {
   const variantStyles = {
     delete: "text-delete hover:bg-deleteBg",
@@ -39,6 +40,7 @@ const ButtonDelete: React.FC<ButtonActionsProps> = ({
         type={type}
         onClick={onClick}
         className={`text-lg rounded-md m-1 p-1 ${variantStyles[status]}`}
+        onClick={onClick}
       >
         {renderIcon()}
       </button>
