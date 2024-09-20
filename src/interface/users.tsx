@@ -28,3 +28,14 @@ export interface userSession {
     progress: [];
   };
 }
+
+export interface IAuthState {
+  user: IUser | null;
+  login: (user: IUser) => void;
+  logout: () => void;
+}
+
+export interface IUserState {
+  users: IUser[];
+  updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
+}

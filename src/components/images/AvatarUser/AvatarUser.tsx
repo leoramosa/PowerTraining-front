@@ -1,8 +1,9 @@
-import { AvatarUserProps } from "@/interface/avatar";
+import { IAvatarUserProps } from "@/interface/avatar";
 
-const AvatarUser: React.FC<AvatarUserProps> = ({
+const AvatarUser: React.FC<IAvatarUserProps> = ({
   name,
   size = "md",
+  className,
   backgroundColor = "bg-primary",
   textColor = "text-white",
 }) => {
@@ -21,6 +22,7 @@ const AvatarUser: React.FC<AvatarUserProps> = ({
       className={`
         ${sizeClasses[size]} 
         ${backgroundColor} 
+        ${className}
         ${textColor} 
         flex items-center justify-center rounded-full font-bold
       `}

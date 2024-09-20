@@ -1,28 +1,30 @@
 import { ButtonAppProps } from "@/interface/button";
 import { TfiTrash } from "react-icons/tfi";
-import { BiEditAlt } from "react-icons/bi";
 import { TbListDetails } from "react-icons/tb";
 
 const ButtonApp: React.FC<ButtonAppProps> = ({
   type,
-
   onClick,
   children,
-  variant = "submit",
+  className,
+  variant = "cancel",
 }) => {
   const variantStyles = {
     submit: "text-delete hover:bg-deleteBg",
-    cancel: "text-warning hover:bg-warningBg",
+    success: "text-white bg-success hover:bg-[#00853a]",
+    cancel: "text-black bg-gray-200 hover:bg-gray-300 px-3",
     checkout: "text-success hover:bg-successBg",
     payment: "text-success hover:bg-successBg",
   };
 
   const renderIcon = () => {
     switch (variant) {
+      case "success":
+        return;
       case "submit":
         return <TfiTrash className="h-6 w-6" />;
       case "cancel":
-        return <BiEditAlt className="h-6 w-6" />;
+        return;
       case "checkout":
         return <TbListDetails className="h-6 w-6" />;
       case "payment":
@@ -33,16 +35,14 @@ const ButtonApp: React.FC<ButtonAppProps> = ({
   };
 
   return (
-    <div className="relative group ">
-      <button
-        type={type}
-        onClick={onClick}
-        className={`text-lg rounded-md m-1 p-1 ${variantStyles[variant]}`}
-      >
-        {renderIcon()}
-        {children}
-      </button>
-    </div>
+    <button
+      type={type}
+      onClick={onClick}
+      className={`text-lg rounded-md m-1 p-1 ${variantStyles[variant]} ${className}`}
+    >
+      {renderIcon()}
+      {children}
+    </button>
   );
 };
 

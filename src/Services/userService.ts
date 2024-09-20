@@ -28,11 +28,13 @@ export async function getAllUsers(): Promise<IUser[]> {
     throw new Error("Error al obtener usuarios");
   }
 
-  return response.json();
+  const users = await response.json();
+  console.log("Users fetched from API:", users); // <-- Aquí
+  return users;
 }
 
 export const getUserById = async (id: string) => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const response = await fetch(`${API_URL}/users/${id}`, {
     method: "GET",
   });
 
@@ -41,6 +43,28 @@ export const getUserById = async (id: string) => {
   }
 
   return response.json();
+};
+
+export const updateUserById = async (
+  id: string,
+  updatedUser: Partial<IUser>
+) => {
+  const response = await fetch(`${API_URL}/users/${id}`, {
+    cache: "no-cache",
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedUser),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update user");
+  }
+
+  const updatedUserData = await response.json();
+  console.log("Updated user data received:", updatedUserData);
+  return updatedUserData;
 };
 
 export const deleteUser = async (id: string) => {

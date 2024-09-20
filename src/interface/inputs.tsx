@@ -1,5 +1,6 @@
 export interface InputFormProps {
-  name: string;
+  id?: string;
+  name?: string;
   type?: string;
   placeholder?: string;
   value?: string;
@@ -8,4 +9,5 @@ export interface InputFormProps {
   label?: string;
   error?: string;
   readOnly?: boolean;
+  className?: string;
 }

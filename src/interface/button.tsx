@@ -11,9 +11,8 @@ export interface ButtonActionsProps {
 
 export interface ButtonAppProps {
   children: ReactNode;
-
   size?: "sm" | "md" | "lg";
-  variant?: "submit" | "cancel" | "checkout" | "payment";
+  variant?: "submit" | "cancel" | "checkout" | "payment" | "success";
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
