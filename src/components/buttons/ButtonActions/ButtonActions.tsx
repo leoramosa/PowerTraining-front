@@ -5,6 +5,7 @@ import { TbListDetails } from "react-icons/tb";
 
 const ButtonDelete: React.FC<ButtonActionsProps> = ({
   type,
+  onClick,
   status = "delete",
   tooltip,
 }) => {
@@ -36,6 +37,7 @@ const ButtonDelete: React.FC<ButtonActionsProps> = ({
     <div className="relative group ">
       <button
         type={type}
+        onClick={onClick}
         className={`text-lg rounded-md m-1 p-1 ${variantStyles[status]}`}
       >
         {renderIcon()}

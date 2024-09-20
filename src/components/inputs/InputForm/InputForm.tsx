@@ -1,7 +1,8 @@
 import { InputFormProps } from "@/interface/inputs";
 
 const InputForm: React.FC<InputFormProps> = ({
-  type = "text",
+  type,
+  name,
   placeholder = "",
   value,
   defaultValue,
@@ -21,6 +22,7 @@ const InputForm: React.FC<InputFormProps> = ({
         </label>
       )}
       <input
+        name={name}
         type={type}
         value={value}
         defaultValue={defaultValue}

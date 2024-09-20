@@ -1,4 +1,5 @@
 export interface InputFormProps {
+  name: string;
   type?: string;
   placeholder?: string;
   value?: string;
