@@ -1,37 +1,83 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import Image from 'next/image';
+import { IError, ILoginProps } from "@/interface/ILogin";
+import { validateLoginForm } from "@/helpers/validate";
+import { login } from "@/helpers/auth-helper";
+import { toast } from 'sonner'; // Importa solo 'toast'
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const initialState = {
+    email: "",
+    password: "",
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Lógica de autenticación aquí
-    console.log("Email:", email, "Password:", password);
+  const [dataUser, setDataUser] = useState<ILoginProps>(initialState);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const errors = validateLoginForm(dataUser);
+
+    if (Object.values(errors).some((err) => err !== "")) {
+      // Mostrar alertas de error
+      Object.values(errors).forEach((err) => {
+        if (err) toast.error(err); // Muestra cada error como un toast
+      });
+      return;
+    }
+
+    try {
+      const response = await login(dataUser);
+      if (response) {
+        const { token, user } = response;
+        const cleanUser = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          address: user.address,
+          phone: user.phone,
+          orders: user.orders,
+        };
+        localStorage.setItem("userSession", JSON.stringify({ userData: cleanUser, token }));
+        
+        // Mostrar un mensaje de éxito al iniciar sesión correctamente
+        toast.success("Login successful! Redirecting...");
+        
+        // Aquí puedes redirigir al usuario después del login
+        // Por ejemplo: router.push('/dashboard');
+      }
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setDataUser({ ...dataUser, [name]: value });
   };
 
   return (
     <div className="bg-black shadow-md rounded-lg p-8 max-w-sm mx-auto mt-10">
       <div className="flex justify-center mb-6">
-          <Image
-            src="/images/LogoLogin.jpg"
-            alt="Logo"
-            width={200}
-            height={200}
-          />
-        </div>
+        <Image
+          src="/images/LogoLogin.jpg"
+          alt="Logo"
+          width={200}
+          height={200}
+        />
+      </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email" className="block text-sm text-white mb-1">
             Email
           </label>
           <input
-            type="email"
+            type="text"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={dataUser.email}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-primary"
             placeholder="Enter your email"
           />
@@ -43,8 +89,9 @@ const LoginForm: React.FC = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={dataUser.password}
+            onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-primary"
             placeholder="Enter your password"
           />
@@ -56,7 +103,6 @@ const LoginForm: React.FC = () => {
           Login
         </button>
       </form>
-      
     </div>
   );
 };
