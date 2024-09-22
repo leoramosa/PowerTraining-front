@@ -18,9 +18,10 @@ const ExercisePage: React.FC<ExercisePageProps> = ( {exercises} ) => {
     const [dataExercise, setDataExercise] = useState<IExercise>({
         id: null,
         name: "",
-        descr: "",
-        urlvideo: "",
-        benefits: ""
+        description: "",
+        urlVideoExample: "",
+        benefits: "",
+        tags: ""
     });
 
     const fetchData = async (id?: number) => {

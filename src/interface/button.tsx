@@ -11,4 +11,6 @@ export interface ButtonActionsProps {
 export interface ButtonPrimaryProps {
   text: string;
   onClick: () => void;
+  type: "button" | "submit",
+  disabled?: boolean
 }
