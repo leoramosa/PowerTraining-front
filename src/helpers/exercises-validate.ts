@@ -8,34 +8,49 @@ import { IExerciseFormError } from "@/interface/IExerciseFormError";
     benefits?: string,
     tags?: string
 */
+
+type ExerciseFieldKeys = keyof IExerciseFormError;
+
 export function validateExerciseForm(values: IExercise): IExerciseFormError {
     const errors: IExerciseFormError = {};
-    const nameRegex = /^[a-zA-Z\s]{1,50}$/;
-    const descriptionRegex = /^[a-zA-Z0-9\s.,!?;:()'-]{1,200}$/;
+    const nameRegex = /^[a-zA-Z0-9\s\-\/]{1,20}$/;
+    const descriptionRegex = /^[a-zA-Z0-9\s.,!?;:()'-]{10,200}$/;
     const urlRegex = /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(\/[^\s]*)?$/;
-    const benefitsRegex = /^[a-zA-Z0-9\s.,!?;:()'-]{1,100}$/;
-    const tagsRegex = /^([a-zA-Z0-9]+(,\s*[a-zA-Z0-9]+)*){1,100}$/;
-
+    const benefitsRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜñÑ\s.,!?'"()-]{1,100}$/;
+    const tagsRegex = /^([a-zA-Z0-9]+(\s*[a-zA-Z0-9]+)*)(,\s*[a-zA-Z0-9]+(\s*[a-zA-Z0-9]+)*)*$/;
 
     if (values.name && !nameRegex.test(values.name)) {
-        errors.name = "Invalid name. It must be 1 to 50 characters long and contain only letters and spaces.";
+        errors.name = "Must be 1-20 characters; letters, numbers, spaces, hyphens, and slashes allowed.";
     }
 
     if (values.description && !descriptionRegex.test(values.description)) {
-        errors.description = "Invalid description. It must be 1 to 200 characters long and can include letters, numbers, and basic punctuation.";
+        errors.description = "Must be 10-200 characters, letters, numbers, and basic punctuation allowed.";
     }
     
     if (values.urlVideoExample && !urlRegex.test(values.urlVideoExample)) {
-        errors.urlVideoExample = "Invalid URL. Please provide a valid web address starting with 'http://' or 'https://'.";
+        errors.urlVideoExample = "Enter a valid URL (e.g., http:// or https://)";
     }
 
     if (values.benefits && !benefitsRegex.test(values.benefits)) {
-        errors.benefits = "Invalid benefits. It must be 1 to 100 characters long and can include letters, numbers, and basic punctuation.";
+        errors.benefits = "Must be 1-100 characters, letters, numbers, and basic punctuation allowed.";
     }
 
     if (values.tags && !tagsRegex.test(values.tags)) {
-        errors.tags = "Invalid tags. Please separate tags with commas and ensure they contain only letters and numbers.";
+        errors.tags = "Use commas to separate tags; letters and numbers allowed.";
     }
-
-    return errors
+    
+    return validateField(errors, values);
 }
+
+const validateField = (errors: IExerciseFormError, values: IExercise) => {
+  
+    const fields: ExerciseFieldKeys[] = ["name", "description", "urlVideoExample", "benefits", "tags"];
+  
+    for (const field of fields) {
+      if (!values[field]) {
+        errors[field] = `${field} is required.`;
+      }
+    }
+  
+    return errors;
+  };
