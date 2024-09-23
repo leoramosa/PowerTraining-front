@@ -194,7 +194,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   ) => {
     event.preventDefault();
     try {
-      console.log(dataExercise)
+      console.log(dataExercise);
       const exerciseUpdate: IExercise = await modifyExerciseById(dataExercise);
       setListExercises((prevList) =>
         prevList.map((exercise) =>

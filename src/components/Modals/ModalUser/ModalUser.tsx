@@ -36,7 +36,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
       );
       await updateUser(userId, { name, email });
       const updatedUsers = await getAllUsers(); // <-- Recarga los usuarios desde la API
-      setUsers(updatedUsers); // <-- Actualiza el estado con los usuarios recargados
+      setUsers(updatedUsers);
+      // <-- Actualiza el estado con los usuarios recargados
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
