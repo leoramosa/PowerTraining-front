@@ -7,12 +7,14 @@ import { useUserStore } from "@/stores/useAuthStore";
 interface ClientUserListProps {
   users: IUser[];
 }
-const ClientUserList: React.FC<ClientUserListProps> = ({ users }) => {
-  const { setUsers } = useUserStore();
+const ClientUserList: React.FC<ClientUserListProps> = ({
+  users: initialUsers,
+}) => {
+  const { users, setUsers } = useUserStore();
 
   useEffect(() => {
-    setUsers(users);
-  }, [users, setUsers]);
+    setUsers(initialUsers);
+  }, [initialUsers, setUsers]);
   return (
     <>
       {users.map((user) => (
