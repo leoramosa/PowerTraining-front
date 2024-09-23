@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export interface ContainerProps {
+export interface IPagDataFilters {
   children: ReactNode;
   maxWidth?: "sm" | "md" | "lg" | "xl";
   padding?: "none" | "sm" | "md" | "lg";

@@ -1,5 +1,5 @@
 export interface IExercise {
-    id: number | null,
+    id: string,
     name: string,
     description: string,
     urlVideoExample: string,

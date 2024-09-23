@@ -9,8 +9,18 @@ export interface ButtonActionsProps {
 }
 
 export interface ButtonPrimaryProps {
+  disabled?: boolean,
+  className?: string,
+  type?: "button" | "submit" | "reset"; 
   text: string;
-  onClick: () => void;
-  type: "button" | "submit",
-  disabled?: boolean
+  onClick?: () => void;
 }
+
+export interface ButtonSecondaryProps {
+  disabled?: boolean,
+  className?: string,
+  type?: "button" | "submit" | "reset"; 
+  text: string;
+  onClick?: () => void;
+}
+
