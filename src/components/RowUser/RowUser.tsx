@@ -7,8 +7,11 @@ import ButtonActions from "../buttons/ButtonActions/ButtonActions";
 import { deleteUser } from "@/Services/userService";
 import { IUser } from "@/interface/users";
 import EditUserModal from "../Modals/ModalUser/ModalUser";
+import { useUserStore } from "@/stores/useAuthStore";
 
-const RowUser: React.FC<IUser> = ({ id, name, lastName, email }) => {
+const RowUser: React.FC<IUser> = ({ id }) => {
+  const { users } = useUserStore();
+  const user = users.find((u) => u.id === id);
   const [isDeleted, setIsDeleted] = useState(false);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
 
@@ -27,19 +30,19 @@ const RowUser: React.FC<IUser> = ({ id, name, lastName, email }) => {
     setEditingUserId(id);
   };
 
-  if (isDeleted) return null; //
+  if (isDeleted || !user) return null; // Asegúrate de que el usuario existe
 
   return (
     <>
       <ItemInfo key={id} className="relative flex">
         <div className="flex items-center">
-          <AvatarUser name={name} className="mr-2" />
+          <AvatarUser name={user.name} className="mr-2" />
           <p>
-            {name} {lastName}
+            {user.name} {user.lastName}
           </p>
         </div>
         <div>
-          <p>{email}</p>
+          <p>{user.email}</p>
         </div>
 
         <div className="flex">
