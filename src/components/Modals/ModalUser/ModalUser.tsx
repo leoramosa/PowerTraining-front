@@ -43,7 +43,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
               label="Name"
               type="text"
               value={name}
-              onChange={(name, value) => setName(value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
@@ -51,7 +51,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
               label="Email"
               type="email"
               value={email}
-              onChange={(name, value) => setEmail(value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex w-full">
