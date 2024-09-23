@@ -30,7 +30,7 @@ const RowUser: React.FC<IUser> = ({ id }) => {
     setEditingUserId(id);
   };
 
-  if (isDeleted || !user) return null; // Asegúrate de que el usuario existe
+  if (isDeleted || !user) return null; //
 
   return (
     <>
