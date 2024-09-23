@@ -11,7 +11,7 @@ import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useUserStore } from "@/stores/useAuthStore";
 
 export const mockUser = {
   id: "1",
@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
 
-  const user = useAuthStore((state) => state.user);
+  const user = useUserStore((state) => state);
 
   const closeDropdown = () => {
     setDropdownOpen(false); //

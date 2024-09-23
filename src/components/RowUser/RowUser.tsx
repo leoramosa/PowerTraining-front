@@ -1,23 +1,22 @@
-"use client";
-
 import React, { useState } from "react";
+import { IUser } from "@/interface/IUsers";
+import { deleteUser } from "@/Services/userService copy";
 import ItemInfo from "../ItemInfo/ItemInfo";
 import AvatarUser from "../images/AvatarUser/AvatarUser";
 import ButtonActions from "../buttons/ButtonActions/ButtonActions";
-import { deleteUser } from "@/Services/userService";
-import { IUser } from "@/interface/users";
 import EditUserModal from "../Modals/ModalUser/ModalUser";
-import { useUserStore } from "@/stores/useAuthStore";
 
-const RowUser: React.FC<IUser> = ({ id }) => {
-  const { users } = useUserStore();
-  const user = users.find((u) => u.id === id);
+interface RowUserProps {
+  user: IUser;
+}
+
+const RowUser: React.FC<RowUserProps> = ({ user }) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
 
   const handleDeleteUser = async () => {
     try {
-      await deleteUser(id);
+      await deleteUser(user.id);
       setIsDeleted(true);
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
@@ -30,11 +29,11 @@ const RowUser: React.FC<IUser> = ({ id }) => {
     setEditingUserId(id);
   };
 
-  if (isDeleted || !user) return null; //
+  if (isDeleted) return null; //
 
   return (
     <>
-      <ItemInfo key={id} className="relative flex">
+      <ItemInfo key={user.id} className="relative flex">
         <div className="flex items-center">
           <AvatarUser name={user.name} className="mr-2" />
           <p>
@@ -48,7 +47,7 @@ const RowUser: React.FC<IUser> = ({ id }) => {
         <div className="flex">
           <ButtonActions
             type="button"
-            onClick={() => handleEditUser(id)}
+            onClick={() => handleEditUser(user.id)}
             status="edit"
             size="md"
             tooltip="Edit user"
