@@ -2,6 +2,7 @@ import { InputFormProps } from "@/interface/inputs";
 
 const InputForm: React.FC<InputFormProps> = ({
   type,
+  name,
   placeholder = "",
   value,
   defaultValue,
@@ -9,9 +10,7 @@ const InputForm: React.FC<InputFormProps> = ({
   label,
   error,
   readOnly = false,
-  name,
 }) => {
-
   return (
     <div className="mb-3">
       {label && (
@@ -27,13 +26,7 @@ const InputForm: React.FC<InputFormProps> = ({
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder}
-          onChange={(e) => {
-            if (onChange) {
-              const newValue = e.target.value;
-              const name = e.target.name;
-              onChange(name, newValue);
-            }
-          }}
+          onChange={onChange}
           readOnly={readOnly}
           name={name}
           className={`w-full bg-lightGray text-dark text-sm py-2 px-2 rounded-md border truncate ${
@@ -46,13 +39,7 @@ const InputForm: React.FC<InputFormProps> = ({
           type={type}
           value={value}
           defaultValue={defaultValue}
-          onChange={(e) => {
-            if (onChange) {
-              const newValue = e.target.value;
-              const name = e.target.name;
-              onChange(name, newValue);
-            }
-          }}
+          onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
           name={name}
@@ -61,7 +48,11 @@ const InputForm: React.FC<InputFormProps> = ({
           } focus:border-primary focus:outline-none transition duration-300`}
         />
       )}
-      {error && <p className="text-red-400 text-sm mt-1 bg-red-100 border border-red-400 rounded-md px-2 py-1 mb-4">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-sm mt-1 bg-red-100 border border-red-400 rounded-md px-2 py-1 mb-4">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

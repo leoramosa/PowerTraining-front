@@ -8,7 +8,6 @@ import { deleteUser } from "@/Services/userService";
 import { IUser } from "@/interface/users";
 import EditUserModal from "../Modals/ModalUser/ModalUser";
 import { useUserStore } from "@/stores/useAuthStore";
-import TitleH1 from "../titles/TitleH1";
 
 const RowUser: React.FC<IUser> = ({ id }) => {
   const { users } = useUserStore();
@@ -35,18 +34,14 @@ const RowUser: React.FC<IUser> = ({ id }) => {
 
   return (
     <>
-      <TitleH1>Usesdsdfrs</TitleH1>
       <ItemInfo key={id} className="relative flex">
         <div className="flex items-center">
           <AvatarUser name={user.name} className="mr-2" />
-          <AvatarUser name={user.name} className="mr-2" />
           <p>
-            {user.name} {user.lastName}
             {user.name} {user.lastName}
           </p>
         </div>
         <div>
-          <p>{user.email}</p>
           <p>{user.email}</p>
         </div>
 

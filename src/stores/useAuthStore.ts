@@ -22,7 +22,6 @@ export const useUserStore = create<IUserState>((set) => ({
   },
   updateUser: async (id, updatedUser) => {
     try {
-      // Actualización optimista
       set((state) => {
         const updatedUsers = state.users.map((user) =>
           user.id === id ? { ...user, ...updatedUser } : user
@@ -32,7 +31,6 @@ export const useUserStore = create<IUserState>((set) => ({
 
       const updatedUserData = await updateUserById(id, updatedUser);
 
-      // Confirmación del backend y actualización final
       set((state) => {
         const updatedUsers = state.users.map((user) =>
           user.id === id ? { ...user, ...updatedUserData } : user
@@ -41,7 +39,6 @@ export const useUserStore = create<IUserState>((set) => ({
       });
     } catch (error) {
       console.error("Error updating user:", error);
-      // Aquí podrías manejar la reversión de la actualización optimista si hay un error
     }
   },
 }));

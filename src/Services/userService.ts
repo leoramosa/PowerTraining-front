@@ -1,5 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-import { IRegisterProps, IUser } from "../interface/users";
+import { IRegisterProps, IUser, IUserFilters } from "../interface/users";
 
 export async function createUser(userData: IRegisterProps) {
   const response = await fetch(`${API_URL}/users`, {
@@ -18,19 +18,34 @@ export async function createUser(userData: IRegisterProps) {
   return response.json();
 }
 
-export async function getAllUsers(): Promise<IUser[]> {
-  const response = await fetch(`${API_URL}/users`, {
-    cache: "no-cache",
-    method: "GET",
-  });
+export async function getAllUsers(
+  limit: number = 5,
+  page: number = 1,
+  filtersBy: IUserFilters = {}
+): Promise<{ data: IUser[]; totalPages: number }> {
+  let url = `${API_URL}/users?limit=${limit}&page=${page}`;
 
-  if (!response.ok) {
-    throw new Error("Error al obtener usuarios");
+  if (filtersBy) {
+    const queryParams = new URLSearchParams();
+    Object.entries(filtersBy).forEach(([key, value]) => {
+      if (value) queryParams.append(key, encodeURIComponent(value));
+    });
+    url += `&${queryParams.toString()}`;
   }
 
-  const users = await response.json();
-  console.log("Users fetched from API:", users); // <-- Aquí
-  return users;
+  console.log("Fetching users from:", url);
+
+  const response = await fetch(url, { cache: "no-cache" });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching users: ${response.statusText}`);
+  }
+
+  const result = await response.json();
+  return {
+    data: result.data || [],
+    totalPages: result.totalPages || 1, // Asegúrate de que la API devuelva el total de páginas
+  };
 }
 
 export const getUserById = async (id: string) => {

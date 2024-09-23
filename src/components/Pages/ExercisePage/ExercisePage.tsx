@@ -227,24 +227,25 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
-
   const validateDisabledSubmitButton = () => {
-    const hasErrors = !!(errors.name || 
-      errors.description || 
-      errors.urlVideoExample || 
-      errors.benefits || 
-      errors.tags);
-    
+    const hasErrors = !!(
+      errors.name ||
+      errors.description ||
+      errors.urlVideoExample ||
+      errors.benefits ||
+      errors.tags
+    );
+
     const hasEmptyFields = !(
-      dataExercise.name && 
-      dataExercise.description && 
-      dataExercise.urlVideoExample && 
-      dataExercise.benefits && 
+      dataExercise.name &&
+      dataExercise.description &&
+      dataExercise.urlVideoExample &&
+      dataExercise.benefits &&
       dataExercise.tags
     );
-  
+
     return hasErrors || hasEmptyFields;
-  }
+  };
 
   return (
     <main className="">
@@ -273,6 +274,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
               <h2 className="text-xl font-bold mb-4">New exercise</h2>
               <form onSubmit={handleSubmitCreate}>
                 <InputForm
+                  type="text"
                   label="Name"
                   placeholder="Enter exercise name"
                   value={dataExercise.name}

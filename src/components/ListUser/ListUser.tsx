@@ -1,20 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import RowUser from "../RowUser/RowUser";
 import { IUser } from "@/interface/users";
-import { useUserStore } from "@/stores/useAuthStore";
 
-interface ClientUserListProps {
+interface ListUserProps {
   users: IUser[];
 }
-const ClientUserList: React.FC<ClientUserListProps> = ({
-  users: initialUsers,
-}) => {
-  const { users, setUsers } = useUserStore();
 
-  useEffect(() => {
-    setUsers(initialUsers);
-  }, [initialUsers, setUsers]);
+const ListUser: React.FC<ListUserProps> = ({ users }) => {
   return (
     <>
       {users.map((user) => (
@@ -24,4 +17,4 @@ const ClientUserList: React.FC<ClientUserListProps> = ({
   );
 };
 
-export default ClientUserList;
+export default ListUser;

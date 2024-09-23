@@ -39,3 +39,11 @@ export interface IUserState {
   users: IUser[];
   updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
 }
+
+export interface IUserFilters {
+  name?: string;
+  lastName?: string;
+  isAdmin?: boolean;
+  birthday?: string;
+  email?: string;
+}
