@@ -8,7 +8,11 @@ import { deleteUser } from "@/Services/userService";
 import { IUser } from "@/interface/users";
 import EditUserModal from "../Modals/ModalUser/ModalUser";
 import { useUserStore } from "@/stores/useAuthStore";
+import { useUserStore } from "@/stores/useAuthStore";
 
+const RowUser: React.FC<IUser> = ({ id }) => {
+  const { users } = useUserStore();
+  const user = users.find((u) => u.id === id);
 const RowUser: React.FC<IUser> = ({ id }) => {
   const { users } = useUserStore();
   const user = users.find((u) => u.id === id);
@@ -37,11 +41,14 @@ const RowUser: React.FC<IUser> = ({ id }) => {
       <ItemInfo key={id} className="relative flex">
         <div className="flex items-center">
           <AvatarUser name={user.name} className="mr-2" />
+          <AvatarUser name={user.name} className="mr-2" />
           <p>
+            {user.name} {user.lastName}
             {user.name} {user.lastName}
           </p>
         </div>
         <div>
+          <p>{user.email}</p>
           <p>{user.email}</p>
         </div>
 
