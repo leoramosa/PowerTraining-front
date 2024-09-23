@@ -3,7 +3,7 @@ import { InputFormProps } from "@/interface/inputs";
 import { useEffect, useState } from "react";
 
 const InputForm: React.FC<InputFormProps> = ({
-  type = "text",
+  type,
   placeholder = "",
   value,
   defaultValue,

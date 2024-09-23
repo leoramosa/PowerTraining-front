@@ -2,6 +2,7 @@
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
 import ButtonSecondary from "@/components/buttons/ButtonSecondary/ButtonSecondary";
 import ExerciseCard from "@/components/cardExercise/CardExercise";
+import ButtonActions from "@/components/buttons/ButtonActions/ButtonActions";
 import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
 import InputForm from "@/components/inputs/InputForm/InputForm";
 import ItemInfo from "@/components/ItemInfo/ItemInfo";
@@ -70,8 +71,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   };
 
   useEffect(() => {
-    const errors = validateExerciseForm(dataExercise);
-    setErrors(errors);
+    //const errors = validateExerciseForm(dataExercise);
+    //setErrors(errors);
   }, [dataExercise]);
 
   useEffect(() => {}, [listExercises, createOrUpdateItem]);
@@ -118,7 +119,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     { label: "Find by benefits", value: "benefits" },
     { label: "Find by tags", value: "tags" },
   ];
-
 
   //####### Handle inputs change
   const handleChange = (
@@ -194,6 +194,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   ) => {
     event.preventDefault();
     try {
+      console.log(dataExercise)
       const exerciseUpdate: IExercise = await modifyExerciseById(dataExercise);
       setListExercises((prevList) =>
         prevList.map((exercise) =>
@@ -253,7 +254,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
             }}
           />
         </div>
-
         {/* Modal create */}
         {isModalOpenCreate && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -388,14 +388,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
 
         {/* List of exercises */}
         <div className="p-4 min-h-[550px]">
-          {listExercises.length == 0 && (
-            <ItemInfo>
-              <p className="p-4 rounded-md flex items-center space-x-2">
-                <FontAwesomeIcon icon={faInfoCircle} className="text-primary" />
-                <span>No data available to display</span>
-              </p>
-            </ItemInfo>
-          )}
           {listExercises.length > 0 &&
             listExercises.map((exercise, i) => {
               return (

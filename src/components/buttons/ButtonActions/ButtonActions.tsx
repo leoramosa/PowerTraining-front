@@ -3,11 +3,11 @@ import { TfiTrash } from "react-icons/tfi";
 import { BiEditAlt } from "react-icons/bi";
 import { TbListDetails } from "react-icons/tb";
 
-const ButtonDelete: React.FC<ButtonActionsProps> = ({
+const ButtonActions: React.FC<ButtonActionsProps> = ({
   type,
+  onClick,
   status = "delete",
   tooltip,
-  onClick
 }) => {
   const variantStyles = {
     delete: "text-delete hover:bg-deleteBg",
@@ -37,8 +37,8 @@ const ButtonDelete: React.FC<ButtonActionsProps> = ({
     <div className="relative group ">
       <button
         type={type}
-        className={`text-lg rounded-md m-1 p-1 ${variantStyles[status]}`}
         onClick={onClick}
+        className={`text-lg rounded-md m-1 p-1 ${variantStyles[status]}`}
       >
         {renderIcon()}
       </button>
@@ -53,4 +53,4 @@ const ButtonDelete: React.FC<ButtonActionsProps> = ({
   );
 };
 
-export default ButtonDelete;
+export default ButtonActions;
