@@ -2,10 +2,8 @@
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
 import ButtonSecondary from "@/components/buttons/ButtonSecondary/ButtonSecondary";
 import ExerciseCard from "@/components/cardExercise/CardExercise";
-import ButtonActions from "@/components/buttons/ButtonActions/ButtonActions";
 import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
 import InputForm from "@/components/inputs/InputForm/InputForm";
-import ItemInfo from "@/components/ItemInfo/ItemInfo";
 import SearchInput from "@/components/search/SearchInput";
 import TitleH1 from "@/components/titles/TitleH1";
 import {
@@ -18,8 +16,6 @@ import {
 import { IExercise } from "@/interface/IExercise";
 import IExerciseData from "@/interface/IExerciseData";
 import { useEffect, useState } from "react";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
 import { validateExerciseForm } from "@/helpers/exercises-validate";
 import { IExerciseFormError } from "@/interface/IExerciseFormError";
@@ -71,8 +67,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   };
 
   useEffect(() => {
-    //const errors = validateExerciseForm(dataExercise);
-    //setErrors(errors);
+    const errors = validateExerciseForm(dataExercise);
+    setErrors(errors);
   }, [dataExercise]);
 
   useEffect(() => {}, [listExercises, createOrUpdateItem]);
@@ -121,10 +117,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   ];
 
   //####### Handle inputs change
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = (name: string, value: string) => {
     setDataExercise((prev) => ({
       ...prev,
       [name]: value,
@@ -234,6 +227,25 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+
+  const validateDisabledSubmitButton = () => {
+    const hasErrors = !!(errors.name || 
+      errors.description || 
+      errors.urlVideoExample || 
+      errors.benefits || 
+      errors.tags);
+    
+    const hasEmptyFields = !(
+      dataExercise.name && 
+      dataExercise.description && 
+      dataExercise.urlVideoExample && 
+      dataExercise.benefits && 
+      dataExercise.tags
+    );
+  
+    return hasErrors || hasEmptyFields;
+  }
+
   return (
     <main className="">
       <ContainerWeb>
@@ -312,7 +324,11 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
                     />
                   </div>
                   <div>
-                    <ButtonPrimary type="submit" text="Save" />
+                    <ButtonPrimary
+                      type="submit"
+                      text="Save"
+                      disabled={validateDisabledSubmitButton()}
+                    />
                   </div>
                 </div>
               </form>
@@ -378,7 +394,11 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
                     />
                   </div>
                   <div>
-                    <ButtonPrimary type="submit" text="Save" />
+                    <ButtonPrimary
+                      type="submit"
+                      text="Save"
+                      disabled={validateDisabledSubmitButton()}
+                    />
                   </div>
                 </div>
               </form>
