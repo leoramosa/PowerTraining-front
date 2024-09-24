@@ -8,3 +8,9 @@ export interface ILoginProps {
     password?: string;
   }
   
+
+  export interface ILoginResponse {
+    success: string;
+    token: string;
+  }
+

@@ -1,17 +1,52 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { ILoginProps } from "@/interface/ILogin";
+import { validateLoginForm } from "@/helpers/login-validate";
+import { login } from "@/helpers/auth-helper";
+import { toast } from "sonner";
 import InputForm from "../inputs/InputForm/InputForm";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const initialState = {
+    email: "",
+    password: "",
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Lógica de autenticación aquí
-    console.log("Email:", email, "Password:", password);
+  const router = useRouter();
+  const [dataUser, setDataUser] = useState<ILoginProps>(initialState);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const errors = validateLoginForm(dataUser);
+
+    if (Object.values(errors).some((err) => err !== "")) {
+      Object.values(errors).forEach((err) => {
+        if (err) toast.error(err);
+      });
+      return;
+    }
+
+    try {
+      const response = await login(dataUser);
+      console.log(response);
+      if (response) {
+        localStorage.setItem("token", response.token);
+
+        toast.success("Login successful! Redirecting...");
+
+        router.push("/dashboard");
+        setTimeout(() => (window.location.pathname = "/dashboard"), 2000);
+      }
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+    }
+  };
+
+  const handleChange = (name: string, value: string) => {
+    setDataUser({ ...dataUser, [name]: value });
   };
 
   return (
@@ -26,10 +61,11 @@ const LoginForm: React.FC = () => {
               Email
             </label>
             <InputForm
-              type="email"
+              type="text"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={dataUser.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-primary"
               placeholder="Enter your email"
             />
@@ -41,8 +77,9 @@ const LoginForm: React.FC = () => {
             <InputForm
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={dataUser.password}
+              onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-primary"
               placeholder="Enter your password"
             />
