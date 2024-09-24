@@ -1,9 +1,7 @@
 "use client";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
-import ButtonSecondary from "@/components/buttons/ButtonSecondary/ButtonSecondary";
 import ExerciseCard from "@/components/cardExercise/CardExercise";
 import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
-import InputForm from "@/components/inputs/InputForm/InputForm";
 import SearchInput from "@/components/search/SearchInput";
 import TitleH1 from "@/components/titles/TitleH1";
 import {
@@ -17,17 +15,37 @@ import { IExercise } from "@/interface/IExercise";
 import IExerciseData from "@/interface/IExerciseData";
 import { useEffect, useState } from "react";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
-import { validateExerciseForm } from "@/helpers/exercises-validate";
-import { IExerciseFormError } from "@/interface/IExerciseFormError";
+import {
+  validateExerciseForm,
+  validateFieldOnBlur,
+} from "@/helpers/exercises-validate";
+import {
+  ExerciseFieldKeys,
+  IExerciseFormError,
+} from "@/interface/IExerciseFormError";
+import ItemInfo from "@/components/ItemInfo/ItemInfo";
+import ModalCreateUpdate from "./components/ModalCreateUpdate";
+
+
 
 const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   //console.log(data);
 
-  const initialState = {
+  const initialState: IExercise = {
     id: "",
     name: "",
     description: "",
     urlVideoExample: "",
+    video: new File([], ""),
+    benefits: "",
+    tags: "",
+  };
+
+  const initialStateError: IExerciseFormError = {
+    name: "",
+    description: "",
+    urlVideoExample: "",
+    video: "",
     benefits: "",
     tags: "",
   };
@@ -54,10 +72,10 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   const [totalPages, setTotalPages] = useState<number>(
     calculateTotalPages(count, limit)
   );
-  const [errors, setErrors] = useState<IExerciseFormError>(initialState);
+  const [errors, setErrors] = useState<IExerciseFormError>(initialStateError);
   const [createOrUpdateItem, setCreateOrUpdateItem] = useState<boolean>(false);
-  const [filters, setFilters] =
-    useState<IFiltersExercises>(filterInitialValues);
+  const [filters, setFilters] = useState<IFiltersExercises>(filterInitialValues);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   //###### Function request api
   const fetchData = async (id?: string) => {
@@ -66,12 +84,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     setDataExercise(exercise);
   };
 
-  useEffect(() => {
-    const errors = validateExerciseForm(dataExercise);
-    setErrors(errors);
-  }, [dataExercise]);
-
-  useEffect(() => {}, [listExercises, createOrUpdateItem]);
+  useEffect(() => {}, [dataExercise, listExercises, createOrUpdateItem]);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -86,50 +99,57 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     fetchExercises();
   }, [currentPage, limit, filters]);
 
+
   //####### Handle Search
-  const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputSearchChange = ( e: React.ChangeEvent<HTMLInputElement> ) => {
     const newValue = e.target.value;
     setSearchValue(newValue);
   };
-  const handleSelectSearchChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+
+  const handleSelectSearchChange = ( e: React.ChangeEvent<HTMLSelectElement> ) => {
     const newValue = e.target.value;
     setSearchSelect(newValue);
   };
+
   const handleClickSearch = async () => {
+    setCurrentPage(1);
     if (searchSelect && searchValue) {
-      setFilters((prevFilters) => {
-        return {
-          ...prevFilters,
-          [searchSelect]: searchValue,
-        };
-      });
+      setFilters({ [searchSelect]: searchValue });
     } else {
-      setCurrentPage(1);
       setFilters(filterInitialValues);
     }
   };
+
   const optionsSearch = [
     { label: "Find by name", value: "name" },
     { label: "Find by benefits", value: "benefits" },
     { label: "Find by tags", value: "tags" },
   ];
 
-  //####### Handle inputs change
-  const handleChange = (name: string, value: string) => {
+
+  //####### Handle inputs change and blur
+  const handleChange = (name: ExerciseFieldKeys, value: string | File) => {
     setDataExercise((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
+  const handleBlur = (name: ExerciseFieldKeys, value: string | File) => {
+    const errorsOne = validateExerciseForm(errors, dataExercise);
+    setErrors(errorsOne);
+    const errorsTwo = validateFieldOnBlur(errors, name, value);
+    setErrors(errorsTwo);    
+  };
+
 
   //####### Modals operations
   const openModal = (type: string, id?: string) => {
     if (type == "create") {
       setDataExercise(initialState);
+      setErrors(initialStateError);
       setIsModalOpenCreate(true);
     } else {
+      setErrors(initialStateError);
       fetchData(id);
       setIsModalOpenModify(true);
     }
@@ -142,6 +162,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     }
   };
 
+
   //####### Create exercises
   const handleSubmitCreate = async (
     event: React.FormEvent<HTMLFormElement>
@@ -152,11 +173,12 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         !(
           errors.name &&
           errors.description &&
-          errors.urlVideoExample &&
+          errors.video &&
           errors.benefits &&
           errors.tags
         )
       ) {
+        setIsSubmitting(true);
         const exerciseCreated: IExercise = await createExercise(dataExercise);
         const response = await getExercisesDB(limit, currentPage);
         setTotalPages(calculateTotalPages(response.count, limit));
@@ -166,8 +188,10 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
           );
           return [exerciseCreated, ...filteredList];
         });
+        console.log(exerciseCreated);
         setDataExercise(exerciseCreated);
         closeModal("create");
+        setIsSubmitting(false);
         setCreateOrUpdateItem(true);
         setTimeout(() => {
           setCreateOrUpdateItem(false);
@@ -181,6 +205,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     }
   };
 
+
   //####### Modify exercises
   const handleSubmitModify = async (
     event: React.FormEvent<HTMLFormElement>
@@ -188,6 +213,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     event.preventDefault();
     try {
       console.log(dataExercise);
+      setIsSubmitting(true);
       const exerciseUpdate: IExercise = await modifyExerciseById(dataExercise);
       setListExercises((prevList) =>
         prevList.map((exercise) =>
@@ -197,6 +223,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         )
       );
       closeModal("modify");
+      setIsSubmitting(false);
       setCreateOrUpdateItem(true);
       setTimeout(() => {
         setCreateOrUpdateItem(false);
@@ -205,6 +232,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
       console.error("Error modify exercise:", error);
     }
   };
+
 
   //####### Delete exercises
   const handleClickDelete = async (id: string) => {
@@ -219,6 +247,7 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     }
   };
 
+
   //####### Pagination operations
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -229,27 +258,31 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
 
 
   const validateDisabledSubmitButton = () => {
-    const hasErrors = !!(errors.name || 
-      errors.description || 
-      errors.urlVideoExample || 
-      errors.benefits || 
-      errors.tags);
-    
+    const hasErrors = !!(
+      errors.name ||
+      errors.description ||
+      errors.video ||
+      errors.benefits ||
+      errors.tags
+    );
+
+    const isVideoValid = typeof dataExercise.video === 'string' || dataExercise.video instanceof File;
+
     const hasEmptyFields = !(
-      dataExercise.name && 
-      dataExercise.description && 
-      dataExercise.urlVideoExample && 
-      dataExercise.benefits && 
+      dataExercise.name &&
+      dataExercise.description &&
+      isVideoValid  &&
+      dataExercise.benefits &&
       dataExercise.tags
     );
-  
-    return hasErrors || hasEmptyFields;
-  }
+
+    return hasErrors || hasEmptyFields || isSubmitting;
+  };
 
   return (
     <main className="">
       <ContainerWeb>
-        <TitleH1>Exercises</TitleH1>
+        <div className="ml-3"><TitleH1>Exercises</TitleH1></div>
         <div className="flex justify-between mx-3.5 my-4 mt-6">
           <SearchInput
             value={searchValue}
@@ -268,146 +301,47 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         </div>
         {/* Modal create */}
         {isModalOpenCreate && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-xl font-bold mb-4">New exercise</h2>
-              <form onSubmit={handleSubmitCreate}>
-                <InputForm
-                  label="Name"
-                  placeholder="Enter exercise name"
-                  value={dataExercise.name}
-                  onChange={handleChange}
-                  name="name"
-                  error={errors.name}
-                />
-                <InputForm
-                  label="Description"
-                  type="textarea"
-                  placeholder="Enter description"
-                  value={dataExercise.description}
-                  onChange={handleChange}
-                  name="description"
-                  error={errors.description}
-                />
-                <InputForm
-                  label="Vídeo url"
-                  placeholder="Enter video URL"
-                  value={dataExercise.urlVideoExample}
-                  onChange={handleChange}
-                  name="urlVideoExample"
-                  error={errors.urlVideoExample}
-                />
-                <InputForm
-                  label="Benefits"
-                  placeholder="Enter benefits"
-                  value={dataExercise.benefits}
-                  onChange={handleChange}
-                  name="benefits"
-                  error={errors.benefits}
-                />
-                <InputForm
-                  label="Tags"
-                  placeholder="Enter tags"
-                  value={dataExercise.tags}
-                  onChange={handleChange}
-                  name="tags"
-                  error={errors.tags}
-                />
-                <div className="flex justify-end space-x-3">
-                  <div>
-                    <ButtonSecondary
-                      type="button"
-                      text="Cancel"
-                      onClick={() => {
-                        closeModal("create");
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <ButtonPrimary
-                      type="submit"
-                      text="Save"
-                      disabled={validateDisabledSubmitButton()}
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
+          <ModalCreateUpdate 
+            nameModal="New exercise"
+            typeModal="create" 
+            dataExercise={dataExercise} 
+            handleSubmit={handleSubmitCreate} 
+            handleBlur={handleBlur}
+            handleChange={handleChange}
+            validateDisabledSubmitButton={validateDisabledSubmitButton}
+            closeModal={closeModal}
+            errors={errors}
+            isSubmitting={isSubmitting}
+          />
         )}
 
         {/* Modal modify */}
         {isModalOpenModify && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-xl font-bold mb-4">Edit exercise</h2>
-              <form onSubmit={handleSubmitModify}>
-                <InputForm
-                  label="Name"
-                  placeholder="Enter exercise name"
-                  value={dataExercise.name}
-                  onChange={handleChange}
-                  name="name"
-                  error={errors.name}
-                />
-                <InputForm
-                  label="Description"
-                  type="textarea"
-                  placeholder="Enter description"
-                  value={dataExercise.description}
-                  onChange={handleChange}
-                  name="description"
-                  error={errors.description}
-                />
-                <InputForm
-                  label="Vídeo url"
-                  placeholder="Enter video URL"
-                  value={dataExercise.urlVideoExample}
-                  onChange={handleChange}
-                  name="urlVideoExample"
-                  error={errors.urlVideoExample}
-                />
-                <InputForm
-                  label="Benefits"
-                  placeholder="Enter benefits"
-                  value={dataExercise.benefits}
-                  onChange={handleChange}
-                  name="benefits"
-                  error={errors.benefits}
-                />
-                <InputForm
-                  label="Tags"
-                  placeholder="Enter tags"
-                  value={dataExercise.tags}
-                  onChange={handleChange}
-                  name="tags"
-                  error={errors.tags}
-                />
-                <div className="flex justify-end space-x-3">
-                  <div>
-                    <ButtonSecondary
-                      type="button"
-                      text="Cancel"
-                      onClick={() => {
-                        closeModal("modify");
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <ButtonPrimary
-                      type="submit"
-                      text="Save"
-                      disabled={validateDisabledSubmitButton()}
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
+          <ModalCreateUpdate 
+          nameModal="Edit exercise"
+          typeModal="modify" 
+          dataExercise={dataExercise} 
+          handleSubmit={handleSubmitModify} 
+          handleBlur={handleBlur}
+          handleChange={handleChange}
+          validateDisabledSubmitButton={validateDisabledSubmitButton}
+          closeModal={closeModal}
+          errors={errors}
+          isSubmitting={isSubmitting}
+        />
         )}
 
         {/* List of exercises */}
         <div className="p-4 min-h-[550px]">
+          {/* If not exist exercises */}
+          {!listExercises ||
+            (listExercises.length === 0 && (
+              <ItemInfo>
+                <p className="text-gray-500 font-semibold">
+                  No results found. Please try with other filter.
+                </p>
+              </ItemInfo>
+            ))}
           {listExercises.length > 0 &&
             listExercises.map((exercise, i) => {
               return (
@@ -438,6 +372,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
               );
             })}
         </div>
+
+        {/* Pagination */}
         {listExercises.length > 0 && (
           <div className="flex justify-center items-center mt-4">
             <ButtonPrimary

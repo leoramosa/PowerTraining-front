@@ -32,7 +32,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   isCreateOrUpdate
 }) => {
   return (
-    <div className={`flex flex-row rounded-lg w-full p-6 mb-6 transition-all duration-500 ease-in-out transform ${isCreateOrUpdate ? 'bg-white border-2 border-green-200 shadow-2xl' : 'bg-white shadow-lg'}`}>
+    <div className={`flex flex-row rounded-lg w-full p-6 mb-6 transition-shadow duration-300 ease-in-out transform ${isCreateOrUpdate ? 'bg-white border-2 border-green-200 shadow-2xl' : 'bg-white shadow-lg'}`}>
       {/* Vista previa del video */}
       <div className="flex-shrink-0 w-1/3">
         <iframe

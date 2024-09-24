@@ -5,8 +5,11 @@ import { IFiltersExercises } from "@/interface/IPagDataFilters";
 
 //'http://localhost:3000/exercises?name=polea&benefits=humor&tags=piernas&page=1&limit=5'
 
-export async function getExercisesDB(limit: number = 5, page: number = 1, filtersBy: IFiltersExercises = {}): Promise<IExerciseData> {
-
+export async function getExercisesDB(
+  limit: number = 5,
+  page: number = 1,
+  filtersBy: IFiltersExercises = {}
+): Promise<IExerciseData> {
   //const res = await fetch(`${APIURL}/exercises?${ filtersBy ? "name="+filtersBy?.name+"&benefits="+filtersBy?.benefits+"&tags="+filtersBy?.tags  : null }limit=${limit}&page=${page}`,  {cache: "no-cache"})
   let url = `${APIURL}/exercises?`;
 
@@ -18,10 +21,10 @@ export async function getExercisesDB(limit: number = 5, page: number = 1, filter
     if (tags) queryParams.append("tags", encodeURIComponent(tags));
     url += `&${queryParams.toString()}&limit=${limit}&page=${page}`;
   } else {
-    url += `limit=${limit}&page=${page}`
+    url += `limit=${limit}&page=${page}`;
   }
 
-  console.log(url)
+  console.log(url);
 
   try {
     const res = await fetch(url, { cache: "no-cache" });
@@ -66,33 +69,71 @@ export async function getExerciseById(
   }
 }
 
+
 export async function createExercise(exercise: IExercise): Promise<IExercise> {
   //token: string
   try {
     console.log(exercise);
+
+    // Subir el video si existe
+    if (exercise.video) {
+      const urlVideoExample = await uploadVideo(exercise.video);
+      console.log(urlVideoExample);
+      if (urlVideoExample) {
+        exercise.urlVideoExample = urlVideoExample;
+      }
+    }
+
+    const exerciseData: any = {
+      name: exercise.name,
+      description: exercise.description,
+      benefits: exercise.benefits,
+      tags: exercise.tags,
+    };
+
+    if (exercise.urlVideoExample) {
+      exerciseData.urlVideoExample = exercise.urlVideoExample;
+    }
+
     const res = await fetch(`${APIURL}/exercises`, {
       method: "POST",
       headers: {
-        "Content-type": "application/json",
-        //Authorization: token
+        "Content-Type": "application/json",
+        // Authorization: token // Descomentar si se necesita autenticación
       },
-      body: JSON.stringify({
-        name: exercise.name,
-        description: exercise.description,
-        urlVideoExample: exercise.urlVideoExample,
-        benefits: exercise.benefits,
-        tags: exercise.tags,
-      }),
+      body: JSON.stringify(exerciseData),
     });
+
     if (!res.ok) {
-      throw new Error(
-        `Error fetching exercises: ${res.status} ${res.statusText}`
-      );
+      throw new Error(`Error fetching exercises: ${res.status} ${res.statusText}`);
     }
+
     const exerciseRes: IExercise = await res.json();
     return exerciseRes;
   } catch (error: any) {
-    throw new Error(error);
+    console.error("Error creating exercise:", error);
+    throw new Error(error.message || "Error desconocido");
+  }
+}
+
+async function uploadVideo(file: File) {
+  const formData = new FormData();
+  formData.append("video", file);
+
+  try {
+    const response = await fetch(`${APIURL}/files/uploadVideo`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Error update video");
+    }
+    const result = await response.text();
+    console.log("############################################:", result);
+    return result
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
 
@@ -119,7 +160,9 @@ export async function deleteExerciseById(id: string | undefined) {
   }
 }
 
-export async function modifyExerciseById(exercise: IExercise): Promise<IExercise> {
+export async function modifyExerciseById(
+  exercise: IExercise
+): Promise<IExercise> {
   //token: string
 
   try {
