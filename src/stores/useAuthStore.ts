@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { IUser } from "@/interface/IUsers";
+import { IAuthState, IUser } from "@/interface/IUsers";
 import { updateUserById } from "@/Services/userService";
 
-// export const useAuthStore = create<IAuthState>((set) => ({
-//   user: null,
-//   login: (user: IUser) => set({ user }),
-//   logout: () => set({ user: null }),
-// }));
+export const useAuthStore = create<IAuthState>((set) => ({
+  user: null,
+  login: (user: IUser) => set({ user }),
+  logout: () => set({ user: null }),
+}));
 
 interface IUserState {
   users: IUser[];

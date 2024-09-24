@@ -79,7 +79,7 @@ const ListRowUser: React.FC = () => {
   const optionsSearch = [
     { label: "Find by name", value: "name" },
     { label: "Find by email", value: "email" },
-    { label: "Find by last name", value: "lastName" },
+    { label: "Find by last name", value: "lastname" },
   ];
 
   return (

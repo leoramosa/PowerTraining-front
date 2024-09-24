@@ -48,7 +48,6 @@ export interface IUserData {
 export interface IUserFilters {
   name?: string;
   lastname?: string;
-  isAdmin?: boolean;
   birthday?: string;
   email?: string;
 }
