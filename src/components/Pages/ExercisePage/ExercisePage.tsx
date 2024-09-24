@@ -25,8 +25,7 @@ import {
 } from "@/interface/IExerciseFormError";
 import ItemInfo from "@/components/ItemInfo/ItemInfo";
 import ModalCreateUpdate from "./components/ModalCreateUpdate";
-
-
+import { toast } from "sonner";
 
 const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   //console.log(data);
@@ -74,7 +73,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   );
   const [errors, setErrors] = useState<IExerciseFormError>(initialStateError);
   const [createOrUpdateItem, setCreateOrUpdateItem] = useState<boolean>(false);
-  const [filters, setFilters] = useState<IFiltersExercises>(filterInitialValues);
+  const [filters, setFilters] =
+    useState<IFiltersExercises>(filterInitialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   //###### Function request api
@@ -93,31 +93,59 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         setTotalPages(calculateTotalPages(response.count, limit));
         setListExercises(response.data);
       } catch (error) {
-        console.error("Error fetching exercises:", error);
+        toast.error("Error fetching exercises, please try again.");
       }
     };
     fetchExercises();
   }, [currentPage, limit, filters]);
 
-
   //####### Handle Search
-  const handleInputSearchChange = ( e: React.ChangeEvent<HTMLInputElement> ) => {
+  const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setSearchValue(newValue);
   };
 
-  const handleSelectSearchChange = ( e: React.ChangeEvent<HTMLSelectElement> ) => {
+  const handleSelectSearchChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newValue = e.target.value;
     setSearchSelect(newValue);
   };
 
   const handleClickSearch = async () => {
-    setCurrentPage(1);
+    /*setCurrentPage(1);
     if (searchSelect && searchValue) {
       setFilters({ [searchSelect]: searchValue });
     } else {
       setFilters(filterInitialValues);
-    }
+    }*/
+      setCurrentPage(1);
+
+      // Mensajes de Sonner con toast.promise
+      toast.promise(
+        new Promise(async (resolve, reject) => {
+          try {
+            if (searchSelect && searchValue) {
+              setFilters({ [searchSelect]: searchValue });
+            } else {
+              setFilters(filterInitialValues);
+            }
+    
+            const response = await getExercisesDB(limit, currentPage, filters);
+            setTotalPages(calculateTotalPages(response.count, limit));
+            setListExercises(response.data);
+    
+            resolve("Exercises fetched successfully!");
+          } catch (error) {
+            reject("Error fetching exercises, please try again.");
+          }
+        }),
+        {
+          loading: "Searching for exercises...", 
+          success: (msg) => String(msg),                
+          error: (msg) => String(msg),                  
+        }
+      );
   };
 
   const optionsSearch = [
@@ -125,7 +153,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     { label: "Find by benefits", value: "benefits" },
     { label: "Find by tags", value: "tags" },
   ];
-
 
   //####### Handle inputs change and blur
   const handleChange = (name: ExerciseFieldKeys, value: string | File) => {
@@ -138,9 +165,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     const errorsOne = validateExerciseForm(errors, dataExercise);
     setErrors(errorsOne);
     const errorsTwo = validateFieldOnBlur(errors, name, value);
-    setErrors(errorsTwo);    
+    setErrors(errorsTwo);
   };
-
 
   //####### Modals operations
   const openModal = (type: string, id?: string) => {
@@ -161,7 +187,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
       setIsModalOpenModify(false);
     }
   };
-
 
   //####### Create exercises
   const handleSubmitCreate = async (
@@ -191,20 +216,24 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         console.log(exerciseCreated);
         setDataExercise(exerciseCreated);
         closeModal("create");
+        toast.success("Exercise created successfully!");
         setIsSubmitting(false);
         setCreateOrUpdateItem(true);
         setTimeout(() => {
           setCreateOrUpdateItem(false);
           setDataExercise(initialState);
-        }, 5000);
+        }, 3000);
       } else {
-        alert("The form has errors. Please, complete.");
+        toast.warning(
+          "Please fill out all required fields before creating the exercise."
+        );
       }
     } catch (error) {
-      console.error("Error creating exercise:", error);
+      toast.error(
+        "An error occurred while creating the exercise. Please try again."
+      );
     }
   };
-
 
   //####### Modify exercises
   const handleSubmitModify = async (
@@ -212,41 +241,82 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   ) => {
     event.preventDefault();
     try {
-      console.log(dataExercise);
-      setIsSubmitting(true);
-      const exerciseUpdate: IExercise = await modifyExerciseById(dataExercise);
-      setListExercises((prevList) =>
-        prevList.map((exercise) =>
-          exercise.id === dataExercise.id
-            ? { ...exercise, ...exerciseUpdate }
-            : exercise
+      if (
+        !(
+          errors.name &&
+          errors.description &&
+          errors.video &&
+          errors.benefits &&
+          errors.tags
         )
-      );
-      closeModal("modify");
-      setIsSubmitting(false);
-      setCreateOrUpdateItem(true);
-      setTimeout(() => {
-        setCreateOrUpdateItem(false);
-      }, 5000);
+      ) {
+        console.log(dataExercise);
+        setIsSubmitting(true);
+        const exerciseUpdate: IExercise = await modifyExerciseById(
+          dataExercise
+        );
+        setListExercises((prevList) =>
+          prevList.map((exercise) =>
+            exercise.id === dataExercise.id
+              ? { ...exercise, ...exerciseUpdate }
+              : exercise
+          )
+        );
+        closeModal("modify");
+        toast.success("Exercise updated successfully!");
+        setIsSubmitting(false);
+        setCreateOrUpdateItem(true);
+        setTimeout(() => {
+          setCreateOrUpdateItem(false);
+        }, 5000);
+      } else {
+        toast.warning(
+          "Make sure all fields are properly filled before updating the exercise."
+        );
+      }
     } catch (error) {
-      console.error("Error modify exercise:", error);
+      toast.error(
+        "An error occurred while updating the exercise. Please try again."
+      );
     }
   };
 
-
   //####### Delete exercises
   const handleClickDelete = async (id: string) => {
-    try {
+    /*try {
       await deleteExerciseById(id);
       setCurrentPage(1);
       const response = await getExercisesDB(limit, currentPage);
       setTotalPages(calculateTotalPages(response.count, limit));
       setListExercises(response.data);
     } catch (error) {
-      console.error("Error delete exercise:", error);
-    }
+      toast.error(
+        "An error occurred while updating the exercise. Please try again."
+      );
+    }*/
+      toast.promise(
+        new Promise(async (resolve, reject) => {
+          try {
+            await deleteExerciseById(id);
+            setCurrentPage(1);
+            const response = await getExercisesDB(limit, currentPage);
+            setTotalPages(calculateTotalPages(response.count, limit));
+            setListExercises(response.data);
+    
+            // Resolución exitosa de la promesa
+            resolve("Exercise deleted successfully");
+          } catch (error) {
+            // Rechazar la promesa en caso de error
+            reject("An error occurred while deleting the exercise. Please try again.");
+          }
+        }),
+        {
+          loading: "Deleting exercise...", 
+          success: (msg) => String(msg),           
+          error: (msg) => String(msg),            
+        }
+      );
   };
-
 
   //####### Pagination operations
   const handleNextPage = () => {
@@ -255,7 +325,6 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
-
 
   const validateDisabledSubmitButton = () => {
     const hasErrors = !!(
@@ -266,12 +335,14 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
       errors.tags
     );
 
-    const isVideoValid = typeof dataExercise.video === 'string' || dataExercise.video instanceof File;
+    const isVideoValid =
+      typeof dataExercise.video === "string" ||
+      dataExercise.video instanceof File;
 
     const hasEmptyFields = !(
       dataExercise.name &&
       dataExercise.description &&
-      isVideoValid  &&
+      isVideoValid &&
       dataExercise.benefits &&
       dataExercise.tags
     );
@@ -282,7 +353,9 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   return (
     <main className="">
       <ContainerWeb>
-        <div className="ml-3"><TitleH1>Exercises</TitleH1></div>
+        <div className="ml-3">
+          <TitleH1>Exercises</TitleH1>
+        </div>
         <div className="flex justify-between mx-3.5 my-4 mt-6">
           <SearchInput
             value={searchValue}
@@ -301,11 +374,11 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         </div>
         {/* Modal create */}
         {isModalOpenCreate && (
-          <ModalCreateUpdate 
+          <ModalCreateUpdate
             nameModal="New exercise"
-            typeModal="create" 
-            dataExercise={dataExercise} 
-            handleSubmit={handleSubmitCreate} 
+            typeModal="create"
+            dataExercise={dataExercise}
+            handleSubmit={handleSubmitCreate}
             handleBlur={handleBlur}
             handleChange={handleChange}
             validateDisabledSubmitButton={validateDisabledSubmitButton}
@@ -317,18 +390,18 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
 
         {/* Modal modify */}
         {isModalOpenModify && (
-          <ModalCreateUpdate 
-          nameModal="Edit exercise"
-          typeModal="modify" 
-          dataExercise={dataExercise} 
-          handleSubmit={handleSubmitModify} 
-          handleBlur={handleBlur}
-          handleChange={handleChange}
-          validateDisabledSubmitButton={validateDisabledSubmitButton}
-          closeModal={closeModal}
-          errors={errors}
-          isSubmitting={isSubmitting}
-        />
+          <ModalCreateUpdate
+            nameModal="Edit exercise"
+            typeModal="modify"
+            dataExercise={dataExercise}
+            handleSubmit={handleSubmitModify}
+            handleBlur={handleBlur}
+            handleChange={handleChange}
+            validateDisabledSubmitButton={validateDisabledSubmitButton}
+            closeModal={closeModal}
+            errors={errors}
+            isSubmitting={isSubmitting}
+          />
         )}
 
         {/* List of exercises */}
