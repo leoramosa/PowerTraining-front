@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import InputForm from "../inputs/InputForm/InputForm";
+import Link from "next/link";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -52,6 +53,14 @@ const LoginForm: React.FC = () => {
           >
             Login
           </button>
+          <Link href="http://localhost:3002/login">
+            <button
+              type="submit"
+              className="w-full py-2 bg-primary text-white rounded-md hover:bg-primarLight transition duration-300"
+            >
+              Login google
+            </button>
+          </Link>
         </form>
       </div>
     </div>

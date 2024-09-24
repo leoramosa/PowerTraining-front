@@ -12,6 +12,8 @@ import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
 import { useUserStore } from "@/stores/useAuthStore";
+import { useSession, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export const mockUser = {
   id: "1",
@@ -55,7 +57,7 @@ const Navbar: React.FC = () => {
               <FaSearch size={20} />
             </button>
 
-            {user?.id && (
+            {!user?.id && (
               <div className="relative flex ">
                 <button
                   className="text-white ml-4"
@@ -125,6 +127,14 @@ const Navbar: React.FC = () => {
                             Sign Up
                           </button>
                         </Link>
+                        <Link href="" onClick={closeDropdownTwo}>
+                          <button
+                            className="w-full rounded-lg py-4 mt-5 bg-[#5E1EE5] text-white hover:bg-[#3b2172]"
+                            type="submit"
+                          >
+                            Sign Up
+                          </button>
+                        </Link>
                         <hr className="my-7" />
                         <button className="flex  justify-center w-full rounded-lg bg-gray-600 text-white py-3 mt-7">
                           <GoogleLogo />
@@ -155,14 +165,14 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-4">
-          {user ? (
+          {!user ? (
             <div className="relative">
               <button
                 className="flex items-center"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <FaUserCircle size={20} />
-                <span className="ml-2"> {user.name}</span>
+                <span className="ml-2"></span>
                 <IoIosArrowDown className="ml-1" />
               </button>
               {dropdownOpen && (
@@ -194,12 +204,20 @@ const Navbar: React.FC = () => {
             </div>
           ) : (
             <>
-              <Link href="/login" onClick={closeDropdownTwo}>
+              <Link href="/login">
                 <button className=" text-white py-1 px-6 mx-3 rounded-lg border-2 border-gray-300 ">
                   Sing In
                 </button>
               </Link>
-              <Link href="" onClick={closeDropdownTwo}>
+
+              <button
+                onClick={() => signIn()}
+                className=" text-white py-1 px-6 mx-3 rounded-lg border-2 border-gray-300 "
+              >
+                Sing In
+              </button>
+
+              <Link href="/api/auth/logout" onClick={closeDropdownTwo}>
                 <button className="flex justify-center items-center bg-primary text-black py-1 mr-2 px-3 rounded-lg">
                   Sign Up <GoArrowRight className="ml-1 text-md font-bold" />
                 </button>

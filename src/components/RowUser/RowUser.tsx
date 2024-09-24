@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IUser } from "@/interface/IUsers";
-import { deleteUser } from "@/Services/userService copy";
+import { deleteUser } from "@/Services/userService";
 import ItemInfo from "../ItemInfo/ItemInfo";
 import AvatarUser from "../images/AvatarUser/AvatarUser";
 import ButtonActions from "../buttons/ButtonActions/ButtonActions";
@@ -29,7 +29,7 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
     setEditingUserId(id);
   };
 
-  if (isDeleted) return null; //
+  if (isDeleted || !user) return null; //
 
   return (
     <>

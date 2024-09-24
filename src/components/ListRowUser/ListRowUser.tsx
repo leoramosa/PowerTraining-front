@@ -16,8 +16,8 @@ const ListRowUser: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchSelect, setSearchSelect] = useState<string>("");
 
-  const calculateTotalPages = (count: number, limit: number) => {
-    return Math.ceil(count / limit);
+  const calculateTotalPages = (totalCount: number, limit: number) => {
+    return Math.ceil(totalCount / limit);
   };
 
   useEffect(() => {
@@ -26,7 +26,6 @@ const ListRowUser: React.FC = () => {
         const response = await getUsersDB(limit, currentPage, filters);
         console.log("Response from getUsersDB:", response); // Log the response
 
-        // Maneja ambos formatos de respuesta
         if (Array.isArray(response)) {
           // Respuesta sin filtros
           setTotalPages(calculateTotalPages(response.length, limit));
@@ -44,6 +43,11 @@ const ListRowUser: React.FC = () => {
     };
     fetchUsers();
   }, [currentPage, limit, filters, setUsers]);
+
+  // Log totalPages whenever it changes
+  useEffect(() => {
+    console.log("Total pages:", totalPages);
+  }, [totalPages]);
 
   const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -75,7 +79,7 @@ const ListRowUser: React.FC = () => {
   const optionsSearch = [
     { label: "Find by name", value: "name" },
     { label: "Find by email", value: "email" },
-    { label: "Find by last name", value: "lastname" },
+    { label: "Find by last name", value: "lastName" },
   ];
 
   return (
