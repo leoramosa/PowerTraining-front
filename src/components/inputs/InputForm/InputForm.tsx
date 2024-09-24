@@ -1,3 +1,4 @@
+import { ExerciseFieldKeys } from "@/interface/IExerciseFormError";
 import { InputFormProps } from "@/interface/inputs";
 
 const InputForm: React.FC<InputFormProps> = ({
@@ -6,11 +7,20 @@ const InputForm: React.FC<InputFormProps> = ({
   value,
   defaultValue,
   onChange,
+  onBlur,
   label,
   error,
   readOnly = false,
   name,
 }) => {
+
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange && e.target.files) {
+      const file = e.target.files[0];
+      const name = e.target.name;
+      onChange(name as ExerciseFieldKeys, file);
+    }
+  };
 
   return (
     <div className="mb-3">
@@ -31,15 +41,40 @@ const InputForm: React.FC<InputFormProps> = ({
             if (onChange) {
               const newValue = e.target.value;
               const name = e.target.name;
-              onChange(name, newValue);
+              onChange(name as ExerciseFieldKeys, newValue);
+            }
+          }}
+          onBlur={(e) => {
+            if (onBlur) {
+              const newValue = e.target.value;
+              const name = e.target.name;
+              onBlur(name as ExerciseFieldKeys, newValue);
             }
           }}
           readOnly={readOnly}
           name={name}
           className={`w-full bg-lightGray text-dark text-sm py-2 px-2 rounded-md border truncate ${
             error ? "border-red-600 border" : "border-gray-300"
-          } focus:border-primary focus:outline-none transition duration-300`}
+          } focus:border-primary focus:outline-none transition duration-300 overflow-hidden resize-none`}
           rows={4}
+        />
+      ) : type === "file" ? (
+        <input
+          type="file"
+          accept=".mp4"
+          onChange={handleFileChange}
+          onBlur={(e) => {
+            if (onBlur) {
+              const name = e.target.name;
+              const value = e.target.value;
+              onBlur(name as ExerciseFieldKeys, value); 
+            }
+          }}
+          name={name}
+          defaultValue={defaultValue}
+          className={`w-full bg-lightGray text-dark text-sm py-2 px-2 rounded-md border truncate ${
+            error ? "border-red-600 border" : "border-gray-300"
+          } focus:border-primary focus:outline-none transition duration-300`}
         />
       ) : (
         <input
@@ -50,7 +85,14 @@ const InputForm: React.FC<InputFormProps> = ({
             if (onChange) {
               const newValue = e.target.value;
               const name = e.target.name;
-              onChange(name, newValue);
+              onChange(name as ExerciseFieldKeys, newValue);
+            }
+          }}
+          onBlur={(e) => {
+            if (onBlur) {
+              const newValue = e.target.value;
+              const name = e.target.name;
+              onBlur(name as ExerciseFieldKeys, newValue);
             }
           }}
           placeholder={placeholder}
