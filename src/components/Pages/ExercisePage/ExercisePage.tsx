@@ -119,33 +119,33 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     } else {
       setFilters(filterInitialValues);
     }*/
-      setCurrentPage(1);
+    setCurrentPage(1);
 
-      // Mensajes de Sonner con toast.promise
-      toast.promise(
-        new Promise(async (resolve, reject) => {
-          try {
-            if (searchSelect && searchValue) {
-              setFilters({ [searchSelect]: searchValue });
-            } else {
-              setFilters(filterInitialValues);
-            }
-    
-            const response = await getExercisesDB(limit, currentPage, filters);
-            setTotalPages(calculateTotalPages(response.count, limit));
-            setListExercises(response.data);
-    
-            resolve("Exercises fetched successfully!");
-          } catch (error) {
-            reject("Error fetching exercises, please try again.");
+    // Mensajes de Sonner con toast.promise
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          if (searchSelect && searchValue) {
+            setFilters({ [searchSelect]: searchValue });
+          } else {
+            setFilters(filterInitialValues);
           }
-        }),
-        {
-          loading: "Searching for exercises...", 
-          success: (msg) => String(msg),                
-          error: (msg) => String(msg),                  
+
+          const response = await getExercisesDB(limit, currentPage, filters);
+          setTotalPages(calculateTotalPages(response.count, limit));
+          setListExercises(response.data);
+
+          resolve("Exercises fetched successfully!");
+        } catch (error) {
+          reject("Error fetching exercises, please try again.");
         }
-      );
+      }),
+      {
+        loading: "Searching for exercises...",
+        success: (msg) => String(msg),
+        error: (msg) => String(msg),
+      }
+    );
   };
 
   const optionsSearch = [
@@ -294,28 +294,30 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
         "An error occurred while updating the exercise. Please try again."
       );
     }*/
-      toast.promise(
-        new Promise(async (resolve, reject) => {
-          try {
-            await deleteExerciseById(id);
-            setCurrentPage(1);
-            const response = await getExercisesDB(limit, currentPage);
-            setTotalPages(calculateTotalPages(response.count, limit));
-            setListExercises(response.data);
-    
-            // Resolución exitosa de la promesa
-            resolve("Exercise deleted successfully");
-          } catch (error) {
-            // Rechazar la promesa en caso de error
-            reject("An error occurred while deleting the exercise. Please try again.");
-          }
-        }),
-        {
-          loading: "Deleting exercise...", 
-          success: (msg) => String(msg),           
-          error: (msg) => String(msg),            
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          await deleteExerciseById(id);
+          setCurrentPage(1);
+          const response = await getExercisesDB(limit, currentPage);
+          setTotalPages(calculateTotalPages(response.count, limit));
+          setListExercises(response.data);
+
+          // Resolución exitosa de la promesa
+          resolve("Exercise deleted successfully");
+        } catch (error) {
+          // Rechazar la promesa en caso de error
+          reject(
+            "An error occurred while deleting the exercise. Please try again."
+          );
         }
-      );
+      }),
+      {
+        loading: "Deleting exercise...",
+        success: (msg) => String(msg),
+        error: (msg) => String(msg),
+      }
+    );
   };
 
   //####### Pagination operations

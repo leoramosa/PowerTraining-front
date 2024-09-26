@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from 'next/image';
-import { IError, ILoginProps } from "@/interface/ILogin";
-import { validateLoginForm } from "@/helpers/validate";
+import { ILoginProps } from "@/interface/ILogin";
+import { validateLoginForm } from "@/helpers/login-validate";
 import { login } from "@/helpers/auth-helper";
 import { toast } from 'sonner'; // Importa solo 'toast'
 

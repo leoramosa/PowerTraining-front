@@ -31,7 +31,8 @@ export interface userSession {
 
 export interface IAuthState {
   user: IUser | null;
-  login: (user: IUser) => void;
+  token: string | null;
+  login: (user: IUser, token: string) => void;
   logout: () => void;
 }
 
@@ -48,7 +49,6 @@ export interface IUserData {
 export interface IUserFilters {
   name?: string;
   lastname?: string;
-  isAdmin?: boolean;
   birthday?: string;
   email?: string;
 }

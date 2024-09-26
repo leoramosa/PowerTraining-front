@@ -15,10 +15,13 @@ const ButtonApp: React.FC<ButtonAppProps> = ({
     cancel: "text-black bg-gray-200 hover:bg-gray-300 px-3",
     checkout: "text-success hover:bg-successBg",
     payment: "text-success hover:bg-successBg",
+    login: "text-black bg-primary hover:bg-[#F9911E]",
   };
 
   const renderIcon = () => {
     switch (variant) {
+      case "login":
+        return;
       case "success":
         return;
       case "submit":

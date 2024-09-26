@@ -4,7 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar/Navbar";
 import Footer from "@/components/shared/Footer/Footer";
 import { Toaster } from "sonner";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { Providers } from "./Providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,19 +29,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <UserProvider>
+      <Providers>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navbar />
           <main className="flex-1">
-            <Toaster position="top-right" richColors />
+            <Toaster position="top-center" richColors />
             {children}
           </main>
 
           <Footer />
         </body>
-      </UserProvider>
+      </Providers>
     </html>
   );
 }

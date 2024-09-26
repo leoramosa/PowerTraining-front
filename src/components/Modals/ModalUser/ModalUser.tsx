@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useUserStore } from "@/stores/useAuthStore";
 import ButtonApp from "@/components/buttons/ButttonApp/ButtonApp";
-import InputForm from "@/components/inputs/InputForm/InputForm";
+import InputFormLogin from "@/components/inputs/InputFormLogin/InputFormLogin";
+import { getSession } from "next-auth/react";
 
 interface EditUserModalProps {
   userId: string;
@@ -9,7 +10,7 @@ interface EditUserModalProps {
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
-  const { users, setUsers, updateUser } = useUserStore();
+  const { users, setUsers, updateUser, setCurrentUser } = useUserStore();
   const user = users.find((u) => u.id === userId);
 
   const [name, setName] = useState(user?.name || "");
@@ -25,8 +26,15 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Actualiza el usuario en el servidor
       await updateUser(userId, { name, email });
+
+      // Actualiza el estado de los usuarios en el store
       setUsers(users.map((u) => (u.id === userId ? { ...u, name, email } : u)));
+
+      // Actualiza el usuario actual en el store
+      setCurrentUser({ ...user, name, email });
+
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
@@ -39,7 +47,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6">
         <form onSubmit={handleSubmit}>
           <div>
-            <InputForm
+            <InputFormLogin
               label="Name"
               type="text"
               value={name}
@@ -47,7 +55,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
             />
           </div>
           <div>
-            <InputForm
+            <InputFormLogin
               label="Email"
               type="email"
               value={email}

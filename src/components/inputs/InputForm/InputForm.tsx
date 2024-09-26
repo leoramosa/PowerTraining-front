@@ -67,7 +67,7 @@ const InputForm: React.FC<InputFormProps> = ({
             if (onBlur) {
               const name = e.target.name;
               const value = e.target.value;
-              onBlur(name as ExerciseFieldKeys, value); 
+              onBlur(name as ExerciseFieldKeys, value);
             }
           }}
           name={name}
