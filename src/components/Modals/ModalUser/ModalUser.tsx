@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUserStore } from "@/stores/useAuthStore";
 import ButtonApp from "@/components/buttons/ButttonApp/ButtonApp";
-import { getAllUsers } from "@/Services/userService";
 import InputForm from "@/components/inputs/InputForm/InputForm";
 
 interface EditUserModalProps {
@@ -26,17 +25,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log(
-        "Submitting updated data for user ID:",
-        userId,
-        "with name:",
-        name,
-        "and email:",
-        email
-      );
       await updateUser(userId, { name, email });
-      const updatedUsers = await getAllUsers(); // <-- Recarga los usuarios desde la API
-      setUsers(updatedUsers); // <-- Actualiza el estado con los usuarios recargados
+      setUsers(users.map((u) => (u.id === userId ? { ...u, name, email } : u)));
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
@@ -61,7 +51,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
               label="Email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex w-full">

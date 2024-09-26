@@ -39,3 +39,16 @@ export interface IUserState {
   users: IUser[];
   updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
 }
+
+export interface IUserData {
+  data: IUser[];
+  count: number;
+}
+
+export interface IUserFilters {
+  name?: string;
+  lastname?: string;
+  isAdmin?: boolean;
+  birthday?: string;
+  email?: string;
+}

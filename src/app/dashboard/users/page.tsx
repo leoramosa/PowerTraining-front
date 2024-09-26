@@ -4,7 +4,7 @@ import React from "react";
 
 const PageUsers = () => {
   return (
-    <ContainerDash>
+    <ContainerDash className="h-full flex">
       <ListRowUser />
     </ContainerDash>
   );

@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { IUser, IAuthState } from "@/interface/users";
+import { IUser } from "@/interface/IUsers";
 import { updateUserById } from "@/Services/userService";
 
-export const useAuthStore = create<IAuthState>((set) => ({
-  user: null,
-  login: (user: IUser) => set({ user }),
-  logout: () => set({ user: null }),
-}));
+// export const useAuthStore = create<IAuthState>((set) => ({
+//   user: null,
+//   login: (user: IUser) => set({ user }),
+//   logout: () => set({ user: null }),
+// }));
 
 interface IUserState {
   users: IUser[];
@@ -17,19 +17,24 @@ interface IUserState {
 export const useUserStore = create<IUserState>((set) => ({
   users: [],
   setUsers: (users) => {
-    console.log("Setting users in store:", users);
+    console.log("Setting users in store:", users); // Log to verify users are being set
     set({ users });
   },
   updateUser: async (id, updatedUser) => {
     try {
+      set((state) => {
+        const updatedUsers = state.users.map((user) =>
+          user.id === id ? { ...user, ...updatedUser } : user
+        );
+        return { users: updatedUsers };
+      });
+
       const updatedUserData = await updateUserById(id, updatedUser);
-      console.log("Updated user data received:", updatedUserData);
 
       set((state) => {
         const updatedUsers = state.users.map((user) =>
           user.id === id ? { ...user, ...updatedUserData } : user
         );
-        console.log("Updated users state:", updatedUsers);
         return { users: updatedUsers };
       });
     } catch (error) {

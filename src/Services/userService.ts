@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-import { IRegisterProps, IUser } from "../interface/users";
+import {
+  IRegisterProps,
+  IUser,
+  IUserFilters,
+  IUserData,
+} from "../interface/IUsers";
 
 export async function createUser(userData: IRegisterProps) {
   const response = await fetch(`${API_URL}/users`, {
@@ -18,21 +23,50 @@ export async function createUser(userData: IRegisterProps) {
   return response.json();
 }
 
-export async function getAllUsers(): Promise<IUser[]> {
-  const response = await fetch(`${API_URL}/users`, {
-    cache: "no-cache",
-    method: "GET",
-  });
+export async function getUsersDB(
+  limit: number = 5,
+  page: number = 1,
+  filtersBy: IUserFilters = {}
+): Promise<any> {
+  let url = `${API_URL}/users`;
 
-  if (!response.ok) {
-    throw new Error("Error al obtener usuarios");
+  const queryParams = new URLSearchParams();
+
+  if (Object.keys(filtersBy).length > 0) {
+    url += "/byFilters";
+    // Solo agregar parámetros de filtro
+    Object.entries(filtersBy).forEach(([key, value]) => {
+      if (value) queryParams.append(key, encodeURIComponent(value));
+    });
+  } else {
+    // Agregar parámetros de paginación solo si no hay filtros
+    queryParams.append("limit", limit.toString());
+    queryParams.append("page", page.toString());
   }
 
-  const users = await response.json();
-  console.log("Users fetched from API:", users); // <-- Aquí
-  return users;
-}
+  url += `?${queryParams.toString()}`;
 
+  console.log("Fetching users from:", url); // Log the URL being fetched
+
+  try {
+    const res = await fetch(url, { cache: "no-cache" });
+    if (!res.ok) {
+      throw new Error(`Error fetching users: ${res.status} ${res.statusText}`);
+    }
+    const resData = await res.json();
+    console.log("Fetched users data:", resData);
+    return resData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error in getUsersDB:", error);
+      throw new Error(`Failed to get users: ${error.message}`);
+    } else {
+      console.error("Unexpected error:", error);
+      throw new Error("An unexpected error occurred");
+    }
+  }
+}
+// return { data, count: data.length };
 export const getUserById = async (id: string) => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: "GET",

@@ -14,12 +14,11 @@ const SearchInput: React.FC<ISearchInputProps> = ({
   const [searchOption, setSearchOption] = useState<string>("");
   const [valueSearch, setValueSearch] = useState<string>(value ? value : "");
 
-  useEffect(()=>{
-    if(value){
-        setValueSearch(value);
+  useEffect(() => {
+    if (value) {
+      setValueSearch(value);
     }
   }, [value]);
-
 
   return (
     <div className="flex items-stretch border rounded-lg bg-white">
@@ -27,9 +26,9 @@ const SearchInput: React.FC<ISearchInputProps> = ({
       <select
         value={searchOption}
         onChange={(e) => {
-            const newValue = e.target.value; 
-            setSearchOption(newValue); 
-            onChangeSelect(e, newValue);
+          const newValue = e.target.value;
+          setSearchOption(newValue);
+          onChangeSelect(e, newValue);
         }}
         className="p-3 py-3 rounded-l-md focus:outline-none bg-gray-100 px-4"
       >
@@ -38,7 +37,11 @@ const SearchInput: React.FC<ISearchInputProps> = ({
         </option>
         {options.length > 0 &&
           options.map((option) => {
-            return <option key={option.value} value={option.value}>{option.label}</option>
+            return (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            );
           })}
       </select>
 
@@ -47,10 +50,10 @@ const SearchInput: React.FC<ISearchInputProps> = ({
         type="text"
         value={valueSearch}
         onChange={(e) => {
-            const newValue = e.target.value; 
-            setValueSearch(newValue); 
-            onChangeInput(e, newValue);
-          }}
+          const newValue = e.target.value;
+          setValueSearch(newValue);
+          onChangeInput(e, newValue);
+        }}
         placeholder={placeholder}
         className="flex-grow p-3 py-3 focus:outline-none w-80"
       />

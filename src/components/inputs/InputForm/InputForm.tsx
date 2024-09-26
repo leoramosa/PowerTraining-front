@@ -3,6 +3,7 @@ import { InputFormProps } from "@/interface/inputs";
 
 const InputForm: React.FC<InputFormProps> = ({
   type,
+  name,
   placeholder = "",
   value,
   defaultValue,
@@ -11,7 +12,6 @@ const InputForm: React.FC<InputFormProps> = ({
   label,
   error,
   readOnly = false,
-  name,
 }) => {
 
    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +103,11 @@ const InputForm: React.FC<InputFormProps> = ({
           } focus:border-primary focus:outline-none transition duration-300`}
         />
       )}
-      {error && <p className="text-red-400 text-sm mt-1 bg-red-100 border border-red-400 rounded-md px-2 py-1 mb-4">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-sm mt-1 bg-red-100 border border-red-400 rounded-md px-2 py-1 mb-4">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
