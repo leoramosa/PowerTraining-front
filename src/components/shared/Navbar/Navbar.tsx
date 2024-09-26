@@ -15,61 +15,32 @@ import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { fetchCurrentUser } from "@/helpers/existingUser-helper";
 import { toast } from "sonner";
-import { FaRegUser } from "react-icons/fa";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useUserStore } from "@/stores/useAuthStore";
-import { useSession, signOut } from "next-auth/react";
-import { signIn } from "next-auth/react";
-
-export const mockUser = {
-  id: "1",
-  name: "John Doe",
-  email: "johndoe@example.com",
-  password: "password123", // No uses contraseñas reales
-};
 
 const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      fetchCurrentUser(token)
-        .then((currentUser) => {
-          if (currentUser) {
-            setUserName(currentUser.name);
-          } else {
-            console.error("Usuario no encontrado");
-          }
-        })
-        .catch((error) => {
-          console.error("Error al obtener los datos del usuario:", error);
-        });
-    }
-  }, []);
+  const { data: session, status } = useSession();
+  const { userData } = useUserStore();
+  const { currentUser } = useUserStore(); // Obtén el usuario actual del store
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
-  
+    const confirmLogout = window.confirm(
+      "¿Estás seguro de que quieres cerrar sesión?"
+    );
     if (confirmLogout) {
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      setUserName(null);
-      router.push("/login");
-      
-      // Mostrar un mensaje de éxito con Sonner
-      toast.success("Logout successful!");
+      signOut();
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+      toast.success("Sesión cerrada con éxito!");
+      router.push("/");
     }
   };
-
-  const user = useUserStore((state) => state);
 
   const closeDropdown = () => {
     setDropdownOpen(false);
@@ -91,6 +62,12 @@ const Navbar: React.FC = () => {
             />
           </Link>
 
+          {currentUser && (
+            <p className="ml-4">
+              {currentUser.name} {currentUser.lastName}
+            </p>
+          )}
+
           {/* Mobile Search Icon */}
           <div className="flex lg:hidden">
             <button
@@ -100,10 +77,8 @@ const Navbar: React.FC = () => {
               <FaSearch size={20} />
             </button>
 
-            {isLoggedIn ? (
+            {session?.user ? (
               <div className="relative flex">
-            {!user?.id && (
-              <div className="relative flex ">
                 <button
                   className="text-white ml-4"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -165,15 +140,6 @@ const Navbar: React.FC = () => {
                           </button>
                         </Link>
                         <Link href="/register" onClick={closeDropdownTwo}>
-                        <Link href="" onClick={closeDropdownTwo}>
-                          <button
-                            className="w-full rounded-lg py-4 mt-5 bg-[#5E1EE5] text-white hover:bg-[#3b2172]"
-                            type="submit"
-                          >
-                            Sign Up
-                          </button>
-                        </Link>
-                        <Link href="" onClick={closeDropdownTwo}>
                           <button
                             className="w-full rounded-lg py-4 mt-5 bg-[#5E1EE5] text-white hover:bg-[#3b2172]"
                             type="submit"
@@ -208,16 +174,14 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-4">
-          {isLoggedIn ? (
-          {!user ? (
+          {session?.user ? (
             <div className="relative">
               <button
                 className="flex items-center"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <FaUserCircle size={20} />
-                <span className="ml-2">{userName}</span>
-                <span className="ml-2"></span>
+                <span className="ml-2">{session.user.name}</span>
                 <IoIosArrowDown className="ml-1" />
               </button>
               {dropdownOpen && (
@@ -253,21 +217,9 @@ const Navbar: React.FC = () => {
               <Link href="/login" onClick={closeDropdownTwo}>
                 <button className="text-white py-1 px-6 mx-3 rounded-lg border-2 border-gray-300">
                   Sign In
-              <Link href="/login">
-                <button className=" text-white py-1 px-6 mx-3 rounded-lg border-2 border-gray-300 ">
-                  Sing In
                 </button>
               </Link>
-              <Link href="/register" onClick={closeDropdownTwo}>
-
-              <button
-                onClick={() => signIn()}
-                className=" text-white py-1 px-6 mx-3 rounded-lg border-2 border-gray-300 "
-              >
-                Sing In
-              </button>
-
-              <Link href="/api/auth/logout" onClick={closeDropdownTwo}>
+              <Link href="/dashboard/register" onClick={closeDropdownTwo}>
                 <button className="flex justify-center items-center bg-primary text-black py-1 mr-2 px-3 rounded-lg">
                   Sign Up <GoArrowRight className="ml-1 text-md font-bold" />
                 </button>

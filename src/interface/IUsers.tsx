@@ -31,7 +31,8 @@ export interface userSession {
 
 export interface IAuthState {
   user: IUser | null;
-  login: (user: IUser) => void;
+  token: string | null;
+  login: (user: IUser, token: string) => void;
   logout: () => void;
 }
 

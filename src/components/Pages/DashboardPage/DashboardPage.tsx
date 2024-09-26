@@ -16,7 +16,7 @@ const DashboardPage = () => {
             </Link>
             <Link href="/dashboard/admin/exercise" className="w-1/2">
               <div className="routines bg-secondary ml-3 rounded-md py-4 text-center text-3xl text-white">
-                Routines
+                Exercises
               </div>
             </Link>
           </div>

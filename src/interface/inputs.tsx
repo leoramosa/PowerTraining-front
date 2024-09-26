@@ -26,10 +26,8 @@ export interface InputFormLoginProps {
   defaultValue?: string;
   onBlur?: (name: ExerciseFieldKeys, value: string) => void;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
-
   label?: string;
   error?: string;
   readOnly?: boolean;
   className?: string;
 }
-

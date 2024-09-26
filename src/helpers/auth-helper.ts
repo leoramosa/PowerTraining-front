@@ -1,7 +1,7 @@
 import { ILoginProps, ILoginResponse } from "@/interface/ILogin";
 import { toast } from "sonner";
 
-export async function login(userData: ILoginProps): Promise<ILoginResponse> {
+export async function Login(userData: ILoginProps): Promise<ILoginResponse> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`,
