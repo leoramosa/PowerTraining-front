@@ -4,6 +4,7 @@ import {
   IUser,
   IUserFilters,
   IUserData,
+  ILoginProps,
 } from "../interface/IUsers";
 
 export async function createUser(userData: IRegisterProps) {
@@ -23,6 +24,30 @@ export async function createUser(userData: IRegisterProps) {
   return response.json();
 }
 
+export async function LoginUser(userData: ILoginProps) {
+  try {
+    const res = await fetch(`${API_URL}/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      const errorMessage = errorData.message || "Failed to login.";
+      throw new Error(errorMessage);
+    }
+
+    const data = await res.json();
+    console.log("Login response data:", data); // Log para verificar la respuesta del servidor
+    return data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    throw new Error(error.message || "An unexpected error occurred.");
+  }
+}
 // export async function getUsersDB(
 //   limit: number = 5,
 //   page: number = 1,

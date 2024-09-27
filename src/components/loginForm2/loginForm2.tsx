@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -8,7 +9,8 @@ import { toast } from "sonner";
 import InputFormLogin from "../inputs/InputFormLogin/InputFormLogin";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { LoginUser } from "@/Services/userService";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -22,59 +24,51 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
 
   const router = useRouter();
   const [dataUser, setDataUser] = useState<ILoginProps>(initialState);
-  const authStore = useAuthStore();
+  const login = useAuthStore((state) => state.login);
   const { data: session, status } = useSession();
-  const [userName, setUserName] = useState("");
 
-  // Este useEffect redirige al dashboard y almacena el token en localStorage
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const userData = window.localStorage.getItem("userData");
-      if (userData) {
-        const user = JSON.parse(userData);
-        setUserName(`${user.name} ${user.lastName}`);
-      }
+    if (session) {
+      const user = {
+        id: session.user.id,
+        name: session.user.name,
+        email: session.user.email,
+      };
+      const token = session.accessToken;
+      login(user, token);
     }
-    console.log("Nombre del usuario:", userName);
-  }, []);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const errors = validateLoginForm(dataUser);
-
-    if (Object.values(errors).some((err) => err !== "")) {
-      Object.values(errors).forEach((err) => {
-        if (err) toast.error(err);
-      });
-      return;
-    }
-
-    try {
-      const response = await Login(dataUser);
-      if (response && response.user && response.token) {
-        authStore.login(response.user, response.token);
-        // Almacena el token y los datos del usuario en el localStorage
-        localStorage.setItem("authToken", response.token);
-        localStorage.setItem("userData", JSON.stringify(response.user));
-        toast.success("Inicio de sesión exitoso! Redirigiendo...");
-        router.push("/dashboard");
-      } else {
-        throw new Error("Respuesta de inicio de sesión inválida");
-      }
-    } catch (error) {
-      console.error("Error de inicio de sesión:", error);
-      toast.error(
-        "Inicio de sesión fallido. Por favor, verifica tus credenciales."
-      );
-    }
-  };
+  });
+  // const [userName, setUserName] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value });
   };
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const response = await LoginUser(dataUser);
+      const { token, userData: user } = response;
+      login(user, token);
+      toast.success("Successful login", {
+        position: "top-center",
+      });
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast.error(error.message || "Error logging in.", {
+        position: "top-center",
+      });
+    }
+  };
+
   const handleGoogleSignIn = () => {
     signIn("google");
+
+    toast.success("Successful login", {
+      position: "top-center",
+    });
   };
 
   return (

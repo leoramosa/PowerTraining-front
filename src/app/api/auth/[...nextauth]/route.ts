@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import axios from "axios";
 
 const handler = NextAuth({
   providers: [
@@ -37,6 +36,7 @@ const handler = NextAuth({
           // Pasar el token y userData del backend a NextAuth
           user.backendToken = backendResponse.token;
           user.userData = backendResponse.userData;
+
           return true;
         } else {
           return false;
@@ -57,7 +57,7 @@ const handler = NextAuth({
 
     async session({ session, token }) {
       // Agregar los datos del backend a la sesión
-      session.backendToken = token.backendToken; // El token que recibiste del backend
+      session.authTokenProvider = token.backendToken; // El token que recibiste del backend
       session.user = {
         ...session.user,
         ...token.userData, // Agregar los datos del usuario que recibiste del backend

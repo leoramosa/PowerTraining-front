@@ -2,13 +2,13 @@
 import { useEffect, useState } from "react";
 import { IUserFilters } from "@/interface/IUsers";
 import { getUsersDB } from "@/Services/userService";
-import { useUserStore } from "@/stores/useAuthStore"; // Ensure correct import
+import { useUsersStore } from "@/stores/usersStore"; // Ensure correct import
 import ListUser from "@/components/ListUser/ListUser";
 import SearchInput from "@/components/search/SearchInput";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
 
 const ListRowUser: React.FC = () => {
-  const { users, setUsers } = useUserStore();
+  const { users, setUsers } = useUsersStore();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit] = useState<number>(5);
   const [totalPages, setTotalPages] = useState<number>(1);

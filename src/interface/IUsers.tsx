@@ -1,3 +1,8 @@
+export interface ILoginProps {
+  email: string;
+  password: string;
+}
+
 export interface IRegisterProps {
   name: string;
   lastName: string;
@@ -38,6 +43,7 @@ export interface IAuthState {
 
 export interface IUserState {
   users: IUser[];
+
   updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
 }
 

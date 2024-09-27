@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useUserStore } from "@/stores/useAuthStore";
+import { useUsersStore } from "@/stores/usersStore";
 import ButtonApp from "@/components/buttons/ButttonApp/ButtonApp";
 import InputFormLogin from "@/components/inputs/InputFormLogin/InputFormLogin";
-import { getSession } from "next-auth/react";
 
 interface EditUserModalProps {
   userId: string;
@@ -10,7 +9,7 @@ interface EditUserModalProps {
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
-  const { users, setUsers, updateUser, setCurrentUser } = useUserStore();
+  const { users, setUsers, updateUser } = useUsersStore();
   const user = users.find((u) => u.id === userId);
 
   const [name, setName] = useState(user?.name || "");
@@ -26,15 +25,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Actualiza el usuario en el servidor
       await updateUser(userId, { name, email });
-
-      // Actualiza el estado de los usuarios en el store
       setUsers(users.map((u) => (u.id === userId ? { ...u, name, email } : u)));
-
-      // Actualiza el usuario actual en el store
-      setCurrentUser({ ...user, name, email });
-
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);

@@ -17,17 +17,19 @@ import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
-import { useUserStore } from "@/stores/useAuthStore";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useUsersStore } from "@/stores/usersStore";
 
 const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const { userData } = useUserStore();
-  const { currentUser } = useUserStore(); // Obtén el usuario actual del store
+
+  const user = useAuthStore((state) => state.user);
+
+  // Sincroniza la sesión de NextAuth con el store global
+  // const currentUser = user?.find((user) => user.id === session?.user.id);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm(
@@ -36,7 +38,10 @@ const Navbar: React.FC = () => {
     if (confirmLogout) {
       signOut();
       localStorage.removeItem("authToken");
-      localStorage.removeItem("userData");
+      localStorage.removeItem("authUser");
+      localStorage.removeItem("authTokenProvider");
+      localStorage.removeItem("authUserProvider");
+
       toast.success("Sesión cerrada con éxito!");
       router.push("/");
     }
@@ -62,12 +67,6 @@ const Navbar: React.FC = () => {
             />
           </Link>
 
-          {currentUser && (
-            <p className="ml-4">
-              {currentUser.name} {currentUser.lastName}
-            </p>
-          )}
-
           {/* Mobile Search Icon */}
           <div className="flex lg:hidden">
             <button
@@ -77,7 +76,7 @@ const Navbar: React.FC = () => {
               <FaSearch size={20} />
             </button>
 
-            {session?.user ? (
+            {user ? (
               <div className="relative flex">
                 <button
                   className="text-white ml-4"
@@ -174,14 +173,16 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-4">
-          {session?.user ? (
+          {user ? (
             <div className="relative">
               <button
                 className="flex items-center"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <FaUserCircle size={20} />
-                <span className="ml-2">{session.user.name}</span>
+
+                <span className="ml-2">{user.name}</span>
+
                 <IoIosArrowDown className="ml-1" />
               </button>
               {dropdownOpen && (
