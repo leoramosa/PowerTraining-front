@@ -15,10 +15,10 @@ interface ExerciseCardProps {
   isCreateOrUpdate: boolean;
 }
 
-const getYoutubeThumbnail = (url: string) => {
+/*const getYoutubeThumbnail = (url: string) => {
   const videoId = url.split("v=")[1];
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-};
+};*/
 
 const ExerciseCard: React.FC<ExerciseCardProps> = ({
   index,
@@ -32,7 +32,8 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   isCreateOrUpdate
 }) => {
   return (
-    <div className={`flex flex-row rounded-lg w-full p-6 mb-6 transition-shadow duration-300 ease-in-out transform ${isCreateOrUpdate ? 'bg-white border-2 border-green-200 shadow-2xl' : 'bg-white shadow-lg'}`}>
+    <div className={`card flex flex-row justify-between my-5 items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6
+    ${isCreateOrUpdate ? 'bg-white border-2 border-green-200 shadow-2xl' : 'bg-white shadow-lg'}`}>
       {/* Vista previa del video */}
       <div className="flex-shrink-0 w-1/3">
         <iframe
@@ -70,7 +71,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         </div>
       </div>
       {/* Botones de acciones al final */}
-      <div className="flex-none flex items-end space-x-2 ml-auto">
+      <div className="flex justify-end mt-auto space-x-2">
         <ButtonActions
           status="edit"
           size="md"
@@ -82,7 +83,6 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
           size="md"
           tooltip="Delete exercise"
           onClick={onClickDelete}
-          //handleClickDelete(exerciseId);
         />
       </div>
     </div>

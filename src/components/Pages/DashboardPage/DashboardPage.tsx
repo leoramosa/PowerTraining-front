@@ -19,6 +19,11 @@ const DashboardPage = () => {
                 Exercises
               </div>
             </Link>
+            <Link href="/dashboard/admin/trash" className="w-1/2">
+              <div className="routines bg-secondary ml-3 rounded-md py-4 text-center text-3xl text-white">
+                Exercises Trash!
+              </div>
+            </Link>
           </div>
         </div>
       </ContainerDash>

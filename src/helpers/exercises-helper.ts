@@ -3,15 +3,14 @@ import { IExercise } from "@/interface/IExercise";
 import IExerciseData from "@/interface/IExerciseData";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
 
-//'http://localhost:3000/exercises?name=polea&benefits=humor&tags=piernas&page=1&limit=5'
-
 export async function getExercisesDB(
   limit: number = 5,
   page: number = 1,
   filtersBy: IFiltersExercises = {}
 ): Promise<IExerciseData> {
-  //const res = await fetch(`${APIURL}/exercises?${ filtersBy ? "name="+filtersBy?.name+"&benefits="+filtersBy?.benefits+"&tags="+filtersBy?.tags  : null }limit=${limit}&page=${page}`,  {cache: "no-cache"})
   let url = `${APIURL}/exercises?`;
+  const token = localStorage.getItem("authToken");
+  console.log(token);
 
   if (filtersBy) {
     const { name, benefits, tags } = filtersBy;
@@ -27,7 +26,14 @@ export async function getExercisesDB(
   console.log(url);
 
   try {
-    const res = await fetch(url, { cache: "no-cache" });
+    const res = await fetch(url, {
+      method: "GET",
+      cache: "no-cache",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     if (!res.ok) {
       throw new Error(
         `Error fetching exercises: ${res.status} ${res.statusText}`
@@ -69,7 +75,6 @@ export async function getExerciseById(
   }
 }
 
-
 export async function createExercise(exercise: IExercise): Promise<IExercise> {
   //token: string
   try {
@@ -105,7 +110,9 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
     });
 
     if (!res.ok) {
-      throw new Error(`Error fetching exercises: ${res.status} ${res.statusText}`);
+      throw new Error(
+        `Error fetching exercises: ${res.status} ${res.statusText}`
+      );
     }
 
     const exerciseRes: IExercise = await res.json();
@@ -131,7 +138,7 @@ async function uploadVideo(file: File) {
     }
     const result = await response.text();
     console.log("############################################:", result);
-    return result
+    return result;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -166,6 +173,25 @@ export async function modifyExerciseById(
   //token: string
 
   try {
+    if (exercise.video) {
+      const urlVideoExample = await uploadVideo(exercise.video);
+      console.log(urlVideoExample);
+      if (urlVideoExample) {
+        exercise.urlVideoExample = urlVideoExample;
+      }
+    }
+
+    const exerciseData: any = {
+      name: exercise.name,
+      description: exercise.description,
+      benefits: exercise.benefits,
+      tags: exercise.tags,
+    };
+
+    if (exercise.urlVideoExample) {
+      exerciseData.urlVideoExample = exercise.urlVideoExample;
+    }
+
     const res = await fetch(`${APIURL}/exercises/${exercise.id}`, {
       method: "PATCH",
       headers: {

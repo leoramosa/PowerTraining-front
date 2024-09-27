@@ -23,6 +23,7 @@ export interface ButtonAppProps {
 export interface ButtonPrimaryProps {
   disabled?: boolean;
   className?: string;
+  icon?: ReactNode;
   type?: "button" | "submit" | "reset";
   text: string;
   onClick?: () => void;

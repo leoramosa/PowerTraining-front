@@ -22,8 +22,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
 
   const router = useRouter();
   const [dataUser, setDataUser] = useState<ILoginProps>(initialState);
-  const authStore = useAuthStore();
-  const { data: session, status } = useSession();
+  //const authStore = useAuthStore();
+  //const { data: session, status } = useSession();
   const [userName, setUserName] = useState("");
 
   // Este useEffect redirige al dashboard y almacena el token en localStorage
@@ -51,16 +51,19 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
 
     try {
       const response = await Login(dataUser);
-      if (response && response.user && response.token) {
-        authStore.login(response.user, response.token);
-        // Almacena el token y los datos del usuario en el localStorage
-        localStorage.setItem("authToken", response.token);
-        localStorage.setItem("userData", JSON.stringify(response.user));
-        toast.success("Inicio de sesión exitoso! Redirigiendo...");
-        router.push("/dashboard");
-      } else {
-        throw new Error("Respuesta de inicio de sesión inválida");
-      }
+      localStorage.setItem("authToken", response.token);
+      toast.success("Inicio de sesión exitoso! Redirigiendo...");
+          router.push("/dashboard");
+        /*if (response && response.user && response.token) {
+          authStore.login(response.user, response.token);
+          // Almacena el token y los datos del usuario en el localStorage
+          localStorage.setItem("authToken", response.token);
+          localStorage.setItem("userData", JSON.stringify(response.user));
+          toast.success("Inicio de sesión exitoso! Redirigiendo...");
+          router.push("/dashboard");
+        } else {
+          throw new Error("Respuesta de inicio de sesión inválida");
+        }*/
     } catch (error) {
       console.error("Error de inicio de sesión:", error);
       toast.error(

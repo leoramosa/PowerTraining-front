@@ -12,7 +12,6 @@ import {
   modifyExerciseById,
 } from "@/helpers/exercises-helper";
 import { IExercise } from "@/interface/IExercise";
-import IExerciseData from "@/interface/IExerciseData";
 import { useEffect, useState } from "react";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
 import {
@@ -26,8 +25,9 @@ import {
 import ItemInfo from "@/components/ItemInfo/ItemInfo";
 import ModalCreateUpdate from "./components/ModalCreateUpdate";
 import { toast } from "sonner";
+import showGenericAlert from "@/components/alert/alert";
 
-const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
+const ExercisePage = () => {
   //console.log(data);
 
   const initialState: IExercise = {
@@ -60,7 +60,9 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     tags: "",
   };
 
-  const [listExercises, setListExercises] = useState<IExercise[]>(data);
+  const [listExercises, setListExercises] = useState<IExercise[]>([
+    initialState,
+  ]);
   const [isModalOpenCreate, setIsModalOpenCreate] = useState<boolean>(false);
   const [isModalOpenModify, setIsModalOpenModify] = useState<boolean>(false);
   const [dataExercise, setDataExercise] = useState<IExercise>(initialState);
@@ -68,9 +70,8 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
   const [searchSelect, setSearchSelect] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
-  const [totalPages, setTotalPages] = useState<number>(
-    calculateTotalPages(count, limit)
-  );
+  const [countReg, setCountReg] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [errors, setErrors] = useState<IExerciseFormError>(initialStateError);
   const [createOrUpdateItem, setCreateOrUpdateItem] = useState<boolean>(false);
   const [filters, setFilters] =
@@ -83,6 +84,21 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     console.log(exercise);
     setDataExercise(exercise);
   };
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await getExercisesDB(limit, currentPage, filters);
+        setCountReg(response.count);
+        setTotalPages(calculateTotalPages(countReg, limit));
+        setListExercises(response.data);
+      } catch (error) {
+        toast.error("Error fetching exercises, please try again.");
+      }
+    };
+    fetchExercises();
+    setLimit(5);
+  }, []);
 
   useEffect(() => {}, [dataExercise, listExercises, createOrUpdateItem]);
 
@@ -240,84 +256,113 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+
     try {
+      // Verificar que no haya errores
       if (
         !(
-          errors.name &&
-          errors.description &&
-          errors.video &&
-          errors.benefits &&
+          errors.name ||
+          errors.description ||
+          errors.video ||
+          errors.benefits ||
           errors.tags
         )
       ) {
-        console.log(dataExercise);
-        setIsSubmitting(true);
-        const exerciseUpdate: IExercise = await modifyExerciseById(
-          dataExercise
-        );
-        setListExercises((prevList) =>
-          prevList.map((exercise) =>
-            exercise.id === dataExercise.id
-              ? { ...exercise, ...exerciseUpdate }
-              : exercise
-          )
-        );
-        closeModal("modify");
-        toast.success("Exercise updated successfully!");
-        setIsSubmitting(false);
-        setCreateOrUpdateItem(true);
-        setTimeout(() => {
-          setCreateOrUpdateItem(false);
-        }, 5000);
+        // Mostrar la alerta de confirmación
+        await showGenericAlert({
+          title: 'Are you sure?',
+          text: 'Do you really want to update this exercise?',
+          icon: 'warning',
+          buttons: [
+            {
+              text: 'Confirm',
+              action: async () => {
+                const toastId = toast.loading("Updating exercise..."); // Muestra el toast de carga
+                
+                try {
+                  // Realizar la modificación del ejercicio
+                  const exerciseUpdate: IExercise = await modifyExerciseById(dataExercise);
+                  
+                  // Actualizar la lista de ejercicios
+                  setListExercises((prevList) =>
+                    prevList.map((exercise) =>
+                      exercise.id === dataExercise.id
+                        ? { ...exercise, ...exerciseUpdate }
+                        : exercise
+                    )
+                  );
+                  
+                  // Cerrar el modal y mostrar el toast de éxito
+                  closeModal("modify");
+                  toast.success("Exercise updated successfully!", { id: toastId });
+                  
+                  setCreateOrUpdateItem(true);
+                  setTimeout(() => {
+                    setCreateOrUpdateItem(false);
+                  }, 5000);
+                } catch (error) {
+                  // Muestra el toast de error en caso de que falle la modificación
+                  toast.error("An error occurred while updating the exercise. Please try again.", { id: toastId });
+                }
+              },
+              isConfirm: true, 
+            },
+            {
+              text: 'Cancel',
+              action: () => {
+                toast.info("Exercise update cancelled"); 
+              },
+              isConfirm: false, 
+            },
+          ],
+        });
       } else {
         toast.warning(
           "Make sure all fields are properly filled before updating the exercise."
         );
       }
     } catch (error) {
-      toast.error(
-        "An error occurred while updating the exercise. Please try again."
-      );
+      toast.error("An error occurred while updating the exercise. Please try again.");
     }
   };
 
   //####### Delete exercises
   const handleClickDelete = async (id: string) => {
-    /*try {
-      await deleteExerciseById(id);
-      setCurrentPage(1);
-      const response = await getExercisesDB(limit, currentPage);
-      setTotalPages(calculateTotalPages(response.count, limit));
-      setListExercises(response.data);
-    } catch (error) {
-      toast.error(
-        "An error occurred while updating the exercise. Please try again."
-      );
-    }*/
-    toast.promise(
-      new Promise(async (resolve, reject) => {
-        try {
-          await deleteExerciseById(id);
-          setCurrentPage(1);
-          const response = await getExercisesDB(limit, currentPage);
-          setTotalPages(calculateTotalPages(response.count, limit));
-          setListExercises(response.data);
-
-          // Resolución exitosa de la promesa
-          resolve("Exercise deleted successfully");
-        } catch (error) {
-          // Rechazar la promesa en caso de error
-          reject(
-            "An error occurred while deleting the exercise. Please try again."
-          );
-        }
-      }),
-      {
-        loading: "Deleting exercise...",
-        success: (msg) => String(msg),
-        error: (msg) => String(msg),
-      }
-    );
+    await showGenericAlert({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this exercise?',
+      icon: 'warning',
+      buttons: [
+        {
+          text: 'Confirm',
+          action: async () => {
+            const toastId = toast.loading("Deleting exercise..."); // Muestra el toast de carga
+  
+            try {
+              await deleteExerciseById(id); // Elimina el ejercicio
+              setCurrentPage(1); // Resetea la página actual
+              const response = await getExercisesDB(limit, currentPage); 
+              setTotalPages(calculateTotalPages(response.count, limit)); 
+              setListExercises(response.data); 
+  
+              // Muestra el toast de éxito
+              toast.success("Exercise deleted successfully", { id: toastId });
+            } catch (error) {
+              // Muestra el toast de error en caso de que falle la eliminación
+              toast.error("An error occurred while deleting the exercise. Please try again.", { id: toastId });
+            }
+          },
+          isConfirm: true, 
+        },
+        {
+          text: 'Cancel',
+          action: () => {
+            toast.info("Exercise deletion cancelled"); 
+          },
+          isConfirm: false, 
+        },
+      ],
+    });
   };
 
   //####### Pagination operations
@@ -337,14 +382,13 @@ const ExercisePage: React.FC<IExerciseData> = ({ data, count }) => {
       errors.tags
     );
 
-    const isVideoValid =
+    /*const isVideoValid =
       typeof dataExercise.video === "string" ||
       dataExercise.video instanceof File;
-
+    */
     const hasEmptyFields = !(
       dataExercise.name &&
       dataExercise.description &&
-      isVideoValid &&
       dataExercise.benefits &&
       dataExercise.tags
     );
