@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export async function login(userData: ILoginProps): Promise<ILoginResponse> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
