@@ -6,7 +6,6 @@ import SearchInput from "@/components/search/SearchInput";
 import TitleH1 from "@/components/titles/TitleH1";
 import {
   createExercise,
-  deleteExerciseById,
   getExerciseById,
   getExercisesDB,
   modifyExerciseById,
@@ -342,22 +341,6 @@ const ExercisePage = () => {
     );
 
     return hasErrors || hasEmptyFields || isSubmitting;
-  };
-
-
-  console.log("Total pages: ",totalPages)
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      console.log("Current pages: ",currentPage);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      console.log("Current pages: ",currentPage);
-    }
   };
 
 

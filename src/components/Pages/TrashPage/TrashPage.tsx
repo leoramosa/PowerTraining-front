@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "sonner";
 import { getExercisesDB, modifyStatusExerciseById } from "@/helpers/exercises-helper";
-import { calculateTotalPages, initialState } from "@/helpers/exercises-utils";
+import { calculateTotalPages } from "@/helpers/exercises-utils";
 import { IExercise } from "@/interface/IExercise";
 import { IUser } from "@/interface/IUsers";
 import Pagination from "@/components/pagination/Pagination";
