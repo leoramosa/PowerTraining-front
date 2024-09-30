@@ -1,5 +1,6 @@
 export interface IFiltersExercises {
     name?: string,
     benefits?: string,
-    tags?: string
+    tags?: string,
+    status?: string
 }

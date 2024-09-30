@@ -77,4 +77,36 @@
       );
     }
   };
+
+
+trashedItems as IEntity[] && trashedItems.map((item) => (
+              <div
+                key={item.id}
+                className="card flex justify-between items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
+                <h3 className="text-xl">Ejemplo</h3>
+                <div className="flex justify-between items-end">
+                  <ButtonOk
+                    type="button"
+                    text="Recover"
+                    onClick={() => handleRecover(item.id)}
+                    icon={
+                      <FontAwesomeIcon icon={faUndo} className="text-white" />
+                    }
+                  />
+                  <ButtonNoOk
+                    type="button"
+                    text="Delete"
+                    onClick={() => handleDelete(item.id)}
+                    icon={
+                      <FontAwesomeIcon icon={faTrash} className="text-white" />
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+           
+          </div>
+
+
 */

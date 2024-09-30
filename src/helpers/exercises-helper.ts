@@ -13,11 +13,12 @@ export async function getExercisesDB(
   console.log(token);
 
   if (filtersBy) {
-    const { name, benefits, tags } = filtersBy;
+    const { name, benefits, tags, status } = filtersBy;
     const queryParams = new URLSearchParams();
     if (name) queryParams.append("name", encodeURIComponent(name));
     if (benefits) queryParams.append("benefits", encodeURIComponent(benefits));
     if (tags) queryParams.append("tags", encodeURIComponent(tags));
+    if (status) queryParams.append("status", encodeURIComponent(status));
     url += `&${queryParams.toString()}&limit=${limit}&page=${page}`;
   } else {
     url += `limit=${limit}&page=${page}`;
@@ -59,7 +60,16 @@ export async function getExerciseById(
     throw new Error("Exercise ID is required");
   }
   try {
-    const res = await fetch(`${APIURL}/exercises/${id}`);
+    const token = localStorage.getItem("authToken");
+    console.log(token);
+    const res = await fetch(`${APIURL}/exercises/${id}`, {
+      method: "GET",
+      cache: "no-cache",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
     if (!res.ok) {
       throw new Error(`Failed to fetch exercise. Status: ${res.status}`);
     }
@@ -76,16 +86,19 @@ export async function getExerciseById(
 }
 
 export async function createExercise(exercise: IExercise): Promise<IExercise> {
-  //token: string
   try {
     console.log(exercise);
+    const token = localStorage.getItem("authToken");
+    console.log(token);
 
     // Subir el video si existe
     if (exercise.video) {
+      //console.log(exercise.urlVideoExample)
       const urlVideoExample = await uploadVideo(exercise.video);
       console.log(urlVideoExample);
       if (urlVideoExample) {
         exercise.urlVideoExample = urlVideoExample;
+        console.log(exercise.urlVideoExample)
       }
     }
 
@@ -98,13 +111,15 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
 
     if (exercise.urlVideoExample) {
       exerciseData.urlVideoExample = exercise.urlVideoExample;
+    } else {
+      exerciseData.urlVideoExample = "https://res.cloudinary.com/ddg6xrmwh/image/upload/v1727721408/r4bzkoazd9gewesa2bah.png";
     }
 
     const res = await fetch(`${APIURL}/exercises`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: token // Descomentar si se necesita autenticación
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(exerciseData),
     });
@@ -126,11 +141,17 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
 async function uploadVideo(file: File) {
   const formData = new FormData();
   formData.append("video", file);
+  const token = localStorage.getItem("authToken");
+    console.log(token);
 
   try {
     const response = await fetch(`${APIURL}/files/uploadVideo`, {
       method: "POST",
       body: formData,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!response.ok) {
@@ -150,11 +171,14 @@ export async function deleteExerciseById(id: string | undefined) {
     throw new Error("Exercise ID is required");
   }
   try {
+    const token = localStorage.getItem("authToken");
+    console.log(token);
+
     const res = await fetch(`${APIURL}/exercises/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
-        //Authorization: token
+        Authorization: `Bearer ${token}`,
       },
     });
     if (!res.ok) {
@@ -171,12 +195,17 @@ export async function modifyExerciseById(
   exercise: IExercise
 ): Promise<IExercise> {
   //token: string
-
+  const token = localStorage.getItem("authToken");
+  console.log(token);
+  let uploadOk = false;
+  console.log("url imagen anterior ",exercise.urlVideoExample )
+  console.log(exercise.video)
   try {
-    if (exercise.video) {
+    if (exercise.video && exercise.video.name && exercise.video.name.endsWith(".mp4")) {
       const urlVideoExample = await uploadVideo(exercise.video);
       console.log(urlVideoExample);
       if (urlVideoExample) {
+        uploadOk = true;
         exercise.urlVideoExample = urlVideoExample;
       }
     }
@@ -185,32 +214,60 @@ export async function modifyExerciseById(
       name: exercise.name,
       description: exercise.description,
       benefits: exercise.benefits,
+      status: exercise.status,
       tags: exercise.tags,
     };
 
-    if (exercise.urlVideoExample) {
+    if (exercise.urlVideoExample && uploadOk) {
+      console.log("nueva url video")
       exerciseData.urlVideoExample = exercise.urlVideoExample;
+      console.log(exerciseData.urlVideoExample)
     }
 
     const res = await fetch(`${APIURL}/exercises/${exercise.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
-        //Authorization: token
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        name: exercise.name,
-        description: exercise.description,
-        urlVideoExample: exercise.urlVideoExample,
-        benefits: exercise.benefits,
-        tags: exercise.tags,
-      }),
+      body: JSON.stringify(exerciseData),
     });
     if (!res.ok) {
       throw new Error(`Failed to modify exercise. Status: ${res.status}`);
     }
     const exerciseRes: IExercise = await res.json();
     return exerciseRes;
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+    throw new Error(errorMessage);
+  }
+}
+
+export async function modifyStatusExerciseById(
+  id: string,
+  status: string,
+): Promise<IExercise> {
+  //token: string
+
+  try {
+    const token = localStorage.getItem("authToken");
+    console.log(token);
+    const res = await fetch(`${APIURL}/exercises/${id}/${status}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id
+      }),
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to modify exercise. Status: ${res.status}`);
+    }
+    const data = await res.json();
+    return data;
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";

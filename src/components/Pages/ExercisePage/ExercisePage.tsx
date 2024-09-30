@@ -10,6 +10,7 @@ import {
   getExerciseById,
   getExercisesDB,
   modifyExerciseById,
+  modifyStatusExerciseById,
 } from "@/helpers/exercises-helper";
 import { IExercise } from "@/interface/IExercise";
 import { useEffect, useState } from "react";
@@ -26,39 +27,11 @@ import ItemInfo from "@/components/ItemInfo/ItemInfo";
 import ModalCreateUpdate from "./components/ModalCreateUpdate";
 import { toast } from "sonner";
 import showGenericAlert from "@/components/alert/alert";
+import { calculateTotalPages, filterInitialValues, initialState, initialStateError } from "@/helpers/exercises-utils";
+import Pagination from "@/components/pagination/Pagination";
 
 const ExercisePage = () => {
   //console.log(data);
-
-  const initialState: IExercise = {
-    id: "",
-    name: "",
-    description: "",
-    urlVideoExample: "",
-    video: new File([], ""),
-    benefits: "",
-    tags: "",
-  };
-
-  const initialStateError: IExerciseFormError = {
-    name: "",
-    description: "",
-    urlVideoExample: "",
-    video: "",
-    benefits: "",
-    tags: "",
-  };
-
-  const calculateTotalPages = (count: number, limit: number) => {
-    const totalPages = Math.ceil(count / limit);
-    return totalPages;
-  };
-
-  const filterInitialValues: IFiltersExercises = {
-    name: "",
-    benefits: "",
-    tags: "",
-  };
 
   const [listExercises, setListExercises] = useState<IExercise[]>([
     initialState,
@@ -70,7 +43,6 @@ const ExercisePage = () => {
   const [searchSelect, setSearchSelect] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
-  const [countReg, setCountReg] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [errors, setErrors] = useState<IExerciseFormError>(initialStateError);
   const [createOrUpdateItem, setCreateOrUpdateItem] = useState<boolean>(false);
@@ -85,17 +57,17 @@ const ExercisePage = () => {
     setDataExercise(exercise);
   };
 
+  const fetchExercises = async () => {
+    try {
+      const response = await getExercisesDB(limit, currentPage, filters);
+      setTotalPages(calculateTotalPages(response.count, limit));
+      setListExercises(response.data);
+    } catch (error) {
+      toast.error("Error fetching exercises, please try again.");
+    }
+  };
+
   useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await getExercisesDB(limit, currentPage, filters);
-        setCountReg(response.count);
-        setTotalPages(calculateTotalPages(countReg, limit));
-        setListExercises(response.data);
-      } catch (error) {
-        toast.error("Error fetching exercises, please try again.");
-      }
-    };
     fetchExercises();
     setLimit(5);
   }, []);
@@ -103,15 +75,6 @@ const ExercisePage = () => {
   useEffect(() => {}, [dataExercise, listExercises, createOrUpdateItem]);
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await getExercisesDB(limit, currentPage, filters);
-        setTotalPages(calculateTotalPages(response.count, limit));
-        setListExercises(response.data);
-      } catch (error) {
-        toast.error("Error fetching exercises, please try again.");
-      }
-    };
     fetchExercises();
   }, [currentPage, limit, filters]);
 
@@ -129,15 +92,7 @@ const ExercisePage = () => {
   };
 
   const handleClickSearch = async () => {
-    /*setCurrentPage(1);
-    if (searchSelect && searchValue) {
-      setFilters({ [searchSelect]: searchValue });
-    } else {
-      setFilters(filterInitialValues);
-    }*/
-    setCurrentPage(1);
-
-    // Mensajes de Sonner con toast.promise
+       setCurrentPage(1);
     toast.promise(
       new Promise(async (resolve, reject) => {
         try {
@@ -339,9 +294,10 @@ const ExercisePage = () => {
             const toastId = toast.loading("Deleting exercise..."); // Muestra el toast de carga
   
             try {
-              await deleteExerciseById(id); // Elimina el ejercicio
-              setCurrentPage(1); // Resetea la página actual
-              const response = await getExercisesDB(limit, currentPage); 
+              await modifyStatusExerciseById(id, "trash")
+              setCurrentPage(1); 
+              console.log(filters)
+              const response = await getExercisesDB(limit, currentPage, filters); 
               setTotalPages(calculateTotalPages(response.count, limit)); 
               setListExercises(response.data); 
   
@@ -363,14 +319,6 @@ const ExercisePage = () => {
         },
       ],
     });
-  };
-
-  //####### Pagination operations
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
   const validateDisabledSubmitButton = () => {
@@ -395,6 +343,23 @@ const ExercisePage = () => {
 
     return hasErrors || hasEmptyFields || isSubmitting;
   };
+
+
+  console.log("Total pages: ",totalPages)
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      console.log("Current pages: ",currentPage);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      console.log("Current pages: ",currentPage);
+    }
+  };
+
 
   return (
     <main className="">
@@ -494,21 +459,11 @@ const ExercisePage = () => {
 
         {/* Pagination */}
         {listExercises.length > 0 && (
-          <div className="flex justify-center items-center mt-4">
-            <ButtonPrimary
-              type="button"
-              text="Previous"
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-            />
-            <span className="font-semibold">Page {currentPage}</span>
-            <ButtonPrimary
-              type="button"
-              text="Next"
-              onClick={handleNextPage}
-              disabled={currentPage == totalPages}
-            />
-          </div>
+          <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          />
         )}
       </ContainerWeb>
     </main>
