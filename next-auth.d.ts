@@ -6,12 +6,16 @@ import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 // Extender el tipo de `Session`
 declare module "next-auth" {
   interface Session {
+    accessToken: string;
     authTokenProvider?: string;
     user: {
       id: any;
       name: string;
       email: string;
       image: string;
+      lastName: string;
+      birthDay: string;
+      password: string;
 
       // Aquí puedes agregar propiedades personalizadas
       backendToken?: string;
