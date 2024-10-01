@@ -85,6 +85,7 @@ const ExercisePage = () => {
       fetchExercises();
       setLimit(5);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {}, [dataExercise, listExercises, createOrUpdateItem]);
@@ -93,6 +94,7 @@ const ExercisePage = () => {
     if (user) {
       fetchExercises();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, limit, filters]);
 
   //####### Handle Search
