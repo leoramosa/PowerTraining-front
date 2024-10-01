@@ -1,6 +1,6 @@
 "use client";
 
-const CheckoutPage = () => {
+const SubscriptionMercado = () => {
   // Producto de prueba
   const cart = [
     {
@@ -31,6 +31,7 @@ const CheckoutPage = () => {
       }
 
       const paymentData = await res.json();
+      console.log("Payment response data:", paymentData); // Log para verificar la respuesta del servidor
 
       if (paymentData.init_point) {
         window.location.href = paymentData.init_point; // Redirige a la página de pago de Mercado Pago
@@ -71,4 +72,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default CheckoutPage;
+export default SubscriptionMercado;

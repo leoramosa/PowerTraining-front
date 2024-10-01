@@ -28,16 +28,19 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session) {
+    if (session && session.user && session.authTokenProvider) {
       const user = {
         id: session.user.id,
-        name: session.user.name,
-        email: session.user.email,
+        name: session.user.name || "",
+        lastName: session.user.lastName || "",
+        email: session.user.email || "",
       };
-      const token = session.accessToken;
+      const token = session.authTokenProvider;
+
+      // Guarda los datos en el store
       login(user, token);
     }
-  });
+  }, [session, login]);
   // const [userName, setUserName] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,10 +68,6 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
 
   const handleGoogleSignIn = () => {
     signIn("google");
-
-    toast.success("Successful login", {
-      position: "top-center",
-    });
   };
 
   return (

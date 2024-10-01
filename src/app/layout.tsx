@@ -6,8 +6,6 @@ import Footer from "@/components/shared/Footer/Footer";
 import { Toaster } from "sonner";
 import { Providers } from "./Providers";
 import SessionHandler from "@/components/Authcomponent/AuthInitializer";
-import AuthInitializer from "@/components/Authcomponent/AuthInitializer";
-import UsersInitializer from "@/components/Authcomponent/UsersInitializer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,8 +35,8 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <SessionHandler />
-          <AuthInitializer />
-          <UsersInitializer />
+          {/* <AuthInitializer />
+          <UsersInitializer /> */}
           <Navbar />
 
           <main className="flex-1">

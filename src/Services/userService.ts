@@ -134,9 +134,13 @@ export async function getUsersDB(
   }
 }
 // return { data, count: data.length };
-export const getUserById = async (id: string) => {
-  const response = await fetch(`${API_URL}/users/${id}`, {
+export const getUserById = async (id: string, token: string) => {
+  const response = await fetch(`${API_URL}/subscriptions/users/${id}`, {
     method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {

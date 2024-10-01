@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUsersStore } from "@/stores/usersStore";
-import ButtonApp from "@/components/buttons/ButttonApp/ButtonApp";
+import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
 import InputFormLogin from "@/components/inputs/InputFormLogin/InputFormLogin";
 
 interface EditUserModalProps {

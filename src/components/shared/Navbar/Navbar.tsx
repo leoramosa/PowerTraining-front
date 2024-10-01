@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Logoweb from "../../../../public/images/logo-white.png";
 import { GoArrowRight } from "react-icons/go";
@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
-import { useUsersStore } from "@/stores/usersStore";
 
 const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -27,9 +26,6 @@ const Navbar: React.FC = () => {
   const router = useRouter();
 
   const user = useAuthStore((state) => state.user);
-
-  // Sincroniza la sesión de NextAuth con el store global
-  // const currentUser = user?.find((user) => user.id === session?.user.id);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm(
@@ -57,7 +53,10 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-black w-full z-40">
-      <div className="container mx-auto px-4 py-4 flex flex-col justify-between items-center text-white lg:px-0 lg:py-4 lg:pr-5 lg:flex-row">
+      <div
+        className="
+       mx-auto px-4 py-4 flex flex-col justify-between items-center text-white  lg:py-4 lg:px-5 lg:flex-row"
+      >
         <div className="flex justify-between w-full lg:w-auto">
           <Link href="/">
             <Image
@@ -220,7 +219,7 @@ const Navbar: React.FC = () => {
                   Sign In
                 </button>
               </Link>
-              <Link href="/dashboard/register" onClick={closeDropdownTwo}>
+              <Link href="/register" onClick={closeDropdownTwo}>
                 <button className="flex justify-center items-center bg-primary text-black py-1 mr-2 px-3 rounded-lg">
                   Sign Up <GoArrowRight className="ml-1 text-md font-bold" />
                 </button>

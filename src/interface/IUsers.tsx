@@ -43,7 +43,6 @@ export interface IAuthState {
 
 export interface IUserState {
   users: IUser[];
-
   updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
 }
 

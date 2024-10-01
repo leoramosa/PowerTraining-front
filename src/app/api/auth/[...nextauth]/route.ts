@@ -21,7 +21,7 @@ const handler = NextAuth({
         console.log("Datos obtenidos de Google:", userData);
 
         // Enviar los datos al backend
-        const res = await fetch("http://localhost:3003/auth/signin-provider", {
+        const res = await fetch("http://localhost:3000/auth/signin-provider", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
