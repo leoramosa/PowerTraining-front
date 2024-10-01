@@ -2,6 +2,7 @@ import React from "react";
 import ButtonActions from "../buttons/ButtonActions/ButtonActions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
 
 interface ExerciseCardProps {
   index: number;
@@ -45,7 +46,7 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         {videoUrl.endsWith(".png") ||
         videoUrl.endsWith(".jpg") ||
         videoUrl.endsWith(".jpeg") ? (
-          <img
+          <Image
             src={videoUrl}
             alt="Imagen alternativa"
             className="rounded-lg w-full h-auto object-cover"
