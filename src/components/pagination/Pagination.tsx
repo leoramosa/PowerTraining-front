@@ -1,61 +1,50 @@
 import React from 'react';
+import ButtonPrimary from '../buttons/ButtonPrimary/ButtonPrimary';
 
 interface PaginationProps {
-  totalItems: number;  
-  itemsPerPage: number; 
+  totalPages: number; 
   currentPage: number;  
-  onPageChange: (page: number) => void; 
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>; 
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  totalItems,
-  itemsPerPage,
   currentPage,
-  onPageChange,
+  setCurrentPage,
+  totalPages
 }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
+  console.log("Total pages: ",totalPages)
+  const handleNextPage = () => {
     if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
+      setCurrentPage(currentPage + 1);
+      console.log(currentPage);
     }
   };
 
-  return (
-    <div className="flex justify-center mt-4">
-      <button
-        onClick={handlePrevious}
-        disabled={currentPage === 1}
-        className="px-4 py-2 bg-gray-400 text-white rounded-l-md hover:bg-primaryLight"
-      >
-        Prev
-      </button>
-      <div className="flex items-center mx-2">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => onPageChange(index + 1)}
-            className={`px-3 py-1 mx-2 rounded-md ${currentPage === index + 1 ? 'bg-gray-400 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
-          >
-            {index + 1}
-          </button>
-        ))}
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      console.log(currentPage);
+    }
+  };
+
+  return <>
+    {/* Pagination */}
+      <div className="flex justify-center items-center mt-4">
+        <ButtonPrimary
+          type="button"
+          text="Previous"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        />
+        <span className="font-semibold">Page {currentPage} of {totalPages}</span>
+        <ButtonPrimary
+          type="button"
+          text="Next"
+          onClick={handleNextPage}
+          disabled={currentPage == totalPages}
+        />
       </div>
-      <button
-        onClick={handleNext}
-        disabled={currentPage === totalPages}
-        className="px-4 py-2 bg-gray-400 text-white rounded-r-md hover:bg-primaryLight"
-      >
-        Next
-      </button>
-    </div>
-  );
+  </>
 };
 
 export default Pagination;

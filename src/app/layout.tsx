@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar/Navbar";
 import Footer from "@/components/shared/Footer/Footer";
 import { Toaster } from "sonner";
+import { Providers } from "./Providers";
+import SessionHandler from "@/components/Authcomponent/AuthInitializer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,18 +30,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar />
-        <main className="flex-1">
-        <Toaster position="top-center" richColors />
-          {children}</main>
-        
-        <Footer />
-        
-        
-      </body>
+      <Providers>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <SessionHandler />
+          {/* <AuthInitializer />
+          <UsersInitializer /> */}
+          <Navbar />
+
+          <main className="flex-1">
+            <Toaster position="top-center" richColors />
+            {children}
+          </main>
+
+          <Footer />
+        </body>
+      </Providers>
     </html>
   );
 }

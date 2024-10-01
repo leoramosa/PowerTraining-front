@@ -1,3 +1,5 @@
+import { IUser } from "@/interface/IUsers";
+
 export const fetchCurrentUser = async (token: string) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
       headers: {
@@ -13,6 +15,6 @@ export const fetchCurrentUser = async (token: string) => {
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
     const userId = decodedToken.id;
   
-    return data.find(user => user.id === userId);
+    return data.find((user:IUser) => user.id === userId);
   };
   

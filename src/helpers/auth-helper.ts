@@ -1,15 +1,18 @@
 import { ILoginProps, ILoginResponse } from "@/interface/ILogin";
 import { toast } from "sonner";
 
-export async function login(userData: ILoginProps): Promise<ILoginResponse> {
+export async function Login(userData: ILoginProps): Promise<ILoginResponse> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
     if (!response.ok) {
       const errorResponse = await response.json();
@@ -25,3 +28,4 @@ export async function login(userData: ILoginProps): Promise<ILoginResponse> {
     throw new Error(error.message || "An unexpected error occurred.");
   }
 }
+

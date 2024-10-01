@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useUserStore } from "@/stores/useAuthStore";
-import ButtonApp from "@/components/buttons/ButttonApp/ButtonApp";
-import { getAllUsers } from "@/Services/userService";
-import InputForm from "@/components/inputs/InputForm/InputForm";
+import { useUsersStore } from "@/stores/usersStore";
+import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
+import InputFormLogin from "@/components/inputs/InputFormLogin/InputFormLogin";
 
 interface EditUserModalProps {
   userId: string;
@@ -10,7 +9,7 @@ interface EditUserModalProps {
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
-  const { users, setUsers, updateUser } = useUserStore();
+  const { users, setUsers, updateUser } = useUsersStore();
   const user = users.find((u) => u.id === userId);
 
   const [name, setName] = useState(user?.name || "");
@@ -26,17 +25,8 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log(
-        "Submitting updated data for user ID:",
-        userId,
-        "with name:",
-        name,
-        "and email:",
-        email
-      );
       await updateUser(userId, { name, email });
-      const updatedUsers = await getAllUsers(); // <-- Recarga los usuarios desde la API
-      setUsers(updatedUsers); // <-- Actualiza el estado con los usuarios recargados
+      setUsers(users.map((u) => (u.id === userId ? { ...u, name, email } : u)));
       onClose();
     } catch (error) {
       console.error("Error updating user:", error);
@@ -49,7 +39,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6">
         <form onSubmit={handleSubmit}>
           <div>
-            <InputForm
+            <InputFormLogin
               label="Name"
               type="text"
               value={name}
@@ -57,11 +47,11 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ userId, onClose }) => {
             />
           </div>
           <div>
-            <InputForm
+            <InputFormLogin
               label="Email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex w-full">

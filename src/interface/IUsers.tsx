@@ -1,3 +1,8 @@
+export interface ILoginProps {
+  email: string;
+  password: string;
+}
+
 export interface IRegisterProps {
   name: string;
   lastName: string;
@@ -31,11 +36,24 @@ export interface userSession {
 
 export interface IAuthState {
   user: IUser | null;
-  login: (user: IUser) => void;
+  token: string | null;
+  login: (user: IUser, token: string) => void;
   logout: () => void;
 }
 
 export interface IUserState {
   users: IUser[];
   updateUser: (id: string, updatedUser: Partial<IUser>) => Promise<void>;
+}
+
+export interface IUserData {
+  data: IUser[];
+  count: number;
+}
+
+export interface IUserFilters {
+  name?: string;
+  lastname?: string;
+  birthday?: string;
+  email?: string;
 }

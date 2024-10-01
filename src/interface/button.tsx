@@ -12,7 +12,7 @@ export interface ButtonActionsProps {
 export interface ButtonAppProps {
   children: ReactNode;
   size?: "sm" | "md" | "lg";
-  variant?: "submit" | "cancel" | "checkout" | "payment" | "success";
+  variant?: "submit" | "cancel" | "checkout" | "payment" | "success" | "login";
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -21,18 +21,18 @@ export interface ButtonAppProps {
 }
 
 export interface ButtonPrimaryProps {
-  disabled?: boolean,
-  className?: string,
-  type?: "button" | "submit" | "reset"; 
+  disabled?: boolean;
+  className?: string;
+  icon?: ReactNode;
+  type?: "button" | "submit" | "reset";
   text: string;
   onClick?: () => void;
 }
 
 export interface ButtonSecondaryProps {
-  disabled?: boolean,
-  className?: string,
-  type?: "button" | "submit" | "reset"; 
+  disabled?: boolean;
+  className?: string;
+  type?: "button" | "submit" | "reset";
   text: string;
   onClick?: () => void;
 }
-

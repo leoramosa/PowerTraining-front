@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Logoweb from "../../../../public/images/logo-white.png";
 import { GoArrowRight } from "react-icons/go";
@@ -15,46 +15,31 @@ import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { useRouter } from "next/navigation";
-import { fetchCurrentUser } from "@/helpers/existingUser-helper";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
+import { useAuthStore } from "@/stores/userAuthStore";
 
 const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      fetchCurrentUser(token)
-        .then((currentUser) => {
-          if (currentUser) {
-            setUserName(currentUser.name);
-          } else {
-            console.error("Usuario no encontrado");
-          }
-        })
-        .catch((error) => {
-          console.error("Error al obtener los datos del usuario:", error);
-        });
-    }
-  }, []);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to logout?");
-  
+    const confirmLogout = window.confirm(
+      "¿Estás seguro de que quieres cerrar sesión?"
+    );
     if (confirmLogout) {
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-      setUserName(null);
-      router.push("/login");
-      
-      // Mostrar un mensaje de éxito con Sonner
-      toast.success("Logout successful!");
+      signOut();
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
+      localStorage.removeItem("authTokenProvider");
+      localStorage.removeItem("authUserProvider");
+
+      toast.success("Sesión cerrada con éxito!");
+      router.push("/");
     }
   };
 
@@ -68,7 +53,10 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-black w-full z-40">
-      <div className="container mx-auto px-4 py-4 flex flex-col justify-between items-center text-white lg:px-0 lg:py-4 lg:pr-5 lg:flex-row">
+      <div
+        className="
+       mx-auto px-4 py-4 flex flex-col justify-between items-center text-white  lg:py-4 lg:px-5 lg:flex-row"
+      >
         <div className="flex justify-between w-full lg:w-auto">
           <Link href="/">
             <Image
@@ -87,7 +75,7 @@ const Navbar: React.FC = () => {
               <FaSearch size={20} />
             </button>
 
-            {isLoggedIn ? (
+            {user ? (
               <div className="relative flex">
                 <button
                   className="text-white ml-4"
@@ -184,14 +172,16 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-4">
-          {isLoggedIn ? (
+          {user ? (
             <div className="relative">
               <button
                 className="flex items-center"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <FaUserCircle size={20} />
-                <span className="ml-2">{userName}</span>
+
+                <span className="ml-2">{user.name}</span>
+
                 <IoIosArrowDown className="ml-1" />
               </button>
               {dropdownOpen && (

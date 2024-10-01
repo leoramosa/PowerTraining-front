@@ -15,10 +15,10 @@ interface ExerciseCardProps {
   isCreateOrUpdate: boolean;
 }
 
-const getYoutubeThumbnail = (url: string) => {
+/*const getYoutubeThumbnail = (url: string) => {
   const videoId = url.split("v=")[1];
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-};
+};*/
 
 const ExerciseCard: React.FC<ExerciseCardProps> = ({
   index,
@@ -29,18 +29,35 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
   tags,
   onClickEdit,
   onClickDelete,
-  isCreateOrUpdate
+  isCreateOrUpdate,
 }) => {
   return (
-    <div className={`flex flex-row rounded-lg w-full p-6 mb-6 transition-all duration-500 ease-in-out transform ${isCreateOrUpdate ? 'bg-white border-2 border-green-200 shadow-2xl' : 'bg-white shadow-lg'}`}>
+    <div
+      className={`card flex flex-row justify-between my-5 items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6
+    ${
+      isCreateOrUpdate
+        ? "bg-white border-2 border-green-200 shadow-2xl"
+        : "bg-white shadow-lg"
+    }`}
+    >
       {/* Vista previa del video */}
       <div className="flex-shrink-0 w-1/3">
-        <iframe
-          className="rounded-lg w-full h-full"
-          src={videoUrl.replace("watch?v=", "embed/")}
-          title={exercise}
-          allowFullScreen
-        />
+        {videoUrl.endsWith(".png") ||
+        videoUrl.endsWith(".jpg") ||
+        videoUrl.endsWith(".jpeg") ? (
+          <img
+            src={videoUrl}
+            alt="Imagen alternativa"
+            className="rounded-lg w-full h-auto object-cover"
+          />
+        ) : (
+          <iframe
+            className="rounded-lg w-full h-full"
+            src={videoUrl.replace("watch?v=", "embed/")}
+            title={exercise}
+            allowFullScreen
+          />
+        )}
       </div>
 
       {/* Contenido de la tarjeta */}
@@ -58,19 +75,22 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         <div className="mt-4">
           <div className="flex flex-wrap">
-            {tags[0]?.replace(/[.,]/g, '').split(" ").map((tag, index: number) => (
-              <span
-                key={index}
-                className="bg-gray-200 text-gray-500 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
+            {tags[0]
+              ?.replace(/[.,]/g, "")
+              .split(" ")
+              .map((tag, index: number) => (
+                <span
+                  key={index}
+                  className="bg-gray-200 text-gray-500 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
           </div>
         </div>
       </div>
       {/* Botones de acciones al final */}
-      <div className="flex-none flex items-end space-x-2 ml-auto">
+      <div className="flex justify-end mt-auto space-x-2">
         <ButtonActions
           status="edit"
           size="md"
@@ -82,7 +102,6 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
           size="md"
           tooltip="Delete exercise"
           onClick={onClickDelete}
-          //handleClickDelete(exerciseId);
         />
       </div>
     </div>
