@@ -29,16 +29,17 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     const confirmLogout = window.confirm(
-      "¿Estás seguro de que quieres cerrar sesión?"
+      "Are you sure you want to logout?"
     );
     if (confirmLogout) {
       signOut();
+      document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       localStorage.removeItem("authToken");
       localStorage.removeItem("authUser");
       localStorage.removeItem("authTokenProvider");
       localStorage.removeItem("authUserProvider");
 
-      toast.success("Sesión cerrada con éxito!");
+      toast.success("Logout successful");
       router.push("/");
     }
   };
