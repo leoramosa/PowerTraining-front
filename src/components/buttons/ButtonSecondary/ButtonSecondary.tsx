@@ -1,4 +1,4 @@
-import { ButtonPrimaryProps, ButtonSecondaryProps } from "@/interface/button";
+import { ButtonSecondaryProps } from "@/interface/button";
 import React from "react";
 
 const ButtonSecondary: React.FC<ButtonSecondaryProps> = ({ text, onClick, type, disabled }) => {

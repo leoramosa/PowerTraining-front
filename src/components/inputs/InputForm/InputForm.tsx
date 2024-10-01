@@ -13,7 +13,8 @@ const InputForm: React.FC<InputFormProps> = ({
   error,
   readOnly = false,
 }) => {
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange && e.target.files) {
       const file = e.target.files[0];
       const name = e.target.name;

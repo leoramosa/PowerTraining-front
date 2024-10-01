@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from 'next/image';
 import { ILoginProps } from "@/interface/ILogin";
 import { validateLoginForm } from "@/helpers/login-validate";
-import { login } from "@/helpers/auth-helper";
+import { Login } from "@/helpers/auth-helper";
 import { toast } from 'sonner'; // Importa solo 'toast'
 
 const LoginForm: React.FC = () => {
@@ -28,8 +28,10 @@ const LoginForm: React.FC = () => {
     }
 
     try {
-      const response = await login(dataUser);
+      const response = await Login(dataUser);
       if (response) {
+
+        /*
         const { token, user } = response;
         const cleanUser = {
           id: user.id,
@@ -40,7 +42,7 @@ const LoginForm: React.FC = () => {
           orders: user.orders,
         };
         localStorage.setItem("userSession", JSON.stringify({ userData: cleanUser, token }));
-        
+        */
         // Mostrar un mensaje de éxito al iniciar sesión correctamente
         toast.success("Login successful! Redirecting...");
         
