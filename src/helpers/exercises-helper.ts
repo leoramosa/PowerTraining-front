@@ -1,6 +1,6 @@
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 import { IExercise } from "@/interface/IExercise";
-import IExerciseData from "@/interface/IExerciseData";
+import { IExerciseData, IExerciseDataSend } from "@/interface/IExerciseData";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
 
 export async function getExercisesDB(
@@ -102,7 +102,7 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
       }
     }
 
-    const exerciseData: any = {
+    const exerciseData: IExerciseDataSend = {
       name: exercise.name,
       description: exercise.description,
       benefits: exercise.benefits,
@@ -132,6 +132,7 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
 
     const exerciseRes: IExercise = await res.json();
     return exerciseRes;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Error creating exercise:", error);
     throw new Error(error.message || "Error desconocido");
@@ -149,7 +150,7 @@ async function uploadVideo(file: File) {
       method: "POST",
       body: formData,
       headers: {
-        "Content-Type": "application/json",
+        //"Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
@@ -210,7 +211,7 @@ export async function modifyExerciseById(
       }
     }
 
-    const exerciseData: any = {
+    const exerciseData: IExerciseDataSend = {
       name: exercise.name,
       description: exercise.description,
       benefits: exercise.benefits,

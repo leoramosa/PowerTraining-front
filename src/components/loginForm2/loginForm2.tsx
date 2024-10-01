@@ -3,14 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ILoginProps } from "@/interface/ILogin";
-import { validateLoginForm } from "@/helpers/login-validate";
-import { Login } from "@/helpers/auth-helper";
 import { toast } from "sonner";
 import InputFormLogin from "../inputs/InputFormLogin/InputFormLogin";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { LoginUser } from "@/Services/userService";
+//import { setCookie } from "@/helpers/auth-utils";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -25,7 +24,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
   const router = useRouter();
   const [dataUser, setDataUser] = useState<ILoginProps>(initialState);
   const login = useAuthStore((state) => state.login);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (session && session.user && session.authTokenProvider) {
@@ -36,7 +35,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
         email: session.user.email || "",
       };
       const token = session.authTokenProvider;
-
+      //document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
+      //setCookie("authToken", token, 7);
       // Guarda los datos en el store
       login(user, token);
     }
@@ -53,6 +53,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
     try {
       const response = await LoginUser(dataUser);
       const { token, userData: user } = response;
+      //document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
+      //setCookie("authToken", token, 7);
       login(user, token);
       toast.success("Successful login", {
         position: "top-center",

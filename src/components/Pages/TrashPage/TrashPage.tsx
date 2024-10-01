@@ -5,13 +5,19 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "sonner";
-import { getExercisesDB, modifyStatusExerciseById } from "@/helpers/exercises-helper";
+import {
+  getExercisesDB,
+  modifyStatusExerciseById,
+} from "@/helpers/exercises-helper";
 import { calculateTotalPages } from "@/helpers/exercises-utils";
 import { IExercise } from "@/interface/IExercise";
 import { IUser } from "@/interface/IUsers";
 import Pagination from "@/components/pagination/Pagination";
 import ExerciseCardTrash from "@/components/CardExerciseTrash/CardExerciseTrash";
 import showGenericAlert from "@/components/alert/alert";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/userAuthStore";
+import Spinner from "@/components/Spinner/Spinner";
 
 interface ICategory {
   id: string;
@@ -25,44 +31,60 @@ const TrashPage: React.FC = () => {
   const [limit, setLimit] = useState<number>(5);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const user = useAuthStore((state) => state.user);
+  console.log(user)
+  const router = useRouter();
   const fetchCategories = async () => {
     const exampleCategories: ICategory[] = [
       {
         id: "1",
-        name: "Exercises"
+        name: "Exercises",
       },
       {
         id: "2",
-        name: "Users"
+        name: "Users",
       },
     ];
     setCategories(exampleCategories);
   };
 
   const fetchExercises = async () => {
+    setLoading(true);
     try {
       const filters = {
-        status: "trash"
+        status: "trash",
       };
       const response = await getExercisesDB(limit, currentPage, filters);
       setTotalPages(calculateTotalPages(response.count, limit));
       setTrashedItems(response.data);
-      console.log("list")
+      console.log("list");
     } catch (error) {
       toast.error("Error fetching exercises, please try again.");
+    } finally {
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
-    fetchExercises();
-    setLimit(5);
-    fetchCategories();
+    if (!user) {
+      router.replace("/");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchExercises();
+      setLimit(5);
+      fetchCategories(); 
+    }
   }, []);
 
   useEffect(() => {
-    fetchExercises();
-    fetchCategories();
+    if (user) {
+      fetchExercises();
+      fetchCategories(); 
+    }
   }, [limit, currentPage]);
 
   useEffect(() => {}, [trashedItems]);
@@ -94,35 +116,38 @@ const TrashPage: React.FC = () => {
   const handleRecover = async (id: string) => {
     console.log(`Recovered: ${id}`);
     await showGenericAlert({
-      title: 'Are you sure?',
-      text: 'Do you really want to recover this exercise?',
-      icon: 'info',
+      title: "Are you sure?",
+      text: "Do you really want to recover this exercise?",
+      icon: "info",
       buttons: [
         {
-          text: 'Confirm',
+          text: "Confirm",
           action: async () => {
             const toastId = toast.loading("Recover exercise..."); // Muestra el toast de carga
-  
+
             try {
-              await modifyStatusExerciseById(id, "active")
-              setCurrentPage(1); 
-              fetchExercises(); 
-  
+              await modifyStatusExerciseById(id, "active");
+              setCurrentPage(1);
+              fetchExercises();
+
               // Muestra el toast de éxito
               toast.success("Exercise recovered successfully", { id: toastId });
             } catch (error) {
               // Muestra el toast de error en caso de que falle la eliminación
-              toast.error("An error occurred while recover the exercise. Please try again.", { id: toastId });
+              toast.error(
+                "An error occurred while recover the exercise. Please try again.",
+                { id: toastId }
+              );
             }
           },
-          isConfirm: true, 
+          isConfirm: true,
         },
         {
-          text: 'Cancel',
+          text: "Cancel",
           action: () => {
-            toast.info("Exercise recover cancelled"); 
+            toast.info("Exercise recover cancelled");
           },
-          isConfirm: false, 
+          isConfirm: false,
         },
       ],
     });
@@ -131,35 +156,38 @@ const TrashPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     console.log(`Deleted: ${id}`);
     await showGenericAlert({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this exercise?',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "Do you really want to delete this exercise?",
+      icon: "warning",
       buttons: [
         {
-          text: 'Confirm',
+          text: "Confirm",
           action: async () => {
             const toastId = toast.loading("Deleting exercise..."); // Muestra el toast de carga
-  
+
             try {
-              await modifyStatusExerciseById(id, "inactive")
-              setCurrentPage(1); 
-              fetchExercises(); 
-  
+              await modifyStatusExerciseById(id, "inactive");
+              setCurrentPage(1);
+              fetchExercises();
+
               // Muestra el toast de éxito
               toast.success("Exercise deleting successfully", { id: toastId });
             } catch (error) {
               // Muestra el toast de error en caso de que falle la eliminación
-              toast.error("An error occurred while deleting the exercise. Please try again.", { id: toastId });
+              toast.error(
+                "An error occurred while deleting the exercise. Please try again.",
+                { id: toastId }
+              );
             }
           },
-          isConfirm: true, 
+          isConfirm: true,
         },
         {
-          text: 'Cancel',
+          text: "Cancel",
           action: () => {
-            toast.info("Exercise deleting cancelled"); 
+            toast.info("Exercise deleting cancelled");
           },
-          isConfirm: false, 
+          isConfirm: false,
         },
       ],
     });
@@ -171,7 +199,11 @@ const TrashPage: React.FC = () => {
 
   return (
     <ContainerWeb>
-      <div className="mx-3 min-h-[300px] h-auto">
+      {loading ? ( // Condicionalmente muestra el spinner
+          <div className="flex justify-center items-center min-h-[300px]">
+            <Spinner /> {/* Aquí iría tu spinner */}
+          </div>
+        ) : ( <div className="mx-3 min-h-[300px] h-auto">
         <TitleH1>
           <FontAwesomeIcon icon={faTrash} /> Recycle Bin
         </TitleH1>
@@ -188,7 +220,9 @@ const TrashPage: React.FC = () => {
           value={selectedCategory}
           className="block w-full p-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <option value="" disabled>Select a category</option>
+          <option value="" disabled>
+            Select a category
+          </option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.name}
@@ -198,9 +232,11 @@ const TrashPage: React.FC = () => {
 
         {selectedCategory && trashedItems.length > 0 ? (
           <div className="trashed-items space-y-4">
-            { trashedItems.length > 0 && trashedItems[0].id && <h2 className="text-2xl font-semibold text-left text-gray-800">
-              Items in Trash
-            </h2>}
+            {trashedItems.length > 0 && trashedItems[0].id && (
+              <h2 className="text-2xl font-semibold text-left text-gray-800">
+                Items in Trash
+              </h2>
+            )}
             {trashedItems.map((item, i: number) => {
               if (isExercise(item) && item.description && item.id) {
                 return (
@@ -217,22 +253,25 @@ const TrashPage: React.FC = () => {
                     description={item.description}
                     benefits={item.benefits}
                     tags={[item.tags]}
-                    handleDelete={()=>handleDelete(item.id)}
-                    handleRecover={()=>handleRecover(item.id)}
+                    handleDelete={() => handleDelete(item.id)}
+                    handleRecover={() => handleRecover(item.id)}
                   />
                 );
               }
               return null;
             })}
-            { trashedItems.length > 0 && trashedItems[0].id &&
+            {trashedItems.length > 0 && trashedItems[0].id && (
               <Pagination
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              totalPages={totalPages}
-            /> }
-            { trashedItems.length > 0 && !trashedItems[0].id && <p className="mt-4 text-lg text-gray-600">
-              There are no items in the trash for this category.
-            </p>}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+              />
+            )}
+            {trashedItems.length > 0 && !trashedItems[0].id && (
+              <p className="mt-4 text-lg text-gray-600">
+                There are no items in the trash for this category.
+              </p>
+            )}
           </div>
         ) : (
           selectedCategory && (
@@ -241,8 +280,8 @@ const TrashPage: React.FC = () => {
             </p>
           )
         )}
-      </div>
-    </ContainerWeb>
+      </div> )}
+    </ContainerWeb> 
   );
 };
 

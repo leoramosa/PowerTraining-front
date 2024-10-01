@@ -32,12 +32,22 @@ const ExerciseCardTrash: React.FC<ExerciseCardTrashProps> = ({
     <div className={`card flex flex-row justify-between my-5 items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6`}>
       {/* Vista previa del video */}
       <div className="flex-shrink-0 w-1/3">
-        <iframe
-          className="rounded-lg w-full h-full"
-          src={videoUrl.replace("watch?v=", "embed/")}
-          title={exercise}
-          allowFullScreen
-        />
+      {videoUrl.endsWith(".png") ||
+        videoUrl.endsWith(".jpg") ||
+        videoUrl.endsWith(".jpeg") ? (
+          <img
+            src={videoUrl}
+            alt="Imagen alternativa"
+            className="rounded-lg w-full h-auto object-cover"
+          />
+        ) : (
+          <iframe
+            className="rounded-lg w-full h-full"
+            src={videoUrl.replace("watch?v=", "embed/")}
+            title={exercise}
+            allowFullScreen
+          />
+        )}
       </div>
 
       {/* Contenido de la tarjeta */}
