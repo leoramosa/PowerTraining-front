@@ -12,17 +12,17 @@ const PricingPage = () => {
 
   const plans = [
     {
-      id: "08f8bbe6-b85c-4e10-93a1-35c0946b5c42",
+      id: "e8e7d970-b2c4-4fed-a3b0-587586a08a02",
       name: "Standard",
       price: 35,
     },
     {
-      id: "8452ac34-ff26-4c37-81a7-85de98b357f0",
+      id: "6454a02a-b1ce-4008-a82e-28546551426b",
       name: "Premium",
       price: 55,
     },
     {
-      id: "eb89beb5-fac7-4ede-9f6b-f85a09d8d21b",
+      id: "dd27e834-2d5c-4781-af12-6e8179202895",
       name: "Pro",
       price: 75,
     },
