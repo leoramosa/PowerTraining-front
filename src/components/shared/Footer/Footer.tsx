@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
           <h2 className="text-lg font-bold mb-4">Exercises</h2>
           <ul className="text-gray-300">
             <li>
-              <Link href="/categories/smartphones" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
