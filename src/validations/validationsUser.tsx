@@ -1,4 +1,4 @@
-import { IRegisterProps, TRegisterError } from "@/interface/users";
+import { IRegisterProps, TRegisterError } from "@/interface/IUsers";
 
 export function validateRegisterForm(values: IRegisterProps): TRegisterError {
   const errors: TRegisterError = {};

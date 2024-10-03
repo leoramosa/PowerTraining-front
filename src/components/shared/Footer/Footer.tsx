@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -7,7 +8,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo Section */}
         <div className="flex justify-center md:block">
-          <img src="/images/logo-footer.png" alt="Logo" className="w-48" />
+          <Image src="/images/logo-footer.png" alt="Logo" className="w-48" />
         </div>
 
         <div className="text-center">

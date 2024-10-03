@@ -10,12 +10,12 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile, user }) {
-      if (account.provider === "google") {
+      if (account?.provider === "google") {
         const userData = {
           provider: account.provider,
-          providerId: account.id || profile.sub,
-          email: profile.email,
-          name: profile.name,
+          providerId: account.id || profile?.sub,
+          email: profile?.email,
+          name: profile?.name,
         };
 
         console.log("Datos obtenidos de Google:", userData);

@@ -32,6 +32,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
         id: session.user.id,
         name: session.user.name || "",
         lastName: session.user.lastName || "",
+        birthDay: session.user.birthDay || "",
+        password: session.user.password || "",
         email: session.user.email || "",
       };
       const token = session.authTokenProvider;

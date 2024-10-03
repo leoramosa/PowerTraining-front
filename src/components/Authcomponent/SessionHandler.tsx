@@ -12,6 +12,10 @@ const SessionHandler: React.FC = () => {
         id: session.user.id,
         name: session.user.name,
         email: session.user.email,
+        image: session.user.image,
+        lastName: session.user.lastName,
+        birthDay: session.user.birthDay,
+        password: session.user.password,
       };
       const token = session.accessToken;
       login(user, token);

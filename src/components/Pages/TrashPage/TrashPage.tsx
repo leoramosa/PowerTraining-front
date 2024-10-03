@@ -33,7 +33,7 @@ const TrashPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const user = useAuthStore((state) => state.user);
-  console.log(user)
+  console.log(user);
   const router = useRouter();
   const fetchCategories = async () => {
     const exampleCategories: ICategory[] = [
@@ -62,7 +62,7 @@ const TrashPage: React.FC = () => {
     } catch (error) {
       toast.error("Error fetching exercises, please try again.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -76,15 +76,17 @@ const TrashPage: React.FC = () => {
     if (user) {
       fetchExercises();
       setLimit(5);
-      fetchCategories(); 
+      fetchCategories();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (user) {
       fetchExercises();
-      fetchCategories(); 
+      fetchCategories();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limit, currentPage]);
 
   useEffect(() => {}, [trashedItems]);
@@ -200,88 +202,90 @@ const TrashPage: React.FC = () => {
   return (
     <ContainerWeb>
       {loading ? ( // Condicionalmente muestra el spinner
-          <div className="flex justify-center items-center min-h-[300px]">
-            <Spinner /> {/* Aquí iría tu spinner */}
-          </div>
-        ) : ( <div className="mx-3 min-h-[300px] h-auto">
-        <TitleH1>
-          <FontAwesomeIcon icon={faTrash} /> Recycle Bin
-        </TitleH1>
+        <div className="flex justify-center items-center min-h-[300px]">
+          <Spinner /> {/* Aquí iría tu spinner */}
+        </div>
+      ) : (
+        <div className="mx-3 min-h-[300px] h-auto">
+          <TitleH1>
+            <FontAwesomeIcon icon={faTrash} /> Recycle Bin
+          </TitleH1>
 
-        <label
-          htmlFor="categories"
-          className="block mb-2 text-lg font-semibold"
-        >
-          Select a category
-        </label>
-        <select
-          id="categories"
-          onChange={handleCategoryChange}
-          value={selectedCategory}
-          className="block w-full p-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="" disabled>
+          <label
+            htmlFor="categories"
+            className="block mb-2 text-lg font-semibold"
+          >
             Select a category
-          </option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
+          </label>
+          <select
+            id="categories"
+            onChange={handleCategoryChange}
+            value={selectedCategory}
+            className="block w-full p-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="" disabled>
+              Select a category
             </option>
-          ))}
-        </select>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
 
-        {selectedCategory && trashedItems.length > 0 ? (
-          <div className="trashed-items space-y-4">
-            {trashedItems.length > 0 && trashedItems[0].id && (
-              <h2 className="text-2xl font-semibold text-left text-gray-800">
-                Items in Trash
-              </h2>
-            )}
-            {trashedItems.map((item, i: number) => {
-              if (isExercise(item) && item.description && item.id) {
-                return (
-                  <ExerciseCardTrash
-                    key={item.id}
-                    index={
-                      currentPage === 1
-                        ? i + 1
-                        : (currentPage - 1) * limit + (i + 1)
-                    }
-                    idExercise={item.id}
-                    exercise={item.name}
-                    videoUrl={item.urlVideoExample}
-                    description={item.description}
-                    benefits={item.benefits}
-                    tags={[item.tags]}
-                    handleDelete={() => handleDelete(item.id)}
-                    handleRecover={() => handleRecover(item.id)}
-                  />
-                );
-              }
-              return null;
-            })}
-            {trashedItems.length > 0 && trashedItems[0].id && (
-              <Pagination
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                totalPages={totalPages}
-              />
-            )}
-            {trashedItems.length > 0 && !trashedItems[0].id && (
+          {selectedCategory && trashedItems.length > 0 ? (
+            <div className="trashed-items space-y-4">
+              {trashedItems.length > 0 && trashedItems[0].id && (
+                <h2 className="text-2xl font-semibold text-left text-gray-800">
+                  Items in Trash
+                </h2>
+              )}
+              {trashedItems.map((item, i: number) => {
+                if (isExercise(item) && item.description && item.id) {
+                  return (
+                    <ExerciseCardTrash
+                      key={item.id}
+                      index={
+                        currentPage === 1
+                          ? i + 1
+                          : (currentPage - 1) * limit + (i + 1)
+                      }
+                      idExercise={item.id}
+                      exercise={item.name}
+                      videoUrl={item.urlVideoExample}
+                      description={item.description}
+                      benefits={item.benefits}
+                      tags={[item.tags]}
+                      handleDelete={() => handleDelete(item.id)}
+                      handleRecover={() => handleRecover(item.id)}
+                    />
+                  );
+                }
+                return null;
+              })}
+              {trashedItems.length > 0 && trashedItems[0].id && (
+                <Pagination
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  totalPages={totalPages}
+                />
+              )}
+              {trashedItems.length > 0 && !trashedItems[0].id && (
+                <p className="mt-4 text-lg text-gray-600">
+                  There are no items in the trash for this category.
+                </p>
+              )}
+            </div>
+          ) : (
+            selectedCategory && (
               <p className="mt-4 text-lg text-gray-600">
                 There are no items in the trash for this category.
               </p>
-            )}
-          </div>
-        ) : (
-          selectedCategory && (
-            <p className="mt-4 text-lg text-gray-600">
-              There are no items in the trash for this category.
-            </p>
-          )
-        )}
-      </div> )}
-    </ContainerWeb> 
+            )
+          )}
+        </div>
+      )}
+    </ContainerWeb>
   );
 };
 

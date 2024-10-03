@@ -28,7 +28,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
         onChange={(e) => {
           const newValue = e.target.value;
           setSearchOption(newValue);
-          onChangeSelect(e, newValue);
+          onChangeSelect(e);
         }}
         className="p-3 py-3 rounded-l-md focus:outline-none bg-gray-100 px-4"
       >
@@ -49,10 +49,10 @@ const SearchInput: React.FC<ISearchInputProps> = ({
       <input
         type="text"
         value={valueSearch}
-        onChange={(e) => {
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const newValue = e.target.value;
           setValueSearch(newValue);
-          onChangeInput(e, newValue);
+          onChangeInput(e);
         }}
         placeholder={placeholder}
         className="flex-grow p-3 py-3 focus:outline-none w-80"
