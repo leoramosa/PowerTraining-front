@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/products" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Pricing
               </Link>
             </li>
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/myaccount" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 My Account
               </Link>
             </li>
@@ -52,22 +52,22 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/categories/laptops" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories/headphones" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories/tablets" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
