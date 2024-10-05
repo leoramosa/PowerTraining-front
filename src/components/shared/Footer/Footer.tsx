@@ -8,7 +8,13 @@ const Footer: React.FC = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo Section */}
         <div className="flex justify-center md:block">
-          <Image src="/images/logo-footer.png" alt="Logo" className="w-48" />
+          <Image
+            width={200}
+            height={200}
+            src="/images/logo-footer.png"
+            alt="Logo"
+            className="w-48"
+          />
         </div>
 
         <div className="text-center">
@@ -20,7 +26,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/products" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Pricing
               </Link>
             </li>
@@ -30,7 +36,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/myaccount" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 My Account
               </Link>
             </li>
@@ -41,27 +47,27 @@ const Footer: React.FC = () => {
           <h2 className="text-lg font-bold mb-4">Exercises</h2>
           <ul className="text-gray-300">
             <li>
-              <Link href="/categories/smartphones" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories/laptops" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories/headphones" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories/tablets" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/categories" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 lorem lorem
               </Link>
             </li>
