@@ -1,7 +1,10 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // Importamos datalabels
 import { Doughnut } from 'react-chartjs-2';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import UserProgressModal from '../Modals/ModalUser/ModalUserProgress';
+import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
+
 
 // Registramos los elementos necesarios, incluyendo datalabels
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -23,29 +26,38 @@ const getColorBasedOnProgress = (progress: number) => {
 
 const UserProgress = () => {
   const [viewType, setViewType] = useState<'bars' | 'charts'>('bars');
+  const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
 
   // Función para alternar entre barras y gráficos circulares
   const toggleView = () => {
     setViewType(viewType === 'bars' ? 'charts' : 'bars');
   };
 
+  const handleUserClick = (user: any) => {
+    setSelectedUser(user); // Seleccionamos el usuario para el modal
+  };
+
+  const closeModal = () => {
+    setSelectedUser(null); // Cerrar modal
+  };
+
   return (
     <div className="h-auto bg-white shadow-lg rounded-lg mt-5 p-5">
       <div className="flex justify-between items-center mb-5">
         <p className="text-black text-2xl">Users Goal Progress</p>
-        <button 
+        <ButtonApp 
+          variant="login"
           onClick={toggleView}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
         >
           Switch to {viewType === 'bars' ? 'Charts' : 'Bars'}
-        </button>
+        </ButtonApp>
       </div>
 
       {viewType === 'bars' ? (
         // Vista de barras de progreso (siempre uno debajo del otro)
         <div className="space-y-4">
           {userProgressData.map(user => (
-            <div key={user.id} className="flex items-center justify-between">
+            <div key={user.id} className="flex items-center justify-between cursor-pointer" onClick={() => handleUserClick(user)}>
               <div className="w-1/3">
                 {/* Fijamos un ancho máximo para que los nombres largos no afecten */}
                 <p className="text-lg font-semibold text-black truncate">{user.name}</p>
@@ -101,7 +113,7 @@ const UserProgress = () => {
             };
 
             return (
-              <div key={user.id} className="text-center">
+              <div key={user.id} className="text-center cursor-pointer" onClick={() => handleUserClick(user)}>
                 <Doughnut data={data} options={options} />
                 <p className="text-lg font-semibold text-black mt-2">{user.name}</p>
                 <p className="text-sm text-gray-600">{user.goal}</p>
@@ -109,6 +121,14 @@ const UserProgress = () => {
             );
           })}
         </div>
+      )}
+
+      {/* Modal de progreso individual del usuario */}
+      {selectedUser && (
+        <UserProgressModal
+          user={selectedUser}
+          onClose={closeModal}
+        />
       )}
     </div>
   );
