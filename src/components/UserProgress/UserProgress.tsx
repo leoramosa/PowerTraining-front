@@ -1,13 +1,12 @@
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // Importamos datalabels
-import { Doughnut } from 'react-chartjs-2';
+import { Doughnut, Bar } from 'react-chartjs-2'; // Usamos también "Bar" para el gráfico de barras verticales
 import { useState } from 'react';
 import UserProgressModal from '../Modals/ModalUser/ModalUserProgress';
 import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
 
-
-// Registramos los elementos necesarios, incluyendo datalabels
-ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+// Registramos los elementos necesarios, incluyendo datalabels y el tipo de gráfico de barras
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, ChartDataLabels);
 
 // Datos de progreso mockeados
 const userProgressData = [
@@ -15,6 +14,10 @@ const userProgressData = [
   { id: 2, name: 'Jane Smith', goal: 'Build Muscle', progress: 50 },
   { id: 3, name: 'Alex Johnson', goal: 'Increase Endurance', progress: 20 },
   { id: 4, name: 'Samuel Green', goal: 'Run a Marathon', progress: 85 },
+  { id: 5, name: 'Emily Davis', goal: 'Reduce Stress', progress: 40 },
+  { id: 6, name: 'Michael Brown', goal: 'Improve Balance', progress: 60 },
+  { id: 7, name: 'Jessica Taylor', goal: 'Improve Flexibility', progress: 90 },
+  { id: 8, name: 'Daniel Wilson', goal: 'Improve Balance', progress: 70 },
 ];
 
 // Función para determinar el color según el progreso
@@ -25,12 +28,12 @@ const getColorBasedOnProgress = (progress: number) => {
 };
 
 const UserProgress = () => {
-  const [viewType, setViewType] = useState<'bars' | 'charts'>('bars');
+  const [viewType, setViewType] = useState<'charts' | 'verticalBars'>('charts');
   const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
 
-  // Función para alternar entre barras y gráficos circulares
+  // Función para alternar entre gráficos circulares y barras verticales
   const toggleView = () => {
-    setViewType(viewType === 'bars' ? 'charts' : 'bars');
+    setViewType(viewType === 'charts' ? 'verticalBars' : 'charts');
   };
 
   const handleUserClick = (user: any) => {
@@ -49,34 +52,11 @@ const UserProgress = () => {
           variant="login"
           onClick={toggleView}
         >
-          Switch to {viewType === 'bars' ? 'Charts' : 'Bars'}
+          Switch to {viewType === 'charts' ? 'Bars' : 'Charts'}
         </ButtonApp>
       </div>
 
-      {viewType === 'bars' ? (
-        // Vista de barras de progreso (siempre uno debajo del otro)
-        <div className="space-y-4">
-          {userProgressData.map(user => (
-            <div key={user.id} className="flex items-center justify-between cursor-pointer" onClick={() => handleUserClick(user)}>
-              <div className="w-1/3">
-                {/* Fijamos un ancho máximo para que los nombres largos no afecten */}
-                <p className="text-lg font-semibold text-black truncate">{user.name}</p>
-                <p className="text-sm text-gray-600">{user.goal}</p>
-              </div>
-              <div className="flex-grow bg-gray-200 rounded-full h-4 mx-4">
-                <div
-                  className="h-4 rounded-full"
-                  style={{
-                    width: `${user.progress}%`,
-                    backgroundColor: getColorBasedOnProgress(user.progress),
-                  }}
-                ></div>
-              </div>
-              <p className="text-black font-bold ml-4">{user.progress}%</p>
-            </div>
-          ))}
-        </div>
-      ) : (
+      {viewType === 'charts' ? (
         // Vista de gráficos circulares (máximo 3 por fila)
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {userProgressData.map(user => {
@@ -120,6 +100,53 @@ const UserProgress = () => {
               </div>
             );
           })}
+        </div>
+      ) : (
+        // Vista de barras verticales
+        <div>
+          <Bar
+            data={{
+              labels: userProgressData.map(user => user.name),
+              datasets: [
+                {
+                  label: 'Progress',
+                  data: userProgressData.map(user => user.progress),
+                  backgroundColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
+                  borderColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
+                  borderWidth: 1,
+                },
+              ],
+            }}
+            options={{
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                },
+              },
+              plugins: {
+                datalabels: {
+                  display: true,
+                  formatter: (value: number) => `${value}%`,
+                  color: '#000',
+                  anchor: 'end',
+                  align: 'start',
+                  offset: -10,
+                  font: {
+                    weight: 'bold',
+                    size: 14,
+                  },
+                },
+              },
+              // Evento de clic para detectar cuando se hace clic en una barra
+              onClick: (evt, element) => {
+                if (element.length > 0) {
+                  const index = element[0].index;
+                  handleUserClick(userProgressData[index]); // Abrir el modal con el usuario correspondiente
+                }
+              }
+            }}
+          />
         </div>
       )}
 
