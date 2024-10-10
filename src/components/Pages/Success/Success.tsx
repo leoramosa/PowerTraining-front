@@ -8,7 +8,9 @@ const OrderSuccess = () => {
 
   useEffect(() => {
     const status = searchParams.get("status");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const paymentId = searchParams.get("payment_id");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const merchantOrderId = searchParams.get("merchant_order_id");
 
     if (status) {

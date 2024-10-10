@@ -38,8 +38,8 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ title, description,
         }
 
         const data = await response.json();
-        console.log('Respuesta de la API:', data); // Verifica que la respuesta contenga el preferenceId
-        setPreferenceId(data.id); // Asegúrate de que 'data.preferenceId' es correcto
+        console.log('Respuesta de la API:', data);
+        setPreferenceId(data.id);
       } catch (error) {
         console.error('Error al crear la preferencia de Mercado Pago:', error);
         setError('Hubo un problema al iniciar el proceso de pago. Inténtalo de nuevo más tarde.');
@@ -49,7 +49,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ title, description,
     createPreference();
   }, [title, price]);
 
-  // Coloca el console.log fuera del useEffect para ver si el estado cambia correctamente
+  
   console.log('preferenceId:', preferenceId);
 
   return (

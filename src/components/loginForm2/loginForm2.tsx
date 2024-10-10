@@ -32,6 +32,8 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
         id: session.user.id,
         name: session.user.name || "",
         lastName: session.user.lastName || "",
+        birthDay: session.user.birthDay || "",
+        password: session.user.password || "",
         email: session.user.email || "",
       };
       const token = session.authTokenProvider;
@@ -42,6 +44,16 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
     }
   }, [session, login]);
   // const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const error = searchParams.get('error');
+    
+    if (error === 'auth') {
+      toast.warning("You need to be logged in to access that page.");
+    }
+  }, []);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value });
@@ -56,7 +68,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
       //document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
       //setCookie("authToken", token, 7);
       login(user, token);
-      toast.success("Successful login", {
+      toast.success("Login successful!", {
         position: "top-center",
       });
 

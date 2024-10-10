@@ -10,7 +10,7 @@ const UsersInitializer: React.FC = () => {
     const loadUsers = async () => {
       try {
         const userData = await getUsersDB();
-        setUsers(userData.users);
+        setUsers(userData.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
