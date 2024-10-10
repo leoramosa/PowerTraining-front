@@ -4,12 +4,9 @@ import { useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
-import { FaTrash, FaUsers } from "react-icons/fa";
-import { FaRunning } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
-import { LuMessagesSquare } from "react-icons/lu";
+import { FaUsers } from "react-icons/fa";
 
-const Sidebar = () => {
+const SuperSidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
 
@@ -35,15 +32,15 @@ const Sidebar = () => {
           icon={<MdDashboard />}
           label="Home"
           isOpen={isOpen}
-          href="/dashboard"
-          active={pathname === "/dashboard"}
+          href="/superadmin/dashboard"
+          active={pathname === "/superadmin/dashboard"}
         />
         <SidebarItem
           icon={<MdOutlinePayment />}
           label="Subscription"
-          href="/dashboard/subscription"
+          href="/superadmin/dashboard/subscriptions"
           isOpen={isOpen}
-          active={pathname === "/dashboard/subscription"}
+          active={pathname === "/superadmin/dashboard/subscriptions"}
         />
         <SidebarItem
           icon={<FaUsers />}
@@ -51,35 +48,6 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/users"
           active={pathname === "/dashboard/users"}
-        />
-        <SidebarItem
-          icon={<FaRunning />}
-          label="Exercises"
-          isOpen={isOpen}
-          href="/dashboard/admin/exercise"
-          active={pathname === "/dashboard/admin/exercise"}
-        />
-        <SidebarItem
-          icon={<LuMessagesSquare />}
-          label="Chats"
-          isOpen={isOpen}
-          href="/dashboard/chats"
-          active={pathname === "/dashboard/chats"}
-        />
-        <SidebarItem
-          icon={<FaTrash />}
-          label="Trash"
-          isOpen={isOpen}
-          href="/dashboard/admin/trash"
-          active={pathname === "/dashboard/admin/trash"}
-        />
-
-        <SidebarItem
-          icon={<IoIosSettings />}
-          label="Settings"
-          isOpen={isOpen}
-          href="/dashboard/settings"
-          active={pathname === "/dashboard/settings"}
         />
       </nav>
     </div>
@@ -113,4 +81,4 @@ const SidebarItem = ({
   </Link>
 );
 
-export default Sidebar;
+export default SuperSidebar;

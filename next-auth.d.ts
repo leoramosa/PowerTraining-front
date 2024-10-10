@@ -16,6 +16,7 @@ declare module "next-auth" {
       lastName: string;
       birthDay: string;
       password: string;
+      role: "Admin" | "User";
 
       // Aquí puedes agregar propiedades personalizadas
       backendToken?: string;
