@@ -7,10 +7,12 @@ import axios from "axios";
 const ClientChat: React.FC = () => {
   const { user } = useAuthStore();
   const socket = useSocket();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [adminOnline, setAdminOnline] = useState(false);
   const [adminTyping, setAdminTyping] = useState(false);
@@ -20,7 +22,7 @@ const ClientChat: React.FC = () => {
   const fetchChatHistory = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/chat/history/${user.id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/history/${user?.id}`
       );
       setMessages(response.data);
     } catch (error) {
@@ -37,6 +39,7 @@ const ClientChat: React.FC = () => {
   useEffect(() => {
     if (socket) {
       fetchChatHistory();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
@@ -83,6 +86,7 @@ const ClientChat: React.FC = () => {
     setIsMinimized(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
   };

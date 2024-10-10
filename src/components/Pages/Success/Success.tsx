@@ -6,6 +6,7 @@ import { BsDownload } from "react-icons/bs";
 
 const OrderSuccess = () => {
   const searchParams = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const OrderSuccess = () => {
       <div className="bg-white h-fit rounded-xl relative px-8 pt-14 pb-10 shadow-lg">
         <div className="content-icon absolute top-0 right-0 left-0 translate-y-[-60%] flex justify-center items-center">
           <div className="icon inline-block bg-[#dcfae9] p-3 rounded-full">
-            <div className="inline-block flex bg-success rounded-full p-5">
+            <div className=" flex bg-success rounded-full p-5">
               <FaCheck className="text-white text-3xl" />
             </div>
           </div>

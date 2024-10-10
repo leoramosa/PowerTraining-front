@@ -9,8 +9,10 @@ import TitleH1 from "../../../components/titles/TitleH1";
 const TrainerChat: React.FC = () => {
   const { user } = useAuthStore(); // El admin actual logueado
   const socket = useSocket();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [users, setUsers] = useState<any[]>([]); // Lista real de usuarios desde la API
   const [selectedUser, setSelectedUser] = useState<string | null>(null); // Usuario seleccionado
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -63,6 +65,7 @@ const TrainerChat: React.FC = () => {
       fetchUsers();
       fetchNewMessageStatus();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
         if (message.sender?.id === selectedUser) {
           setMessages((prevMessages) => [...prevMessages, message]);
@@ -83,6 +86,7 @@ const TrainerChat: React.FC = () => {
         socket.off("message");
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, selectedUser]);
 
   useEffect(() => {
@@ -170,7 +174,7 @@ const TrainerChat: React.FC = () => {
         <div className="w-1/4 bg-white rounded-lg mr-5 shadow-lg border-r p-4">
           <div className="text-gray-400 border-b mb-4">Select a chat</div>
           {users
-            .filter((u) => u.id !== user.id) // Filtra para que no muestre al admin
+            .filter((u) => u.id !== user?.id) // Filtra para que no muestre al admin
             .map((user) => (
               <div
                 key={user.id}
