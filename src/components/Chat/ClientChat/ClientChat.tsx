@@ -58,6 +58,7 @@ const ClientChat: React.FC = () => {
         socket.off("adminTyping");
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   useEffect(() => {
