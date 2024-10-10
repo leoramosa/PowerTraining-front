@@ -16,6 +16,7 @@ const SessionHandler: React.FC = () => {
         lastName: session.user.lastName,
         birthDay: session.user.birthDay,
         password: session.user.password,
+        role: session.user.role,
       };
       const token = session.accessToken;
       login(user, token);

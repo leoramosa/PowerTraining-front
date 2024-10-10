@@ -14,9 +14,11 @@ export interface IUser {
   id: string;
   name: string;
   lastName: string;
+  role: "Admin" | "User";
   birthDay: string;
   email: string;
   password: string;
+  hasNewMessage?: boolean;
 }
 
 export type TRegisterError = Partial<IRegisterProps>;

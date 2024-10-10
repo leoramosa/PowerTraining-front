@@ -4,7 +4,7 @@ const AvatarUser: React.FC<IAvatarUserProps> = ({
   name,
   size = "md",
   className,
-  backgroundColor = "bg-primary",
+  backgroundColor = "",
   textColor = "text-white",
 }) => {
   const getInitial = (name: string) => {

@@ -41,7 +41,13 @@ export async function LoginUser(userData: ILoginProps) {
     }
 
     const data = await res.json();
-    console.log("Login response data:", data); // Log para verificar la respuesta del servidor
+    console.log("Login response data:", data); // Aquí deberías recibir el token
+
+    // Guardar el token en localStorage después de un inicio de sesión exitoso
+    if (data.token) {
+      localStorage.setItem("authToken", data.token);
+    }
+
     return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
