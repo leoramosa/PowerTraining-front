@@ -10,6 +10,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { LoginUser } from "@/Services/userService";
 //import { setCookie } from "@/helpers/auth-utils";
+import Link from "next/link";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -47,13 +48,12 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const error = searchParams.get('error');
-    
-    if (error === 'auth') {
+    const error = searchParams.get("error");
+
+    if (error === "auth") {
       toast.warning("You need to be logged in to access that page.");
     }
   }, []);
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value });
@@ -132,6 +132,14 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
           >
             {type === "login" ? "Google" : "Register"}
           </button>
+          <p className="text-center mt-4 text-white">
+            <Link
+              href="/reset-password"
+              className="hover:underline text-primary"
+            >
+              Forgot password?
+            </Link>
+          </p>
         </form>
       </div>
     </div>
