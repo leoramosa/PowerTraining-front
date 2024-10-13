@@ -32,7 +32,7 @@ const UserProgressModal: React.FC<UserProgressModalProps> = ({ user, onClose }) 
         formatter: (value: number) => `${value}%`,
         color: '#fff',
         font: {
-          weight: 'bold',
+          weight: 700,
           size: 16,
         },
       },
