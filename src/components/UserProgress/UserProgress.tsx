@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels'; // Importamos datalabels
 import { Doughnut, Bar } from 'react-chartjs-2'; // Usamos también "Bar" para el gráfico de barras verticales
@@ -8,8 +9,16 @@ import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
 // Registramos los elementos necesarios, incluyendo datalabels y el tipo de gráfico de barras
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, ChartDataLabels);
 
+// Definición del tipo de datos de progreso del usuario
+interface UserProgress {
+  id: number;
+  name: string;
+  goal: string;
+  progress: number;
+}
+
 // Datos de progreso mockeados
-const userProgressData = [
+const userProgressData: UserProgress[] = [
   { id: 1, name: 'John Doe', goal: 'Lose Weight', progress: 75 },
   { id: 2, name: 'Jane Smith', goal: 'Build Muscle', progress: 50 },
   { id: 3, name: 'Alex Johnson', goal: 'Increase Endurance', progress: 20 },
@@ -27,16 +36,16 @@ const getColorBasedOnProgress = (progress: number) => {
   return '#4caf50'; // Verde para >70%
 };
 
-const UserProgress = () => {
+const UserProgress: React.FC = () => {
   const [viewType, setViewType] = useState<'charts' | 'verticalBars'>('charts');
-  const [selectedUser, setSelectedUser] = useState(null); // Estado para el usuario seleccionado
+  const [selectedUser, setSelectedUser] = useState<UserProgress | null>(null); // Estado para el usuario seleccionado
 
   // Función para alternar entre gráficos circulares y barras verticales
   const toggleView = () => {
     setViewType(viewType === 'charts' ? 'verticalBars' : 'charts');
   };
 
-  const handleUserClick = (user: any) => {
+  const handleUserClick = (user: UserProgress) => {
     setSelectedUser(user); // Seleccionamos el usuario para el modal
   };
 
