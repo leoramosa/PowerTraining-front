@@ -94,7 +94,7 @@ const UserProgress: React.FC = () => {
                   formatter: (value: number) => `${value}%`,
                   color: '#fff',
                   font: {
-                    weight: 'bold',
+                    weight: 700,
                     size: 16,
                   },
                 },
@@ -142,7 +142,7 @@ const UserProgress: React.FC = () => {
                   align: 'start',
                   offset: -10,
                   font: {
-                    weight: 'bold',
+                    weight: 700,
                     size: 14,
                   },
                 },
