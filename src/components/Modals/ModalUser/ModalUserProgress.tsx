@@ -42,7 +42,7 @@ const UserProgressModal: React.FC<UserProgressModalProps> = ({ user, onClose }) 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50">
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">{user.name}'s Progress</h2>
+        <h2 className="text-2xl font-bold mb-4">{user.name}`&apos;` Progress</h2>
         <p className="mb-4">Goal: {user.goal}</p>
 
         {/* Gráfico circular */}
