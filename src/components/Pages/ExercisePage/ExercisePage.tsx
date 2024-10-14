@@ -92,7 +92,7 @@ const ExercisePage = () => {
   useEffect(() => {
     if (user) {
       fetchExercises();
-    }
+   }
   }, [currentPage, limit, filters]);
 
   //####### Handle Search
@@ -380,10 +380,10 @@ const ExercisePage = () => {
   return (
     <main className="">
       <ContainerWeb>
-        <div className="ml-3">
+        <div className="">
           <TitleH1>Exercises</TitleH1>
         </div>
-        <div className="flex justify-between mx-3.5 my-4 mt-6">
+        <div className="flex justify-between">
           <SearchInput
             value={searchValue}
             placeholder="Type a word here"
@@ -432,7 +432,7 @@ const ExercisePage = () => {
         )}
 
         {/* List of exercises */}
-        <div className="p-4 min-h-[550px]">
+        <div className="">
           {/* If not exist exercises */}
           {!listExercises ||
             (listExercises.length === 0 && (

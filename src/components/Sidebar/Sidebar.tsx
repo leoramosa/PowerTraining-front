@@ -5,7 +5,7 @@ import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers } from "react-icons/fa";
-import { FaRunning } from "react-icons/fa";
+import { FaRunning, FaDumbbell  } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 
 const Sidebar = () => {
@@ -57,6 +57,13 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/admin/exercise"
           active={pathname === "/dashboard/admin/exercise"}
+        />
+        <SidebarItem
+          icon={<FaDumbbell />}
+          label="Routines"
+          isOpen={isOpen}
+          href="/dashboard/admin/routine"
+          active={pathname === "/dashboard/admin/routine"}
         />
         <SidebarItem
           icon={<FaTrash />}

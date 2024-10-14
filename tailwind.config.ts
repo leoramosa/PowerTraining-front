@@ -23,8 +23,20 @@ const config: Config = {
         warningBg: "#f8c12a33",
         delete: "#f31260",
         deleteBg: "#f3126033",
+        scrollbar: {
+          DEFAULT: '#888',
+          hover: '#555',
+          track: '#f1f1f1',
+        },
       },
     },
+    variants: {
+      scrollbar: ['rounded'],
+    },
+    plugins: [
+      require('tailwind-scrollbar'), 
+      require('@tailwindcss/line-clamp')
+    ],
   },
   plugins: [],
 };

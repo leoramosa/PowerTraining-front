@@ -36,7 +36,8 @@ const showGenericAlert = async ({
     showCancelButton: false, 
     showConfirmButton: false, // Cambia esto a false para ocultar el botón de cancelación
     html: `
-      <div id="alert-buttons" style="display: flex; justify-content: center;">
+      <div id="alert-text" style="margin-bottom: 10px;">${text}</div>
+      <div id="alert-buttons" style="display: flex; justify-content: center; gap: 10px">
         <div id="button-secondary"></div>
         <div id="button-primary"></div>
       </div>

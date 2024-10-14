@@ -183,3 +183,25 @@ export const deleteUser = async (id: string) => {
 
   return response.json();
 };
+
+export const getUserById2 = async (id: string, token: string) => {
+  try {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el usuario");
+    }
+
+    return response.json();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Error creating routine:", error);
+    throw new Error(error.message || "Error desconocido");
+  }
+};

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import ISearchInputProps from "@/interface/ISearchInputProps";
+import ISearchInputProps2 from "@/interface/ISearchInputProps";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-const SearchInput: React.FC<ISearchInputProps> = ({
+const SearchInput: React.FC<ISearchInputProps2> = ({
   value,
   placeholder = "Search...",
   onClick,
@@ -30,7 +30,7 @@ const SearchInput: React.FC<ISearchInputProps> = ({
           setSearchOption(newValue);
           onChangeSelect(e, newValue);
         }}
-        className="p-3 py-3 rounded-l-md focus:outline-none bg-gray-100 px-4"
+        className="p-3 py-3 rounded-l-md focus:outline-none bg-gray-300 px-4"
       >
         <option key={"vacio"} value="" disabled>
           Choose filter

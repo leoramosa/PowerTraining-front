@@ -12,7 +12,7 @@ const Pagination: React.FC<PaginationProps> = ({
   setCurrentPage,
   totalPages
 }) => {
-  console.log("Total pages: ",totalPages)
+  //console.log("Total pages: ",totalPages)
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -36,7 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({
           onClick={handlePrevPage}
           disabled={currentPage === 1}
         />
-        <span className="font-semibold">Page {currentPage} of {totalPages}</span>
+        <span className="font-semibold mx-4">Page {currentPage} of {totalPages}</span>
         <ButtonPrimary
           type="button"
           text="Next"
