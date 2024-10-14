@@ -7,7 +7,7 @@ import {
   faLockOpen,
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { modifyRoutineCompletedById } from "@/helpers/routine-helper";
+//import { modifyRoutineCompletedById } from "@/helpers/routine-helper";
 import { ITrainingDay } from "@/interface/IRoutineClientRequest";
 
 interface RoutineCardProps {
@@ -27,7 +27,6 @@ interface RoutineCardProps {
 const RoutineClientCard: React.FC<RoutineCardProps> = ({
   routine,
   currentDate,
-  completedRoutine,
 }) => {
   const [progress, setProgress] = useState<number>(0);
   const [trainingDays, setTrainingDays] = useState<ITrainingDay[]>([]);

@@ -129,7 +129,7 @@ const CardRoutineBody: React.FC<{
     setLimit(5);
     fetchRoutines();
     //}
-  }, []);
+  }, [fetchRoutines]);
 
   useEffect(() => {}, [listRoutines]);
 
@@ -137,7 +137,7 @@ const CardRoutineBody: React.FC<{
     //if (user) {
     fetchRoutines();
     //}
-  }, [currentPage, limit, refreshRoutines]);
+  }, [currentPage, limit, refreshRoutines, fetchRoutines]);
 
   function extractDayNumber(dayString: string): number {
     const match = dayString.match(/\d+/);
