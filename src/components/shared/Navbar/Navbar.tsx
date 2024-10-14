@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Logoweb from "../../../../public/images/logo-white.png";
 import { GoArrowRight } from "react-icons/go";
@@ -26,19 +26,32 @@ const Navbar: React.FC = () => {
   const router = useRouter();
 
   const user = useAuthStore((state) => state.user);
+  console.log("Datos del usuario:", user);
+
+  useEffect(() => {
+    if (user) {
+      console.log("Datos del usuario:", user);
+      if (user.role === "User") {
+        console.log("El usuario tiene el rol User");
+      } else {
+        console.log("El usuario  es Admin");
+      }
+    }
+  }, [user]);
 
   const handleLogout = () => {
     const confirmLogout = window.confirm(
-      "¿Estás seguro de que quieres cerrar sesión?"
+      "Are you sure you want to logout?"
     );
     if (confirmLogout) {
       signOut();
+      document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       localStorage.removeItem("authToken");
       localStorage.removeItem("authUser");
       localStorage.removeItem("authTokenProvider");
       localStorage.removeItem("authUserProvider");
 
-      toast.success("Sesión cerrada con éxito!");
+      toast.success("Logout successful");
       router.push("/");
     }
   };

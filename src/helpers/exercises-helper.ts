@@ -1,4 +1,4 @@
-const APIURL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import { IExercise } from "@/interface/IExercise";
 import { IExerciseData, IExerciseDataSend } from "@/interface/IExerciseData";
 import { IFiltersExercises } from "@/interface/IPagDataFilters";
@@ -8,7 +8,7 @@ export async function getExercisesDB(
   page: number = 1,
   filtersBy: IFiltersExercises = {}
 ): Promise<IExerciseData> {
-  let url = `${APIURL}/exercises?`;
+  let url = `${API_URL}/exercises?`;
   const token = localStorage.getItem("authToken");
   console.log(token);
 
@@ -62,7 +62,7 @@ export async function getExerciseById(
   try {
     const token = localStorage.getItem("authToken");
     console.log(token);
-    const res = await fetch(`${APIURL}/exercises/${id}`, {
+    const res = await fetch(`${API_URL}/exercises/${id}`, {
       method: "GET",
       cache: "no-cache",
       headers: {
@@ -98,7 +98,7 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
       console.log(urlVideoExample);
       if (urlVideoExample) {
         exercise.urlVideoExample = urlVideoExample;
-        console.log(exercise.urlVideoExample)
+        console.log(exercise.urlVideoExample);
       }
     }
 
@@ -112,10 +112,11 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
     if (exercise.urlVideoExample) {
       exerciseData.urlVideoExample = exercise.urlVideoExample;
     } else {
-      exerciseData.urlVideoExample = "https://res.cloudinary.com/ddg6xrmwh/image/upload/v1727721408/r4bzkoazd9gewesa2bah.png";
+      exerciseData.urlVideoExample =
+        "https://res.cloudinary.com/ddg6xrmwh/image/upload/v1727721408/r4bzkoazd9gewesa2bah.png";
     }
 
-    const res = await fetch(`${APIURL}/exercises`, {
+    const res = await fetch(`${API_URL}/exercises`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,7 +133,7 @@ export async function createExercise(exercise: IExercise): Promise<IExercise> {
 
     const exerciseRes: IExercise = await res.json();
     return exerciseRes;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Error creating exercise:", error);
     throw new Error(error.message || "Error desconocido");
@@ -143,10 +144,10 @@ async function uploadVideo(file: File) {
   const formData = new FormData();
   formData.append("video", file);
   const token = localStorage.getItem("authToken");
-    console.log(token);
+  console.log(token);
 
   try {
-    const response = await fetch(`${APIURL}/files/uploadVideo`, {
+    const response = await fetch(`${API_URL}/files/uploadVideo`, {
       method: "POST",
       body: formData,
       headers: {
@@ -175,7 +176,7 @@ export async function deleteExerciseById(id: string | undefined) {
     const token = localStorage.getItem("authToken");
     console.log(token);
 
-    const res = await fetch(`${APIURL}/exercises/${id}`, {
+    const res = await fetch(`${API_URL}/exercises/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
@@ -199,10 +200,14 @@ export async function modifyExerciseById(
   const token = localStorage.getItem("authToken");
   console.log(token);
   let uploadOk = false;
-  console.log("url imagen anterior ",exercise.urlVideoExample )
-  console.log(exercise.video)
+  console.log("url imagen anterior ", exercise.urlVideoExample);
+  console.log(exercise.video);
   try {
-    if (exercise.video && exercise.video.name && exercise.video.name.endsWith(".mp4")) {
+    if (
+      exercise.video &&
+      exercise.video.name &&
+      exercise.video.name.endsWith(".mp4")
+    ) {
       const urlVideoExample = await uploadVideo(exercise.video);
       console.log(urlVideoExample);
       if (urlVideoExample) {
@@ -220,12 +225,12 @@ export async function modifyExerciseById(
     };
 
     if (exercise.urlVideoExample && uploadOk) {
-      console.log("nueva url video")
+      console.log("nueva url video");
       exerciseData.urlVideoExample = exercise.urlVideoExample;
-      console.log(exerciseData.urlVideoExample)
+      console.log(exerciseData.urlVideoExample);
     }
 
-    const res = await fetch(`${APIURL}/exercises/${exercise.id}`, {
+    const res = await fetch(`${API_URL}/exercises/${exercise.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -247,21 +252,21 @@ export async function modifyExerciseById(
 
 export async function modifyStatusExerciseById(
   id: string,
-  status: string,
+  status: string
 ): Promise<IExercise> {
   //token: string
 
   try {
     const token = localStorage.getItem("authToken");
     console.log(token);
-    const res = await fetch(`${APIURL}/exercises/${id}/${status}`, {
+    const res = await fetch(`${API_URL}/exercises/${id}/${status}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        id
+        id,
       }),
     });
     if (!res.ok) {

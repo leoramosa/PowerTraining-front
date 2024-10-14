@@ -3,30 +3,39 @@
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useCartStore } from "@/stores/useCart";
 import CardSubscription from "@/components/CardSubscription/CardSubscription";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  durationInMonths: number;
+}
 
 const PricingPage = () => {
+  const [plans, setPlans] = useState<Plan[]>([]);
+
   const [planId, setPlanId] = useState("");
   const user = useAuthStore((state) => state.user);
   const { addToCart, cartItems } = useCartStore();
 
-  const plans = [
-    {
-      id: "08f8bbe6-b85c-4e10-93a1-35c0946b5c42",
-      name: "Standard",
-      price: 35,
-    },
-    {
-      id: "8452ac34-ff26-4c37-81a7-85de98b357f0",
-      name: "Premium",
-      price: 55,
-    },
-    {
-      id: "eb89beb5-fac7-4ede-9f6b-f85a09d8d21b",
-      name: "Pro",
-      price: 75,
-    },
-  ];
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/subscription-plans`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch subscription plans");
+        }
+        const data = await response.json();
+        setPlans(data);
+      } catch (error) {
+        console.error("Error fetching subscription plans:", error);
+      }
+    };
+
+    fetchPlans();
+  }, []);
 
   const handleAddToCart = (planId: string) => {
     const selectedPlan = plans.find((plan) => plan.id === planId);
@@ -34,7 +43,7 @@ const PricingPage = () => {
       addToCart({
         id: selectedPlan.id,
         name: selectedPlan.name,
-        price: selectedPlan.price,
+        price: Number(selectedPlan.price),
         quantity: 1,
       });
     }
@@ -102,7 +111,7 @@ const PricingPage = () => {
                   handleAddToCart(plan.id); // Agregar el plan seleccionado al carrito
                 }}
               />
-              {plan.name} - ${plan.price.toFixed(2)}
+              {plan.name} - ${plan.price}
             </li>
           ))}
         </ul>

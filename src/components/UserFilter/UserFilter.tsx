@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { IUserFilters } from "@/interface/users";
+import { IUserFilters } from "@/interface/IUsers";
 
 interface UserFiltersProps {
   setFilters: (filters: IUserFilters) => void;

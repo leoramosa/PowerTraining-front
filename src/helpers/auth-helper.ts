@@ -23,9 +23,9 @@ export async function Login(userData: ILoginProps): Promise<ILoginResponse> {
     }
 
     return (await response.json()) as ILoginResponse;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     toast.error("An unexpected error occurred. Please try again.");
     throw new Error(error.message || "An unexpected error occurred.");
   }
 }
-

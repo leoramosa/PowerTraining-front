@@ -1,6 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -10,18 +12,18 @@ const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile, user }) {
-      if (account.provider === "google") {
+      if (account?.provider === "google") {
         const userData = {
           provider: account.provider,
-          providerId: account.id || profile.sub,
-          email: profile.email,
-          name: profile.name,
+          providerId: account.id || profile?.sub,
+          email: profile?.email,
+          name: profile?.name,
         };
 
         console.log("Datos obtenidos de Google:", userData);
 
         // Enviar los datos al backend
-        const res = await fetch("http://localhost:3000/auth/signin-provider", {
+        const res = await fetch(`${API_URL}/auth/signin-provider`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),

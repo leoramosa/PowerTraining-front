@@ -7,6 +7,7 @@ import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers } from "react-icons/fa";
 import { FaRunning, FaDumbbell  } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
+import { LuMessagesSquare } from "react-icons/lu";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -59,6 +60,13 @@ const Sidebar = () => {
           active={pathname === "/dashboard/admin/exercise"}
         />
         <SidebarItem
+          icon={<LuMessagesSquare />}
+          label="Chats"
+          isOpen={isOpen}
+          href="/dashboard/chats"
+          active={pathname === "/dashboard/chats"}
+        />
+        <SidebarItem
           icon={<FaDumbbell />}
           label="Routines"
           isOpen={isOpen}
@@ -72,6 +80,7 @@ const Sidebar = () => {
           href="/dashboard/admin/trash"
           active={pathname === "/dashboard/admin/trash"}
         />
+
         <SidebarItem
           icon={<IoIosSettings />}
           label="Settings"

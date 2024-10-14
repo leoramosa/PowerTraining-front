@@ -20,6 +20,7 @@ const FormRegisterForm: React.FC = () => {
   const [formData, setFormData] = useState<IRegisterProps>(initialFormData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState<TRegisterError>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,6 +77,7 @@ const FormRegisterForm: React.FC = () => {
         });
         // const returnUrl = searchParams.get("returnUrl") || "";
         // router.push(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error.message === "Email already registered.") {
           toast.error("This email is already registered. Please use another.");

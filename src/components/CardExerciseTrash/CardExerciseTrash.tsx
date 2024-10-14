@@ -3,11 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faUndo, faRocket } from "@fortawesome/free-solid-svg-icons";
 import ButtonOk from "../buttons/ButtonOk/ButtonOk";
 import ButtonNoOk from "../buttons/ButtonNoOk/ButtonNoOk";
+import Image from "next/image";
 
 interface ExerciseCardTrashProps {
   index: number;
   exercise: string;
-  idExercise: string,
+  idExercise: string;
   videoUrl: string;
   description: string;
   benefits: string;
@@ -15,7 +16,6 @@ interface ExerciseCardTrashProps {
   handleDelete: (id: string) => void;
   handleRecover: (id: string) => void;
 }
-
 
 const ExerciseCardTrash: React.FC<ExerciseCardTrashProps> = ({
   index,
@@ -29,13 +29,18 @@ const ExerciseCardTrash: React.FC<ExerciseCardTrashProps> = ({
   handleRecover,
 }) => {
   return (
-    <div className={`card flex flex-row justify-between my-5 items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6`}>
+    <div
+      className={`card flex flex-row justify-between my-5 items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6`}
+    >
       {/* Vista previa del video */}
       <div className="flex-shrink-0 w-1/3">
-      {videoUrl.endsWith(".png") ||
+        {videoUrl.endsWith(".png") ||
         videoUrl.endsWith(".jpg") ||
         videoUrl.endsWith(".jpeg") ? (
-          <img
+          <Image
+            width={200}
+            height={200}
+            layout="responsive"
             src={videoUrl}
             alt="Imagen alternativa"
             className="rounded-lg w-full h-auto object-cover"
@@ -65,34 +70,33 @@ const ExerciseCardTrash: React.FC<ExerciseCardTrashProps> = ({
 
         <div className="mt-4">
           <div className="flex flex-wrap">
-            {tags[0]?.replace(/[.,]/g, '').split(" ").map((tag, index: number) => (
-              <span
-                key={index}
-                className="bg-gray-200 text-gray-500 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
+            {tags[0]
+              ?.replace(/[.,]/g, "")
+              .split(" ")
+              .map((tag, index: number) => (
+                <span
+                  key={index}
+                  className="bg-gray-200 text-gray-500 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
           </div>
         </div>
       </div>
       {/* Botones de acciones al final */}
       <div className="flex justify-end mt-auto space-x-2">
         <ButtonOk
-            type="button"
-            text="Recover"
-            onClick={() => handleRecover(idExercise)}
-            icon={
-                <FontAwesomeIcon icon={faUndo} className="text-white" />
-            }
+          type="button"
+          text="Recover"
+          onClick={() => handleRecover(idExercise)}
+          icon={<FontAwesomeIcon icon={faUndo} className="text-white" />}
         />
         <ButtonNoOk
-            type="button"
-            text="Delete"
-            onClick={() => handleDelete(idExercise)}
-            icon={
-                <FontAwesomeIcon icon={faTrash} className="text-white" />
-            }
+          type="button"
+          text="Delete"
+          onClick={() => handleDelete(idExercise)}
+          icon={<FontAwesomeIcon icon={faTrash} className="text-white" />}
         />
       </div>
     </div>
