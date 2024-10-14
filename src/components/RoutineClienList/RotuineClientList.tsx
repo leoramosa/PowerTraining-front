@@ -6,8 +6,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faLockOpen,
-  faLock,
-  faCheckCircle,
+  faLock
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
@@ -24,7 +23,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
 }) => {
   const [currentRoutineIndex, setCurrentRoutineIndex] = useState<number>(0);
   const [orderedRoutines, setOrderedRoutines] = useState<IRoutine[]>([]);
-  const [isCompletedRoutine, setCompletedRoutine] = useState<boolean>(false);
+  //const [isCompletedRoutine, setCompletedRoutine] = useState<boolean>(false);
 
   useEffect(() => {
     if (!routines || routines.length === 0) return;
@@ -64,9 +63,9 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
     }
   }, [routines, currentDate]);
 
-  useEffect(()=>{
+  /*useEffect(()=>{
     console.log("--------------------> isCompletedRoutine: ",isCompletedRoutine)
-  },[isCompletedRoutine]);
+  },[isCompletedRoutine]);*/
 
 
   const goNext = () => {

@@ -35,7 +35,7 @@ const SummaryRoutine: React.FC<IRoutineWizard> = (routine) => {
       <div className="border-t pt-4 space-y-4 max-h-64 overflow-y-auto">
         {routine.trainingDays.length === 0 ? (
           <p className="text-gray-500 text-sm">
-            You haven't added any training days yet.
+            You haven&apos;t added any training days yet.
           </p>
         ) : (
           <div className="space-y-6">
@@ -46,7 +46,7 @@ const SummaryRoutine: React.FC<IRoutineWizard> = (routine) => {
                 </h3>
                 {day.exercises.length === 0 ? (
                   <p className="text-gray-500">
-                    You haven't added any exercises for this day.
+                    You haven&apos;t added any exercises for this day.
                   </p>
                 ) : (
                   <ul className="list-disc list-inside space-y-1">

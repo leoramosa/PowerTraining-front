@@ -33,14 +33,14 @@ const RoutineClientCard: React.FC<RoutineCardProps> = ({
   const [trainingDays, setTrainingDays] = useState<ITrainingDay[]>([]);
   const [unlocked, setUnlocked] = useState<boolean>(false);
 
-  const modifyRoutine = async (id?: number) => {
+  /*const modifyRoutine = async (id?: number) => {
     const token = localStorage.getItem("authToken");
     if (token && routine) {
       await modifyRoutineCompletedById(id, token, routine);
       console.log("se modificó la rutina");
       completedRoutine(true, routine.id);
     }
-  };
+  };*/
 
   useEffect(() => {
     if (routine) {

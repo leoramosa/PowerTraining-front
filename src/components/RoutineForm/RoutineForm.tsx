@@ -43,7 +43,7 @@ const RoutineForm: React.FC<IRoutineFormProps> = ({
       name: dataRoutine.userName,
       lastname: dataRoutine.userLastName,
     })
-  }, [routineData]);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

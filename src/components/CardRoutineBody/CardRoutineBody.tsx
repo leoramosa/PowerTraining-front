@@ -49,7 +49,7 @@ const CardRoutineBody: React.FC<{
   const [limit, setLimit] = useState<number>(5);
   //const [createOrUpdateItem, setCreateOrUpdateItem] = useState<boolean>(false);
   const [activeRoutineId, setActiveRoutineId] = useState<number | null>(null);
-  const [dataRoutine, setDataRoutine] = useState<IRoutineItem2>(initialState);
+  //const [dataRoutine, setDataRoutine] = useState<IRoutineItem2>(initialState);
   //const [isSubmitting, setIsSubmitting] = useState(false);
   const [userNames, setUserNames] = useState<{ [key: string]: string }>({});
   const [listRoutines, setListRoutines] = useState<IRoutineItem[]>([
@@ -131,7 +131,7 @@ const CardRoutineBody: React.FC<{
     //}
   }, []);
 
-  useEffect(() => {}, [dataRoutine, listRoutines]);
+  useEffect(() => {}, [listRoutines]);
 
   useEffect(() => {
     //if (user) {
