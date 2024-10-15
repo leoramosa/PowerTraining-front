@@ -211,7 +211,7 @@ const Navbar: React.FC = () => {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
                   <Link
-                    href="/dashboard/admin"
+                    href="/dashboard"
                     className="dropdown-item px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"
                     onClick={closeDropdown}
                   >
@@ -219,7 +219,7 @@ const Navbar: React.FC = () => {
                     Admin Board
                   </Link>
                   <Link
-                    href="/dashboard/admin/exercise"
+                    href="/dashboard/exercise"
                     className="px-4 py-2 hover:bg-gray-100 flex items-center"
                     onClick={closeDropdown}
                   >
