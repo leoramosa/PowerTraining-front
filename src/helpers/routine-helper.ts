@@ -446,7 +446,7 @@ export async function getRoutinesByUserId(
 
 export async function modifyTrainingExerciseById(id: number | undefined, token: string, trainingExercises: ITrainingExercise | undefined) {
   if (!id) {
-    throw new Error("Traininf Id is required");
+    throw new Error("Training id is required");
   }
   if(!trainingExercises){
     throw new Error("Trainig data Id is required");
@@ -466,6 +466,7 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
     if (!res.ok) {
       throw new Error(`Failed to modify this training exercise. Status: ${res.status}`);
     }
+    console.log("pegando al enpoind ok")
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -474,13 +475,11 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
 }
 
 
-export async function modifyRoutineCompletedById(id: number | undefined, token: string, routine: IRoutine | undefined): Promise<IRoutine> {
+export async function modifyRoutineCompletedById(id: number | undefined, token: string): Promise<IRoutine> {
   if (!id) {
-    throw new Error("Trainin Id is required");
+    throw new Error("Routine id is required");
   }
-  if(!routine){
-    throw new Error("Routine data Id is required");
-  }
+  const routine = await getRoutineById(id);
   try {
     const res = await fetch(`${APIURL}/routine/${id}`, {
       method: "PATCH",
