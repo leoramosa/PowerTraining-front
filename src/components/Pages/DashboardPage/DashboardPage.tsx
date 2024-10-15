@@ -12,7 +12,7 @@ const DashboardPage = () => {
   const [exercisesCount, setExercisesCount] = useState(0); // Cambia esto al número real
 
   useEffect(() => {
-    let userCountInterval = setInterval(() => {
+    const userCountInterval = setInterval(() => {
       setUserCount((prevCount) => {
         if (prevCount < 100) {
           return prevCount + 5; 
@@ -24,7 +24,7 @@ const DashboardPage = () => {
     }, 30); 
 
     
-    let routinesCountInterval = setInterval(() => {
+    const routinesCountInterval = setInterval(() => {
       setRoutinesCount((prevCount) => {
         if (prevCount < 82) {
           return prevCount + 5; 
@@ -36,7 +36,7 @@ const DashboardPage = () => {
     }, 30); 
 
    
-    let exercisesCountInterval = setInterval(() => {
+    const exercisesCountInterval = setInterval(() => {
       setExercisesCount((prevCount) => {
         if (prevCount < 25) {
           return prevCount + 5; 
