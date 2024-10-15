@@ -6,7 +6,7 @@ import {
 } from "@/interface/IRoutine";
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
 import { IRoutine, ITrainingExercise } from "@/interface/IRoutineClientRequest";
-import exercises from "./exercises";
+//import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
