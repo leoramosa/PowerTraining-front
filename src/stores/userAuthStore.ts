@@ -19,12 +19,14 @@ export const useAuthStore = create<IAuthState>((set) => ({
   login: (user, token) => {
     if (user && token) {
       document.cookie = `authToken=${token}; path=/`; // Guardar token en cookie
+      localStorage.setItem("authToken", token);
       localStorage.setItem("authUser", JSON.stringify(user)); // Almacenar usuario en localStorage
       set({ user, token });
     }
   },
   logout: () => {
-    document.cookie = 'authToken=; Max-Age=0; path=/'; // Eliminar cookie del token
+    document.cookie = "authToken=; Max-Age=0; path=/"; // Eliminar cookie del token
+    localStorage.removeItem("authToken");
     localStorage.removeItem("authUser"); // Eliminar usuario de localStorage
     set({ user: null, token: null });
   },

@@ -12,7 +12,8 @@ const InputFormLogin: React.FC<InputFormLoginProps> = ({
   readOnly = false,
   labelClassName = "",
   inputClassName = "",
-  required = false, // Nueva propiedad para indicar si el campo es requerido
+  required = false,
+  disabled = false,
 }) => {
   return (
     <div className="mb-3">
@@ -46,6 +47,7 @@ const InputFormLogin: React.FC<InputFormLoginProps> = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
+          disabled={disabled}
           name={name}
           className={`w-full  text-dark   rounded-md border truncate ${
             error ? "border-red-600 border" : "border-gray-300"
