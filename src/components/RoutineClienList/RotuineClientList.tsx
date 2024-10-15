@@ -29,7 +29,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   const maxVisibleCards = 4;
   const [visibleRoutines, setVisibleRoutines] = useState<IRoutine[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
-  const [endIndex, setEndIndex] = useState<number>(0);
+  //const [endIndex, setEndIndex] = useState<number>(0);
 
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
       startIndexR + maxVisibleCards,
       orderedRoutines.length
     );
-    setEndIndex(endIndexR);
+    //setEndIndex(endIndexR);
     setVisibleRoutines(orderedRoutines.slice(startIndexR, endIndexR))
   },[orderedRoutines]);
 
