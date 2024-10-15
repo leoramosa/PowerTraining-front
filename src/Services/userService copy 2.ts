@@ -54,6 +54,47 @@ export async function LoginUser(userData: ILoginProps) {
     throw new Error(error.message || "An unexpected error occurred.");
   }
 }
+// export async function getUsersDB(
+//   limit: number = 5,
+//   page: number = 1,
+//   filtersBy: IUserFilters = {}
+// ): Promise<IUserData> {
+//   let url = `${API_URL}/users?`;
+
+//   if (filtersBy) {
+//     const { name, lastname, email, birthday } = filtersBy;
+//     const queryParams = new URLSearchParams();
+//     if (name) queryParams.append("name", encodeURIComponent(name));
+//     if (lastname) queryParams.append("lastname", encodeURIComponent(lastname));
+//     if (email) queryParams.append("email", encodeURIComponent(email));
+//     if (birthday) queryParams.append("birthday", encodeURIComponent(birthday));
+//     url += `&${queryParams.toString()}&limit=${limit}&page=${page}`;
+//   } else {
+//     url += `limit=${limit}&page=${page}`;
+//   }
+
+//   console.log(url);
+
+//   console.log("Fetching users from:", url); // Log the URL being fetched
+
+//   try {
+//     const res = await fetch(url, { cache: "no-cache" });
+//     if (!res.ok) {
+//       throw new Error(`Error fetching users: ${res.status} ${res.statusText}`);
+//     }
+//     const resData = await res.json();
+//     console.log("Fetched users data:", resData);
+//     return resData;
+//   } catch (error: unknown) {
+//     if (error instanceof Error) {
+//       console.error("Error in getUsersDB:", error);
+//       throw new Error(`Failed to get users: ${error.message}`);
+//     } else {
+//       console.error("Unexpected error:", error);
+//       throw new Error("An unexpected error occurred");
+//     }
+//   }
+// }
 
 export async function getUsersDB(
   limit: number = 5,

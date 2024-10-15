@@ -1,50 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/userAuthStore";
+import EditProfileModal from "@/components/Modals/ModalProfileUser/ModalProfileUser";
 
-const EditUserForm: React.FC = () => {
+const UserProfile = () => {
   const user = useAuthStore((state) => state.user);
-  const updateUser = useAuthStore((state) => state.updateUser);
-  const [name, setName] = useState(user?.name || "");
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (user) {
-      await updateUser({ name });
-      alert("Nombre actualizado con éxito");
+  useEffect(() => {
+    if (!user) {
+      console.error("Datos del usuario no disponibles");
+    } else {
+      console.log("Datos del usuario cargados:", user);
     }
-  };
+  });
+
+  if (!user) return <div>Loading...</div>;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-4 bg-white shadow-md rounded"
-    >
-      <h2 className="text-xl font-bold mb-4">Editar Nombre de Usuario</h2>
-      <div className="mb-4">
-        <label
-          htmlFor="name"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Nombre
-        </label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          required
-        />
-      </div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Perfil de Usuario</h1>
+      <p>
+        <strong>Nombre:</strong> {user.name}
+      </p>
+      <p>
+        <strong>Apellido:</strong> {user.lastName}
+      </p>
+      <p>
+        <strong>Cumpleaños:</strong> {user.birthDay}
+      </p>
       <button
-        type="submit"
-        className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded"
+        className="mt-4 p-2 bg-blue-500 text-white rounded"
+        onClick={() => setModalOpen(true)}
       >
-        Guardar Cambios
+        Editar Perfil
       </button>
-    </form>
+      {isModalOpen && (
+        <EditProfileModal user={user} onClose={() => setModalOpen(false)} />
+      )}
+    </div>
   );
 };
 
-export default EditUserForm;
+export default UserProfile;

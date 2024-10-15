@@ -58,12 +58,12 @@ const OrderSuccess = () => {
         </div>
         <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
           <div className="border border-gray-200 p-3 rounded-lg ">
-            <span className="text-gray-500 text-sm">in numer</span>
-            <p>08978987987897</p>
+            <span className="text-gray-500 text-sm">Payment ID</span>
+            <p>{searchParams.get("payment_id")}</p>
           </div>
           <div className="border border-gray-200 p-3 rounded-lg ">
-            <span className="text-gray-500 text-sm">in numer</span>
-            <p>08978987987897</p>
+            <span className="text-gray-500 text-sm">Order ID</span>
+            <p>{searchParams.get("merchant_order_id")}</p>
           </div>
           <div className="border border-gray-200 p-3 rounded-lg ">
             <span className="text-gray-500 text-sm">in numer</span>

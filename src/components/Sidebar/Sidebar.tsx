@@ -8,10 +8,12 @@ import { FaTrash, FaUsers } from "react-icons/fa";
 import { FaRunning } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { LuMessagesSquare } from "react-icons/lu";
+import { useAuthStore } from "@/stores/userAuthStore";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
+  const { user } = useAuthStore();
 
   return (
     <div
@@ -59,13 +61,16 @@ const Sidebar = () => {
           href="/dashboard/admin/exercise"
           active={pathname === "/dashboard/admin/exercise"}
         />
-        <SidebarItem
-          icon={<LuMessagesSquare />}
-          label="Chats"
-          isOpen={isOpen}
-          href="/dashboard/chats"
-          active={pathname === "/dashboard/chats"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<LuMessagesSquare />}
+            label="Chats"
+            isOpen={isOpen}
+            href="/dashboard/chats"
+            active={pathname === "/dashboard/chats"}
+          />
+        )}
+
         <SidebarItem
           icon={<FaTrash />}
           label="Trash"

@@ -39,6 +39,15 @@ const Navbar: React.FC = () => {
     }
   }, [user]);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     const userElement = document.getElementById("user-web");
+  //     if (userElement) {
+  //       userElement.innerText = user.name;
+  //     }
+  //   }
+  // });
+
   const handleLogout = () => {
     const confirmLogout = window.confirm(
       "¿Estás seguro de que quieres cerrar sesión?"
@@ -192,7 +201,9 @@ const Navbar: React.FC = () => {
               >
                 <FaUserCircle size={20} />
 
-                <span className="ml-2">{user.name}</span>
+                <span id="user-web" className="user-web ml-2">
+                  {user.name}
+                </span>
 
                 <IoIosArrowDown className="ml-1" />
               </button>
