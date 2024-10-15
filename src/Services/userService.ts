@@ -1,3 +1,5 @@
+import { setCookie } from "nookies"; // Utilidad para manejar cookies en Next.js
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import {
   IRegisterProps,
@@ -46,6 +48,10 @@ export async function LoginUser(userData: ILoginProps) {
     // Guardar el token en localStorage después de un inicio de sesión exitoso
     if (data.token) {
       localStorage.setItem("authToken", data.token);
+
+      // Guardar el token en una cookie
+      setCookie(null, "authToken", data.token, { path: "/", maxAge: 86400 });
+      setCookie(null, "userRole", data.role, { path: "/", maxAge: 86400 });
     }
 
     return data;
