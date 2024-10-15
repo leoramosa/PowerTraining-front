@@ -58,8 +58,8 @@ const Sidebar = () => {
           icon={<FaRunning />}
           label="Exercises"
           isOpen={isOpen}
-          href="/dashboard/admin/exercise"
-          active={pathname === "/dashboard/admin/exercise"}
+          href="/dashboard/exercise"
+          active={pathname === "/dashboard/exercise"}
         />
         {user?.role === "Admin" && (
           <SidebarItem
@@ -75,15 +75,15 @@ const Sidebar = () => {
           icon={<FaDumbbell />}
           label="Routines"
           isOpen={isOpen}
-          href="/dashboard/admin/routine"
-          active={pathname === "/dashboard/admin/routine"}
+          href="/dashboard/routine"
+          active={pathname === "/dashboard/routine"}
         />
         <SidebarItem
           icon={<FaTrash />}
           label="Trash"
           isOpen={isOpen}
-          href="/dashboard/admin/trash"
-          active={pathname === "/dashboard/admin/trash"}
+          href="/dashboard/trash"
+          active={pathname === "/dashboard/trash"}
         />
 
         <SidebarItem

@@ -34,3 +34,10 @@ export interface ITrainingExercise {
   rpe: number | null;
   exercise: IExercise;
 }
+
+export interface IPaginatedRoutines2 {
+  totalItems: number; // Total de rutinas
+  totalPages: number; // Total de páginas
+  currentPage: number; // Página actual
+  items: IRoutine[]; // Lista de rutinas
+}

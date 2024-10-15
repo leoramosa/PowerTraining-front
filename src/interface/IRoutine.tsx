@@ -222,3 +222,6 @@ export interface Routine {
     user: IUserPartial; 
     trainingDays: ITrainingDay[]; 
   }
+
+
+  

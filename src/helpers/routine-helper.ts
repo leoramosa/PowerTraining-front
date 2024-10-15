@@ -6,6 +6,7 @@ import {
 } from "@/interface/IRoutine";
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
 import { IRoutine, ITrainingExercise } from "@/interface/IRoutineClientRequest";
+//import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -365,13 +366,16 @@ export async function modifyRoutineById(id: number | undefined, routine: IRoutin
 
 export async function getRoutinesByUserId(
   id: string | undefined
-): Promise<IPaginatedRoutines> {
+): Promise<IRoutine[]> {
   if (!id) {
     throw new Error("User ID is required");
   }
+
   try {
     const token = localStorage.getItem("authToken");
-    console.log(token);
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
 
     const res = await fetch(`${APIURL}/routine/`, {
       method: "GET",
@@ -387,18 +391,46 @@ export async function getRoutinesByUserId(
     }
 
     const routine: IPaginatedRoutines = await res.json();
-    
+
+    // Verificar la estructura de `routine` aquí
+    if (!routine || !Array.isArray(routine.items)) {
+      throw new Error("Unexpected routine structure received");
+    }
+
     // Filtrar las rutinas por el ID de usuario
     const routinesByUser = {
-      ...routine, // Mantener las propiedades de paginación
-      items: routine.items.filter(r => r.user.id === id) // Filtrar por ID de usuario
+      ...routine,
+      items: routine.items.filter(r => r.user.id === id),
     };
 
     if (!routinesByUser.items.length) {
-      throw new Error("No routines found for this user");
+      console.warn("No routines found for this user"); // Cambié esto a un console.warn
     }
 
-    return routinesByUser; // Devolver las rutinas filtradas
+    const routinesByUser2 = routinesByUser.items.map((routine) => ({
+      id: routine.id,
+      name: routine.name,
+      description: routine.description,
+      startDate: routine.startDate,
+      endDate: routine.endDate,
+      completed: routine.completed,
+      trainingDays: routine.trainingDays.map((training) => ({
+        id: training.id,
+        date: training.date,
+        description: training.description,
+        exercises: training.exercises.map((exe) => ({
+          id: exe.id,
+          series: exe.series,
+          repetitions: exe.repetitions,
+          weight: exe.weight,
+          completed: exe.completed,
+          rpe: exe.rpe ?? null,
+          exercise: exe.exercise,
+        })),
+      })),
+    }));
+
+    return routinesByUser2; // Devolver las rutinas filtradas
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -407,13 +439,14 @@ export async function getRoutinesByUserId(
 }
 
 
+
 //######################################################################
 //Client requests
 
 
 export async function modifyTrainingExerciseById(id: number | undefined, token: string, trainingExercises: ITrainingExercise | undefined) {
   if (!id) {
-    throw new Error("Traininf Id is required");
+    throw new Error("Training id is required");
   }
   if(!trainingExercises){
     throw new Error("Trainig data Id is required");
@@ -433,6 +466,7 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
     if (!res.ok) {
       throw new Error(`Failed to modify this training exercise. Status: ${res.status}`);
     }
+    console.log("pegando al enpoind ok")
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -441,13 +475,11 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
 }
 
 
-export async function modifyRoutineCompletedById(id: number | undefined, token: string, routine: IRoutine | undefined): Promise<IRoutine> {
+export async function modifyRoutineCompletedById(id: number | undefined, token: string): Promise<IRoutine> {
   if (!id) {
-    throw new Error("Trainin Id is required");
+    throw new Error("Routine id is required");
   }
-  if(!routine){
-    throw new Error("Routine data Id is required");
-  }
+  const routine = await getRoutineById(id);
   try {
     const res = await fetch(`${APIURL}/routine/${id}`, {
       method: "PATCH",
