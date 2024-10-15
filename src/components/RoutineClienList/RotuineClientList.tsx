@@ -6,11 +6,13 @@ import {
   faArrowLeft,
   faArrowRight,
   faLockOpen,
-  faLock
+  faLock,
+  faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
 import ItemInfo from "../ItemInfo/ItemInfo";
+import { modifyRoutineCompletedById } from "@/helpers/routine-helper";
 
 interface RoutineListProps {
   routines: IRoutine[];
@@ -21,9 +23,14 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   routines,
   currentDate,
 }) => {
+  
   const [currentRoutineIndex, setCurrentRoutineIndex] = useState<number>(0);
   const [orderedRoutines, setOrderedRoutines] = useState<IRoutine[]>([]);
-  //const [isCompletedRoutine, setCompletedRoutine] = useState<boolean>(false);
+  const maxVisibleCards = 4;
+  const [visibleRoutines, setVisibleRoutines] = useState<IRoutine[]>([]);
+  const [startIndex, setStartIndex] = useState<number>(0);
+  const [endIndex, setEndIndex] = useState<number>(0);
+
 
   useEffect(() => {
     if (!routines || routines.length === 0) return;
@@ -63,11 +70,6 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
     }
   }, [routines, currentDate]);
 
-  /*useEffect(()=>{
-    console.log("--------------------> isCompletedRoutine: ",isCompletedRoutine)
-  },[isCompletedRoutine]);*/
-
-
   const goNext = () => {
     setCurrentRoutineIndex((prevIndex) =>
       prevIndex < orderedRoutines.length - 1 ? prevIndex + 1 : prevIndex
@@ -80,21 +82,27 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
     );
   };
 
-  useEffect(()=>{},[orderedRoutines]);
+  useEffect(()=>{
+    const startIndexR = Math.max(0, currentRoutineIndex - 1);
+    setStartIndex(startIndexR);
+    const endIndexR = Math.min(
+      startIndexR + maxVisibleCards,
+      orderedRoutines.length
+    );
+    setEndIndex(endIndexR);
+    setVisibleRoutines(orderedRoutines.slice(startIndexR, endIndexR))
+  },[orderedRoutines]);
 
-  const maxVisibleCards = 3;
-  const startIndex = Math.max(0, currentRoutineIndex - 1);
-  const endIndex = Math.min(
-    startIndex + maxVisibleCards,
-    orderedRoutines.length
-  );
-  const visibleRoutines = orderedRoutines.slice(startIndex, endIndex);
-
-  const completedRoutine = (completed: boolean, idRoutine: number) => {
+  
+ const completedRoutine = async (completed: boolean, idRoutine: number) => {
     console.log("se ejecuta función completedRoutine");
     console.log(completed);
     console.log(idRoutine);
+
+    const token = localStorage.getItem("authToken")
   
+    const newRoutine = await modifyRoutineCompletedById(idRoutine, token ? token : "");
+    console.log(newRoutine)
     // Actualizar el estado de las rutinas
     setOrderedRoutines((prevRoutines) =>
       prevRoutines.map((routine) => {
@@ -107,7 +115,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
         return routine; // Retorna las rutinas sin cambios
       })
     );
-  
+
     if (completed) {
       console.log(`La rutina con ID ${idRoutine} ha sido completada.`);
     } else {
@@ -184,9 +192,9 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
                             )}
                           </span>
                         </h3>
-                        {/*(routine.completed || isCompletedRoutine) && (
+                        {routine.completed && (
                          <FontAwesomeIcon icon={faCheckCircle} className="ml-2 text-green-500" />
-                        )*/}
+                        )}
                       </div>
                       <h4 className="text-md font-semibold text-gray-700 mt-1">
                         {routine.name}

@@ -27,19 +27,11 @@ interface RoutineCardProps {
 const RoutineClientCard: React.FC<RoutineCardProps> = ({
   routine,
   currentDate,
+  completedRoutine
 }) => {
   const [progress, setProgress] = useState<number>(0);
   const [trainingDays, setTrainingDays] = useState<ITrainingDay[]>([]);
   const [unlocked, setUnlocked] = useState<boolean>(false);
-
-  /*const modifyRoutine = async (id?: number) => {
-    const token = localStorage.getItem("authToken");
-    if (token && routine) {
-      await modifyRoutineCompletedById(id, token, routine);
-      console.log("se modificó la rutina");
-      completedRoutine(true, routine.id);
-    }
-  };*/
 
   useEffect(() => {
     if (routine) {
@@ -63,14 +55,17 @@ const RoutineClientCard: React.FC<RoutineCardProps> = ({
 
   useEffect(() => {
     if (!routine) return;
-
     const newProgress = calculateProgress(trainingDays);
-    setProgress(newProgress);
+    if (newProgress !== progress) {
+      setProgress(newProgress);
+      if (newProgress === 100) {
+        completedRoutine(true, routine.id);
+      }
+    }
+  }, [trainingDays, routine]);
 
-    /*if (newProgress === 100) {
-      modifyRoutine(routine.id);
-    }*/
-  }, [trainingDays, routine, progress]);
+  useEffect(()=>{
+  },[progress])
 
 
   if (!routine) {
@@ -82,7 +77,7 @@ const RoutineClientCard: React.FC<RoutineCardProps> = ({
       <div className="flex flex-col md:flex-row justify-between items-center mb-1">
         <h2 className="text-xl font-bold text-gray-800">
           {routine.name}
-          {progress === 100 && (
+          {(progress === 100 || routine.completed)  && (
             <FontAwesomeIcon
               icon={faCheckCircle}
               className="ml-2 text-green-500"
@@ -105,7 +100,7 @@ const RoutineClientCard: React.FC<RoutineCardProps> = ({
 
       {unlocked && (
         <>
-          <ProgressClientBar progress={progress} />
+          <ProgressClientBar progress={routine.completed ? 100 : progress} />
           {trainingDays
             .sort((a, b) => {
               const dayA = parseInt(a.date.split(" ")[1]);
