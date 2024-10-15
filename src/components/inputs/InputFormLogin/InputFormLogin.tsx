@@ -10,15 +10,19 @@ const InputFormLogin: React.FC<InputFormLoginProps> = ({
   label,
   error,
   readOnly = false,
+  labelClassName = "",
+  inputClassName = "",
+  required = false, // Nueva propiedad para indicar si el campo es requerido
 }) => {
   return (
     <div className="mb-3">
       {label && (
         <label
-          className="block text-gray-500 text-semibold text-xs 
-         mb-1"
+          className={`block text-gray-500 text-semibold  mb-1 ${labelClassName}`}
         >
           {label}
+          {required && <span className="text-primary"> *</span>}
+          {/* Asterisco estilizado */}
         </label>
       )}
       {type === "textarea" ? (
@@ -43,9 +47,9 @@ const InputFormLogin: React.FC<InputFormLoginProps> = ({
           placeholder={placeholder}
           readOnly={readOnly}
           name={name}
-          className={`w-full bg-lightGray text-dark text-sm py-2 px-2 rounded-md border truncate ${
+          className={`w-full  text-dark   rounded-md border truncate ${
             error ? "border-red-600 border" : "border-gray-300"
-          } focus:border-primary focus:outline-none transition duration-300`}
+          } focus:border-primary focus:outline-none transition duration-300 ${inputClassName}`}
         />
       )}
       {error && (
