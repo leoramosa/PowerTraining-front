@@ -51,7 +51,6 @@ export async function LoginUser(userData: ILoginProps) {
 
       // Guardar el token en una cookie
       setCookie(null, "authToken", data.token, { path: "/", maxAge: 86400 });
-      setCookie(null, "userRole", data.role, { path: "/", maxAge: 86400 });
     }
 
     return data;

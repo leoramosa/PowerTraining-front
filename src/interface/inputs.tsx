@@ -38,4 +38,5 @@ export interface InputFormLoginProps {
   labelClassName?: string;
   inputClassName?: string;
   required?: boolean;
+  disabled?: boolean;
 }

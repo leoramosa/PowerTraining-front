@@ -5,10 +5,10 @@ import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers } from "react-icons/fa";
-import { FaRunning, FaDumbbell  } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
+import { FaRunning, FaDumbbell } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { useAuthStore } from "@/stores/userAuthStore";
+import { RiProfileLine } from "react-icons/ri";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -39,6 +39,13 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard"
           active={pathname === "/dashboard"}
+        />
+        <SidebarItem
+          icon={<RiProfileLine />}
+          label="Profile"
+          isOpen={isOpen}
+          href="/dashboard/profile"
+          active={pathname === "/dashboard/profile"}
         />
         <SidebarItem
           icon={<MdOutlinePayment />}
@@ -84,14 +91,6 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/trash"
           active={pathname === "/dashboard/trash"}
-        />
-
-        <SidebarItem
-          icon={<IoIosSettings />}
-          label="Settings"
-          isOpen={isOpen}
-          href="/dashboard/settings"
-          active={pathname === "/dashboard/settings"}
         />
       </nav>
     </div>
