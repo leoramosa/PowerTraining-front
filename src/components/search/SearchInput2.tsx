@@ -12,7 +12,7 @@ const SearchInput2: React.FC<ISearchInputProps> = ({
   return (
     <div className="flex space-x-2">
       <select
-        onChange={onChangeSelect}
+        onChange={()=>onChangeSelect}
         className="border border-gray-300 rounded-md p-2"
       >
         {options.map((option) => (
@@ -24,7 +24,7 @@ const SearchInput2: React.FC<ISearchInputProps> = ({
       <input
         type="text"
         value={value}
-        onChange={onChangeInput}
+        onChange={()=>{onChangeInput}}
         placeholder={placeholder}
         className="border border-gray-300 rounded-md p-2 flex-1"
       />
