@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
-import { FaTrash, FaUsers } from "react-icons/fa";
+import { FaTrash, FaUsers, FaFilePdf  } from "react-icons/fa";
 import { FaRunning, FaDumbbell  } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { LuMessagesSquare } from "react-icons/lu";
@@ -77,6 +77,13 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/routine"
           active={pathname === "/dashboard/routine"}
+        />
+        <SidebarItem
+          icon={<FaFilePdf />}
+          label="Reporting"
+          isOpen={isOpen}
+          href="/dashboard/reports"
+          active={pathname === "/dashboard/reports"}
         />
         <SidebarItem
           icon={<FaTrash />}

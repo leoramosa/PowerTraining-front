@@ -15,7 +15,7 @@ const ModalCardRoutine: React.FC<ModalProps> = ({
   return createPortal(
     <>
       <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-lg w-12/12 md:w-1/2 lg:w-1/3 p-6 relative">
+        <div className="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 p-6 relative"> 
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-semibold mb-4">{title}</h1>
             <button
