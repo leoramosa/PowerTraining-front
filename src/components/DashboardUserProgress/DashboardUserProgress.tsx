@@ -1,4 +1,3 @@
-
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import React from 'react';
@@ -36,7 +35,7 @@ const getColorBasedOnProgress = (progress: number) => {
 
 const DashboardUserProgress: React.FC = () => {
   return (
-    <Link href="/dashboard/admin/progress">
+    <Link href="/dashboard/progress">
       <div className="bg-white shadow-lg rounded-lg p-5">
         <p className="text-black text-2xl mb-5">Users Goal Progress</p>
         <Bar
