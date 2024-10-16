@@ -18,11 +18,11 @@ const TrainerChat: React.FC = () => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Obtener lista de usuarios reales desde la API.
+  // Obtener lista de usuarios ordenados desde la API.
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/users`
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/users-ordered-by-last-message`
       );
       setUsers(response.data);
     } catch (error) {
@@ -34,7 +34,7 @@ const TrainerChat: React.FC = () => {
   const fetchNewMessageStatus = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/chat/new-message-status/${user!.id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/chat/new-message-status/${user?.id}`
       );
       const status = response.data;
       setUsers((prevUsers) =>
@@ -65,18 +65,21 @@ const TrainerChat: React.FC = () => {
       fetchUsers();
       fetchNewMessageStatus();
 
+      socket.on("updateUserList", fetchUsers);
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
         if (message.sender?.id === selectedUser) {
           setMessages((prevMessages) => [...prevMessages, message]);
         } else {
-          setUsers((prevUsers) =>
-            prevUsers.map((user) =>
+          setUsers((prevUsers) => {
+            // Actualiza el estado de hasNewMessage
+            return prevUsers.map((user) =>
               user.id === message.sender?.id
                 ? { ...user, hasNewMessage: true }
                 : user
-            )
-          );
+            );
+          });
         }
       });
     }
@@ -84,6 +87,7 @@ const TrainerChat: React.FC = () => {
     return () => {
       if (socket) {
         socket.off("message");
+        socket.off("updateUserList");
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,7 +191,7 @@ const TrainerChat: React.FC = () => {
               <div
                 key={user.id}
                 className={`flex items-center p-2 mb-2 border cursor-pointer rounded-md ${
-                  user.hasNewMessage ? "bg-orange-100" : ""
+                  user.hasNewMessage ? "bg-orange-100 text-black" : ""
                 } ${
                   selectedUser === user.id
                     ? "bg-black text-white"

@@ -4,13 +4,32 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
+import DashboardUserProgress2 from "@/components/DashboardUserProgress/DashboardUserProgress2";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useRouter } from "next/navigation";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { getCountersHome } from "@/helpers/routine-helper";
 
 const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
-  const [routinesCount, setRoutinesCount] = useState(0); 
-  const [exercisesCount, setExercisesCount] = useState(0);
+  const [routinesCount, setRoutinesCount] = useState(0); // Inicialmente 0
+  const [exercisesCount, setExercisesCount] = useState(0); // Cambia esto al número real
+  const { user, token } = useAuthStore(); // Obtenemos el token aquí
+  const router = useRouter();
+
+  const { subscription, fetchSubscription, loading, error } =
+    useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
+
   const [targetCounts, setTargetCounts] = useState<{ users: number, routines: number, exercises: number } | null>(null);
   const valueIncrement: number = 2;
 
@@ -73,64 +92,91 @@ const DashboardPage = () => {
   }, [targetCounts]);
 
   return (
-    <>
-      <div className="min-h-screen pb-20">
-        <div className="bg-[url('/images/backdash.jpg')] py-10 bg-cover bg-top rounded-lg relative shadow-lg">
-          <p className="text-black text-4xl font-bold px-5">Welcome to your dashboard</p>
-          <p className="text-black w-3/4 pt-5 pl-5 text-lg">
-            We are here to help you manage your clients and create personalized
-            routines that maximize their results. Start organizing your
-            workouts, monitor your clients progress, and continue to boost their
-            performance. It is time to take your coaching to the next level!
-          </p>
-        </div>
-
-        <div className="flex pt-5 space-x-3">
-          <Link href="/dashboard/users" className="w-1/3">
-            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
-              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
-                <HiOutlineUsers className="text-4xl text-white" />
-              </div>
-              <div className="text-left pl-5 flex flex-col justify-center items-start">
-                <p className="text-3xl font-bold">Users</p>
-                <p className="text-6xl font-bold">{userCount}</p>
-                <p className="text-sm">(registered)</p>
-              </div>
+    <div className="relative">
+      <div className={`${showBlur ? "backdrop-blur-sm opacity-90" : ""} `}>
+        <div className=" ">
+          <div className="bg-[url('/images/backdash.jpg')]  bg-cover bg-top  relative rounded-lg shadow-lg">
+            <div className="bg-gradient-to-l from-[#f9931e88]  to-[#000000] py-10 rounded-lg">
+              <p className="text-primary text-4xl font-bold px-5 pl-7">
+                Welcome to your dashboard
+              </p>
+              <p className="text-white w-3/4 pt-5 pl-7 text-lg">
+                We are here to help you manage your clients and create
+                personalized routines that maximize their results. Start
+                organizing your workouts, monitor your clients progress, and
+                continue to boost their performance. It is time to take your
+                coaching to the next level!
+              </p>
             </div>
-          </Link>
+          </div>
 
-          <Link href="/dashboard/routine" className="w-1/3">
-            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
-              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
-                <LiaDumbbellSolid className="text-4xl text-white" />
+          <div className="flex pt-5 space-x-3">
+            <Link href="/dashboard/users" className="w-1/3">
+              <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
+                <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                  <HiOutlineUsers className="text-4xl text-primary" />
+                </div>
+                <div className="text-left pl-5 flex flex-col justify-center items-start">
+                  <p className="text-3xl font-bold">Users</p>
+                  <p className="text-5xl font-bold text-primary">{userCount}</p>
+                  <p className="text-sm">(registered)</p>
+                </div>
               </div>
-              <div className="text-left pl-5 flex flex-col justify-center items-start">
-                <p className="text-3xl font-bold">Routines</p>
-                <p className="text-6xl font-bold">{routinesCount}</p>
-                <p className="text-sm">(total)</p>
-              </div>
-            </div>
-          </Link>
+            </Link>
 
-          <Link href="/dashboard/exercise" className="w-1/3">
-            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
-              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
-                <FaDumbbell className="text-4xl text-white" />
+            <Link href="/dashboard/routine" className="w-1/3">
+              <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
+                <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                  <LiaDumbbellSolid className="text-4xl text-primary" />
+                </div>
+                <div className="text-left pl-5 flex flex-col justify-center items-start">
+                  <p className="text-3xl font-bold">Routines</p>
+                  <p className="text-5xl font-bold text-primary">
+                    {routinesCount}
+                  </p>
+                  {/* Muestra la cantidad real de rutinas */}
+                  <p className="text-sm">(total)</p>
+                </div>
               </div>
-              <div className="text-left pl-5 flex flex-col justify-center items-start">
-                <p className="text-3xl font-bold">Exercises</p>
-                <p className="text-6xl font-bold">{exercisesCount}</p>
-                <p className="text-sm">(available)</p>
-              </div>
-            </div>
-          </Link>
-        </div>
+            </Link>
 
-        <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
-          <DashboardUserProgress />
+            <Link href="/dashboard/exercise" className="w-1/3">
+              <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-60">
+                <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                  <FaDumbbell className="text-4xl text-white" />
+                </div>
+                <div className="text-left pl-5 flex flex-col justify-center items-start">
+                  <p className="text-3xl font-bold">Exercises</p>
+                  <p className="text-5xl font-bold text-primary">
+                    {exercisesCount}
+                  </p>
+                  <p className="text-sm">(available)</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
+            <DashboardUserProgress2 />
+          </div>
         </div>
       </div>
-    </>
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-50 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

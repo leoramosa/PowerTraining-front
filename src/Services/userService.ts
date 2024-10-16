@@ -25,6 +25,22 @@ export async function createUser(userData: IRegisterProps) {
 
   return response.json();
 }
+export async function createAdmin(userData: IRegisterProps) {
+  const response = await fetch(`${API_URL}/users/admin`, {
+    cache: "no-cache",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al crear usuario admin");
+  }
+
+  return response.json();
+}
 
 export async function LoginUser(userData: ILoginProps) {
   try {

@@ -36,7 +36,7 @@ export default function RootLayout({
         >
           <SessionHandler />
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow bg-gray-100">
             <Toaster position="top-center" richColors />
             {children}
           </main>

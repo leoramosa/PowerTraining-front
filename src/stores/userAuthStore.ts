@@ -11,6 +11,7 @@ export interface IAuthState {
   setUser: (user: IUser) => void;
   loadAuth: () => void; // Nueva función para cargar autenticación
   updateUser: (updatedUser: IUser) => Promise<void>; // Nueva función para actualizar usuario
+  updateUserSubscription: () => void;
 }
 
 export const useAuthStore = create<IAuthState>((set) => ({
@@ -56,5 +57,16 @@ export const useAuthStore = create<IAuthState>((set) => ({
     } catch (error) {
       console.error("Error updating user:", error);
     }
+  },
+
+  updateUserSubscription: () => {
+    set((state) => {
+      if (state.user) {
+        const updatedUser = { ...state.user, isSubscribed: true };
+        localStorage.setItem("authUser", JSON.stringify(updatedUser)); // Actualizar en localStorage
+        return { user: updatedUser };
+      }
+      return state;
+    });
   },
 }));

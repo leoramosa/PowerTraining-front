@@ -83,7 +83,7 @@ const ReportingPage = () => {
           <Card
             title="Users Report"
             description="Overview of the latest user data, including engagement metrics and demographics."
-            imageUrl="/images/report-1.jpg" 
+            imageUrl="/images/report-1.jpg"
             onClick={() => {
               setSelectedCard("user-report");
               handleExcelDownload("user-report");
@@ -95,7 +95,7 @@ const ReportingPage = () => {
           <Card
             title="Exercises Report"
             description="Detailed analysis of user engagement with exercises and completion statistics."
-            imageUrl="/images/report-2.jpg" 
+            imageUrl="/images/report-2.jpg"
             onClick={() => {
               setSelectedCard("exercise-report");
               handleExcelDownload("exercise-report");
@@ -107,7 +107,7 @@ const ReportingPage = () => {
           <Card
             title="Routines Report"
             description="Insights on weekly training stats, adherence rates, and performance metrics."
-            imageUrl="/images/report-3.jpg" 
+            imageUrl="/images/report-3.jpg"
             onClick={() => {
               setSelectedCard("routine-report");
               handlePdfDownload();
@@ -169,7 +169,6 @@ const Card: React.FC<CardProps> = ({
           Download {nameReport}
         </button>
       </div>
-      
     </div>
   );
 };
