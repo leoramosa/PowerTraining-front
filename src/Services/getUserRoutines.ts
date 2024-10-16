@@ -3,7 +3,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getUserRoutines(userId: string) {
   try {
-    const response = await fetch(`${API_URL}/routine/userid/${userId}`, {
+    const response = await fetch(`${API_URL}/routine/user/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
