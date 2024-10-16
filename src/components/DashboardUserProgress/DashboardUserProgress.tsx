@@ -1,31 +1,15 @@
-
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-// Registramos los elementos necesarios para las barras verticales
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
+import { BarChart, Bar, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 // Definición del tipo de datos de progreso del usuario
 interface UserProgress {
-  id: number;
+  id: string;
   name: string;
   goal: string;
   progress: number;
 }
-
-// Datos de progreso mockeados
-const userProgressData: UserProgress[] = [
-  { id: 1, name: 'John Doe', goal: 'Lose Weight', progress: 75 },
-  { id: 2, name: 'Jane Smith', goal: 'Build Muscle', progress: 50 },
-  { id: 3, name: 'Alex Johnson', goal: 'Increase Endurance', progress: 20 },
-  { id: 4, name: 'Samuel Green', goal: 'Run a Marathon', progress: 85 },
-  { id: 5, name: 'Emily Davis', goal: 'Reduce Stress', progress: 40 },
-  { id: 6, name: 'Michael Brown', goal: 'Improve Balance', progress: 60 },
-  { id: 7, name: 'Jessica Taylor', goal: 'Improve Flexibility', progress: 90 },
-  { id: 8, name: 'Daniel Wilson', goal: 'Improve Balance', progress: 70 },
-];
 
 // Función para determinar el color según el progreso
 const getColorBasedOnProgress = (progress: number) => {
@@ -34,42 +18,97 @@ const getColorBasedOnProgress = (progress: number) => {
   return '#4caf50'; // Verde para >70%
 };
 
+// Función para seleccionar un objetivo (goal) aleatorio
+const getRandomGoal = () => {
+  const goals = ["Lose Weight", "Build Muscle", "Get Shredded"];
+  return goals[Math.floor(Math.random() * goals.length)];
+};
+
 const DashboardUserProgress: React.FC = () => {
+  const [userProgressData, setUserProgressData] = useState<UserProgress[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Función para obtener los usuarios
+  async function getAllUsers(limit = 10): Promise<UserProgress[]> {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?limit=${limit}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error HTTP! status: ${response.status}, message: ${errorText}`);
+      }
+
+      const users = await response.json();
+
+      // Calcula el progreso y el objetivo aleatorio y crea los datos de progreso
+      return users.map((user: any) => ({
+        id: user.id,
+        name: `${user.name} ${user.lastName}`,
+        goal: getRandomGoal(), // Objetivo aleatorio
+        progress: Math.floor(Math.random() * 101), // Progreso aleatorio
+      }));
+    } catch (error: any) {
+      console.error("Error obteniendo los usuarios:", error);
+      throw new Error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const usersData = await getAllUsers(10); // Obtén 10 usuarios
+        setUserProgressData(usersData);
+        setLoading(false);
+      } catch (err: any) {
+        setError(err.message);
+        setLoading(false);
+      }
+    }
+
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <Link href="/dashboard/admin/progress">
+    <Link href="/dashboard/progress">
       <div className="bg-white shadow-lg rounded-lg p-5">
         <p className="text-black text-2xl mb-5">Users Goal Progress</p>
-        <Bar
-          data={{
-            labels: userProgressData.map(user => user.name),
-            datasets: [
-              {
-                label: 'Progress',
-                data: userProgressData.map(user => user.progress),
-                backgroundColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
-                borderColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
-                borderWidth: 1,
-              },
-            ],
-          }}
-          options={{
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 100,
-              },
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: function (tooltipItem) {
-                    return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-                  },
-                },
-              },
-            },
-          }}
-        />
+
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={userProgressData}>
+            <YAxis domain={[0, 100]} />
+            <Tooltip
+              formatter={(value: number) => `${value}%`} // Formato del valor
+              labelFormatter={(name: string) => `User: ${name}`} // Etiqueta para el nombre del usuario
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const user = payload[0].payload;
+                  return (
+                    <div className="bg-white border rounded p-2">
+                      <p>User: {user.name}</p>
+                      <p>Goal: {user.goal}</p>
+                      <p>Progress: {user.progress}%</p>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
+            <Bar dataKey="progress">
+              {userProgressData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getColorBasedOnProgress(entry.progress)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </Link>
   );

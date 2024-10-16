@@ -4,8 +4,10 @@ import { useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
-import { FaRunning, FaDumbbell } from "react-icons/fa";
-import { FaTrash, FaUsers, FaFilePdf } from "react-icons/fa";
+import { FaTrash, FaUsers, FaFilePdf  } from "react-icons/fa";
+import { FaRunning, FaDumbbell, FaRegChartBar  } from "react-icons/fa";
+import { IoIosSettings } from "react-icons/io";
+
 import { LuMessagesSquare } from "react-icons/lu";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { RiProfileLine } from "react-icons/ri";
@@ -84,6 +86,13 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/routine"
           active={pathname === "/dashboard/routine"}
+        />
+        <SidebarItem
+          icon={<FaRegChartBar />}
+          label="Progress"
+          isOpen={isOpen}
+          href="/dashboard/progress"
+          active={pathname === "/dashboard/progress"}
         />
         <SidebarItem
           icon={<FaFilePdf />}
