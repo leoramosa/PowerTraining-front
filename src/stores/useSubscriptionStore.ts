@@ -34,7 +34,8 @@ export const useSubscriptionStore = create<ISubscriptionState>((set) => ({
     try {
       const activeSubscription = await ActiveSubscription(userId, token);
       set({ subscription: activeSubscription, loading: false });
-    } catch (error: Error | any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       set({ subscription: null, loading: false, error: error.message });
     }
   },
