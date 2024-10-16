@@ -437,14 +437,14 @@ const ExercisePage = () => {
         <div className="">
           {/* If not exist exercises */}
           {!listExercises ||
-            (listExercises.length === 0 && (
-              <ItemInfo>
+            (listExercises.length === 0 || listExercises[0].id === "" && (
+              <div className="mt-3"><ItemInfo>
                 <p className="text-gray-500 font-semibold">
-                  No results found. Please try with other filter.
+                  No results found. Please try with other filter or recharge page.
                 </p>
-              </ItemInfo>
+              </ItemInfo></div>
             ))}
-          {listExercises.length > 0 &&
+          {listExercises.length > 0 && listExercises[0].id != "" && 
             listExercises.map((exercise, i) => {
               return (
                 <ExerciseCard
@@ -476,7 +476,7 @@ const ExercisePage = () => {
         </div>
 
         {/* Pagination */}
-        {listExercises.length > 0 && (
+        {listExercises.length > 0 && listExercises[0].id != "" && (
           <Pagination
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}

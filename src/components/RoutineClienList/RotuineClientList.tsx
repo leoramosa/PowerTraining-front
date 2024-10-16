@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import RoutineClientCard from "@/components/RoutineClientCard/RoutineClientCard";
 import TitleH1 from "../titles/TitleH1";
+import { FaFileDownload } from "react-icons/fa";
 import {
   faDumbbell,
   faArrowLeft,
   faArrowRight,
   faLockOpen,
   faLock,
-  faCheckCircle
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
 import ItemInfo from "../ItemInfo/ItemInfo";
 import { modifyRoutineCompletedById } from "@/helpers/routine-helper";
+import { toast } from "sonner";
+const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 interface RoutineListProps {
   routines: IRoutine[];
@@ -23,12 +26,12 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   routines,
   currentDate,
 }) => {
-  
   const [currentRoutineIndex, setCurrentRoutineIndex] = useState<number>(0);
   const [orderedRoutines, setOrderedRoutines] = useState<IRoutine[]>([]);
   const maxVisibleCards = 4;
   const [visibleRoutines, setVisibleRoutines] = useState<IRoutine[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
+  const [disabledPdf, setDisabledPdf] = useState<boolean>(false);
 
   useEffect(() => {
     if (!routines || routines.length === 0) return;
@@ -80,55 +83,116 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
     );
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     const startIndexR = Math.max(0, currentRoutineIndex - 1);
     setStartIndex(startIndexR);
     const endIndexR = Math.min(
       startIndexR + maxVisibleCards,
       orderedRoutines.length
     );
-    setVisibleRoutines(orderedRoutines.slice(startIndexR, endIndexR))
-  },[orderedRoutines]);
+    setVisibleRoutines(orderedRoutines.slice(startIndexR, endIndexR));
+  }, [orderedRoutines]);
 
-  
- const completedRoutine = async (completed: boolean, idRoutine: number) => {
+  const completedRoutine = async (completed: boolean, idRoutine: number) => {
     console.log("se ejecuta función completedRoutine");
     console.log(completed);
     console.log(idRoutine);
 
-    const token = localStorage.getItem("authToken")
-  
-    const newRoutine = await modifyRoutineCompletedById(idRoutine, token ? token : "");
-    console.log(newRoutine)
+    const token = localStorage.getItem("authToken");
+
+    const newRoutine = await modifyRoutineCompletedById(
+      idRoutine,
+      token ? token : ""
+    );
+    console.log(newRoutine);
     setOrderedRoutines((prevRoutines) =>
       prevRoutines.map((routine) => {
         if (routine.id === idRoutine) {
           return {
             ...routine,
-            completed: completed, 
+            completed: completed,
           };
         }
-        return routine; 
+        return routine;
       })
     );
 
     if (completed) {
       console.log(`La rutina con ID ${idRoutine} ha sido completada.`);
     } else {
-      console.log(`La rutina con ID ${idRoutine} ha sido marcada como incompleta.`);
+      console.log(
+        `La rutina con ID ${idRoutine} ha sido marcada como incompleta.`
+      );
     }
   };
-  
+
+  useEffect(()=>{},[disabledPdf])
+
+  const handlePdfDownload = async () => {
+    setDisabledPdf(true);
+    const userLocal = localStorage.getItem("authUser");
+    try {
+      if (userLocal) {
+        const user = JSON.parse(userLocal);
+        const response = await fetch(
+          APIURL + "/pdfreports/userroutine/pdf?email=" + user.email,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/pdf",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error al descargar el archivo");
+        }
+        console.log(APIURL + "/pdfreports/userroutine/pdf?email=" + user.email)
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.setAttribute("download", "user-routine.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success("The report has been downloaded successfully");
+      } else {
+        toast.error(
+          "There was an error downloading the report. Please try again later."
+        );
+      }
+      setDisabledPdf(false);
+    } catch (error) {
+      console.error("Error al descargar el archivo:", error);
+    }
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4">
-      <div className="flex justify-start my-4 mt-6 space-x-2 items-center">
-        <FontAwesomeIcon
-          icon={faDumbbell}
-          size="2x"
-          className="text-primary pb-3"
-        />
-        <TitleH1>My Routines</TitleH1>
+      <div className="flex justify-between my-4 mt-6 space-x-2 items-center">
+        <div>
+          
+          <TitleH1><FontAwesomeIcon
+            icon={faDumbbell}
+            size="1x"
+            className="text-primary"
+          /> My Routines</TitleH1>
+        </div>
+        <div>
+          <button
+            disabled={disabledPdf}
+            onClick={handlePdfDownload}
+            className={` mt-3 ${
+              !disabledPdf
+                ? "hover:bg-primary bg-gray-500"
+                : "hover:none bg-gray-300"
+            }  text-white px-4 py-2 rounded-full flex items-center justify-center mx-auto transition duration-300 ease-in-out`}
+          >
+            <FaFileDownload className="mr-2" />
+            Download pdf
+          </button>
+        </div>
       </div>
       {!routines || routines.length === 0 ? (
         <ItemInfo>
@@ -189,7 +253,10 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
                           </span>
                         </h3>
                         {routine.completed && (
-                         <FontAwesomeIcon icon={faCheckCircle} className="ml-2 text-green-500" />
+                          <FontAwesomeIcon
+                            icon={faCheckCircle}
+                            className="ml-2 text-green-500"
+                          />
                         )}
                       </div>
                       <h4 className="text-md font-semibold text-gray-700 mt-1">

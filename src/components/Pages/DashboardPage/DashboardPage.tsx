@@ -8,6 +8,8 @@ import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardU
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
+//import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
+import { getCountersHome } from "@/helpers/routine-helper";
 
 const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
@@ -27,46 +29,66 @@ const DashboardPage = () => {
   const showBlur =
     user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
+  const [targetCounts, setTargetCounts] = useState<{ users: number, routines: number, exercises: number } | null>(null);
+  const valueIncrement: number = 2;
+
   useEffect(() => {
-    const userCountInterval = setInterval(() => {
-      setUserCount((prevCount) => {
-        if (prevCount < 100) {
-          return prevCount + 5;
-        } else {
-          clearInterval(userCountInterval);
-          return prevCount;
-        }
-      });
-    }, 30);
-
-    const routinesCountInterval = setInterval(() => {
-      setRoutinesCount((prevCount) => {
-        if (prevCount < 82) {
-          return prevCount + 5;
-        } else {
-          clearInterval(routinesCountInterval);
-          return prevCount;
-        }
-      });
-    }, 30);
-
-    const exercisesCountInterval = setInterval(() => {
-      setExercisesCount((prevCount) => {
-        if (prevCount < 25) {
-          return prevCount + 5;
-        } else {
-          clearInterval(exercisesCountInterval);
-          return prevCount;
-        }
-      });
-    }, 30);
-
-    return () => {
-      clearInterval(userCountInterval);
-      clearInterval(routinesCountInterval);
-      clearInterval(exercisesCountInterval);
+    const fetchStatistics = async () => {
+      try {
+        const data = await getCountersHome();
+        console.log(data);
+        setTargetCounts(data);
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+      }
     };
+    fetchStatistics();
   }, []);
+
+  useEffect(() => {
+    if (targetCounts) {
+      const { users, routines, exercises } = targetCounts;
+
+      const userCountInterval = setInterval(() => {
+        setUserCount((prevCount) => {
+          if (prevCount < users) {
+            return prevCount + valueIncrement; 
+          } else {
+            clearInterval(userCountInterval);
+            return prevCount;
+          }
+        });
+      }, 30); 
+
+      const routinesCountInterval = setInterval(() => {
+        setRoutinesCount((prevCount) => {
+          if (prevCount < routines) {
+            return prevCount + valueIncrement; 
+          } else {
+            clearInterval(routinesCountInterval);
+            return prevCount; 
+          }
+        });
+      }, 30); 
+
+      const exercisesCountInterval = setInterval(() => {
+        setExercisesCount((prevCount) => {
+          if (prevCount < exercises) {
+            return prevCount + valueIncrement; 
+          } else {
+            clearInterval(exercisesCountInterval);
+            return prevCount; 
+          }
+        });
+      }, 30); 
+
+      return () => {
+        clearInterval(userCountInterval);
+        clearInterval(routinesCountInterval);
+        clearInterval(exercisesCountInterval);
+      };
+    }
+  }, [targetCounts]);
 
   return (
     <div className="relative">

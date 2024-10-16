@@ -7,6 +7,7 @@ import {
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
 import { ITrainingDayResById, IRoutineResById, IExerciseResById } from "@/interface/IRoutineByUserId";
+import { Statistics } from "@/interface/ICounters";
 //import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -492,6 +493,30 @@ export async function modifyRoutineCompletedById(id: number | undefined, token: 
     }
     const newRoutine = res.json();
     return newRoutine;
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
+    throw new Error(errorMessage);
+  }
+}
+
+export async function getCountersHome(): Promise<Statistics> {
+  try {
+    const token = localStorage.getItem("authToken");
+    console.log(token);
+    const res = await fetch(`${APIURL}/routine/statistics`, {
+      method: "GET",
+      cache: "no-cache",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch routine stattics. Status: ${res.status}`);
+    }
+    const counters: Statistics = await res.json();
+    return counters;
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
