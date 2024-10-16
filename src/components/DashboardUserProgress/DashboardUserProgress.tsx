@@ -1,10 +1,6 @@
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import React from 'react';
 import Link from 'next/link';
-
-// Registramos los elementos necesarios para las barras verticales
-ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 // Definición del tipo de datos de progreso del usuario
 interface UserProgress {
@@ -38,37 +34,24 @@ const DashboardUserProgress: React.FC = () => {
     <Link href="/dashboard/progress">
       <div className="bg-white shadow-lg rounded-lg p-5">
         <p className="text-black text-2xl mb-5">Users Goal Progress</p>
-        <Bar
-          data={{
-            labels: userProgressData.map(user => user.name),
-            datasets: [
-              {
-                label: 'Progress',
-                data: userProgressData.map(user => user.progress),
-                backgroundColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
-                borderColor: userProgressData.map(user => getColorBasedOnProgress(user.progress)),
-                borderWidth: 1,
-              },
-            ],
-          }}
-          options={{
-            scales: {
-              y: {
-                beginAtZero: true,
-                max: 100,
-              },
-            },
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: function (tooltipItem) {
-                    return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-                  },
-                },
-              },
-            },
-          }}
-        />
+
+        {/* Responsive container to ensure it adjusts to the size */}
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={userProgressData}>
+            <XAxis dataKey="name" />
+            <YAxis domain={[0, 100]} />
+            <Tooltip
+              formatter={(value: number) => `${value}%`}
+              labelFormatter={(name: string) => `User: ${name}`}
+            />
+            <Bar dataKey="progress">
+              {/* For each bar, set its color based on the progress */}
+              {userProgressData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getColorBasedOnProgress(entry.progress)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </Link>
   );
