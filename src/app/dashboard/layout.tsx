@@ -1,4 +1,4 @@
-import AvatarUser from "@/components/images/AvatarUser/AvatarUser";
+// import AvatarUser from "@/components/images/AvatarUser/AvatarUser";
 import Sidebar from "@/components/Sidebar/Sidebar";
 
 export default function dashLayout({
@@ -11,7 +11,7 @@ export default function dashLayout({
       <div className="w-full flex h-full px-5 py-5 mx-auto">
         <Sidebar />
         <div className="flex-1 ml-5  rounded-lg ">{children}</div>
-        <div className="w-72  ml-5 ">
+        {/* <div className="w-72  ml-5 ">
           <div className="pb-5">
             <p className="text-black text-[12px]">Recently registered</p>
             <p className="text-black text-2xl">New users</p>
@@ -37,7 +37,7 @@ export default function dashLayout({
               <span className="text-[12px] text-gray-400">leo33@gmail.com</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
