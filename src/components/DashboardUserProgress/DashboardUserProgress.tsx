@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { BarChart, Bar, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  BarChart,
+  Bar,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 
 // Definición del tipo de datos de progreso del usuario
 interface UserProgress {
@@ -13,9 +20,9 @@ interface UserProgress {
 
 // Función para determinar el color según el progreso
 const getColorBasedOnProgress = (progress: number) => {
-  if (progress < 30) return '#ff4d4d'; // Rojo para <30%
-  if (progress >= 30 && progress <= 70) return '#ffcc00'; // Amarillo para 30%-70%
-  return '#4caf50'; // Verde para >70%
+  if (progress < 30) return "#ff4d4d"; // Rojo para <30%
+  if (progress >= 30 && progress <= 70) return "#ffcc00"; // Amarillo para 30%-70%
+  return "#4caf50"; // Verde para >70%
 };
 
 // Función para seleccionar un objetivo (goal) aleatorio
@@ -32,16 +39,21 @@ const DashboardUserProgress: React.FC = () => {
   // Función para obtener los usuarios
   async function getAllUsers(limit = 10): Promise<UserProgress[]> {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users?limit=${limit}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users?limit=${limit}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Error HTTP! status: ${response.status}, message: ${errorText}`);
+        throw new Error(
+          `Error HTTP! status: ${response.status}, message: ${errorText}`
+        );
       }
 
       const users = await response.json();
@@ -104,7 +116,10 @@ const DashboardUserProgress: React.FC = () => {
             />
             <Bar dataKey="progress">
               {userProgressData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={getColorBasedOnProgress(entry.progress)} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={getColorBasedOnProgress(entry.progress)}
+                />
               ))}
             </Bar>
           </BarChart>

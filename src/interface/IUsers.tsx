@@ -19,6 +19,7 @@ export interface IUser {
   email: string;
   password: string;
   hasNewMessage?: boolean;
+  isSubscribed: boolean;
 }
 
 export type TRegisterError = Partial<IRegisterProps>;

@@ -37,6 +37,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
         password: session.user.password || "",
         email: session.user.email || "",
         role: session.user.role,
+        isSubscribed: session.user.isSubscribed,
       };
       const token = session.authTokenProvider;
       //document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;

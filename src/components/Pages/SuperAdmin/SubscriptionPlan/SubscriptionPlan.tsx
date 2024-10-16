@@ -14,7 +14,9 @@ const SubscriptionPlan = () => {
     name: "",
     price: 0,
     durationInMonths: 0,
+    features: [] as string[], // Array para almacenar características
   });
+  const [featureInput, setFeatureInput] = useState(""); // Estado para el campo de entrada de características
 
   useEffect(() => {
     fetchPlans();
@@ -29,6 +31,31 @@ const SubscriptionPlan = () => {
     await createPlan(newPlan);
     setShowModal(false);
     fetchPlans();
+    // Limpiar el formulario
+    setNewPlan({
+      name: "",
+      price: 0,
+      durationInMonths: 0,
+      features: [],
+    });
+    setFeatureInput("");
+  };
+
+  const handleAddFeature = () => {
+    if (featureInput.trim()) {
+      setNewPlan((prevPlan) => ({
+        ...prevPlan,
+        features: [...prevPlan.features, featureInput.trim()],
+      }));
+      setFeatureInput(""); // Limpiar el campo de entrada después de agregar
+    }
+  };
+
+  const handleDeleteFeature = (index: number) => {
+    setNewPlan((prevPlan) => ({
+      ...prevPlan,
+      features: prevPlan.features.filter((_, i) => i !== index),
+    }));
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,6 +143,35 @@ const SubscriptionPlan = () => {
               }
               className="border p-2 mb-2 w-full"
             />
+            <div className="mb-2">
+              <input
+                type="text"
+                placeholder="Add a feature"
+                value={featureInput}
+                onChange={(e) => setFeatureInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddFeature()}
+                className="border p-2 w-full"
+              />
+              <button
+                className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
+                onClick={handleAddFeature}
+              >
+                Add Feature
+              </button>
+            </div>
+            <ul className="list-disc pl-5 mb-2">
+              {newPlan.features.map((feature, index) => (
+                <li key={index} className="flex justify-between items-center">
+                  {feature}
+                  <button
+                    className="text-red-500 ml-2"
+                    onClick={() => handleDeleteFeature(index)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
             <button
               className="bg-green-500 text-white px-4 py-2 rounded"
               onClick={handleCreatePlan}

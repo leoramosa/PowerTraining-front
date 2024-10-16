@@ -5,11 +5,13 @@ import { useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
-import { FaTrash, FaUsers, FaFilePdf  } from "react-icons/fa";
-import { FaRunning, FaDumbbell, FaRegChartBar  } from "react-icons/fa";
+import { FaTrash, FaUsers, FaFilePdf } from "react-icons/fa";
+import { FaRunning, FaDumbbell, FaRegChartBar } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { RiProfileLine } from "react-icons/ri";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -28,12 +30,16 @@ const Sidebar = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="text-gray-400 focus:outline-none"
         >
-          {isOpen ? "<" : ">"}
+          {isOpen ? (
+            <IoIosArrowDropleftCircle className="text-2xl" />
+          ) : (
+            <IoIosArrowDroprightCircle className="text-2xl" />
+          )}
         </button>
       </div>
 
       {/* Sidebar Items */}
-      <nav className="flex flex-col space-y-4">
+      <nav className="flex flex-col  ">
         <SidebarItem
           icon={<MdDashboard />}
           label="Home"
@@ -48,27 +54,33 @@ const Sidebar = () => {
           href="/dashboard/profile"
           active={pathname === "/dashboard/profile"}
         />
-        <SidebarItem
-          icon={<MdOutlinePayment />}
-          label="Subscription"
-          href="/dashboard/subscription"
-          isOpen={isOpen}
-          active={pathname === "/dashboard/subscription"}
-        />
-        <SidebarItem
-          icon={<FaUsers />}
-          label="Customers"
-          isOpen={isOpen}
-          href="/dashboard/users"
-          active={pathname === "/dashboard/users"}
-        />
-        <SidebarItem
-          icon={<FaRunning />}
-          label="Exercises"
-          isOpen={isOpen}
-          href="/dashboard/exercise"
-          active={pathname === "/dashboard/exercise"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<MdOutlinePayment />}
+            label="Subscription"
+            href="/dashboard/subscription"
+            isOpen={isOpen}
+            active={pathname === "/dashboard/subscription"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaUsers />}
+            label="Customers"
+            isOpen={isOpen}
+            href="/dashboard/users"
+            active={pathname === "/dashboard/users"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaRunning />}
+            label="Exercises"
+            isOpen={isOpen}
+            href="/dashboard/exercise"
+            active={pathname === "/dashboard/exercise"}
+          />
+        )}
         {user?.role === "Admin" && (
           <SidebarItem
             icon={<LuMessagesSquare />}
@@ -78,35 +90,43 @@ const Sidebar = () => {
             active={pathname === "/dashboard/chats"}
           />
         )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaDumbbell />}
+            label="Routines"
+            isOpen={isOpen}
+            href="/dashboard/routine"
+            active={pathname === "/dashboard/routine"}
+          />
+        )}
+        {user?.role === "User" && (
+          <SidebarItem
+            icon={<FaDumbbell />}
+            label="Routines"
+            isOpen={isOpen}
+            href="/dashboard/client/routine"
+            active={pathname === "/dashboard/client/routine"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaFilePdf />}
+            label="Reporting"
+            isOpen={isOpen}
+            href="/dashboard/reports"
+            active={pathname === "/dashboard/reports"}
+          />
+        )}
 
-        <SidebarItem
-          icon={<FaDumbbell />}
-          label="Routines"
-          isOpen={isOpen}
-          href="/dashboard/routine"
-          active={pathname === "/dashboard/routine"}
-        />
-        <SidebarItem
-          icon={<FaRegChartBar />}
-          label="Progress"
-          isOpen={isOpen}
-          href="/dashboard/progress"
-          active={pathname === "/dashboard/progress"}
-        />
-        <SidebarItem
-          icon={<FaFilePdf />}
-          label="Reporting"
-          isOpen={isOpen}
-          href="/dashboard/reports"
-          active={pathname === "/dashboard/reports"}
-        />
-        <SidebarItem
-          icon={<FaTrash />}
-          label="Trash"
-          isOpen={isOpen}
-          href="/dashboard/trash"
-          active={pathname === "/dashboard/trash"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaTrash />}
+            label="Trash"
+            isOpen={isOpen}
+            href="/dashboard/trash"
+            active={pathname === "/dashboard/trash"}
+          />
+        )}
       </nav>
     </div>
   );
@@ -129,8 +149,10 @@ const SidebarItem = ({
 }: SidebarItemProps) => (
   <Link href={href}>
     <div
-      className={`flex items-center p-4 text-white hover:bg-gray-700 transition-colors cursor-pointer
-      ${active ? "bg-gray-700" : ""}  // Clase condicional para el activo
+      className={`flex items-center  p-4 text-white hover:bg-gray-700 transition-colors cursor-pointer border-b border-gray-800
+      ${active ? "bg-gray-700 " : ""} ${
+        isOpen ? "justify-start" : "justify-center"
+      }
     `}
     >
       {icon}

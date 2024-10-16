@@ -15,7 +15,7 @@ const ReportingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-start justify-between">
+    <div className=" bg-gray-100 flex items-start justify-between">
       <div className="w-full h-full flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl font-bold mb-8 text-gray-700 ">
           Download Reports
@@ -24,7 +24,7 @@ const ReportingPage = () => {
           <Card
             title="User Report"
             description="Overview of the latest user data, including engagement metrics and demographics."
-            imageUrl="/images/report-1.jpg" 
+            imageUrl="/images/report-1.jpg"
             onClick={() => {
               setSelectedCard("user-report");
               handleDownload("user-report");
@@ -34,7 +34,7 @@ const ReportingPage = () => {
           <Card
             title="Exercise Report"
             description="Detailed analysis of user engagement with exercises and completion statistics."
-            imageUrl="/images/report-2.jpg" 
+            imageUrl="/images/report-2.jpg"
             onClick={() => {
               setSelectedCard("exercise-report");
               handleDownload("exercise-report");
@@ -44,7 +44,7 @@ const ReportingPage = () => {
           <Card
             title="Routine Report"
             description="Insights on weekly training stats, adherence rates, and performance metrics."
-            imageUrl="/images/report-3.jpg" 
+            imageUrl="/images/report-3.jpg"
             onClick={() => {
               setSelectedCard("routine-report");
               handleDownload("routine-report");
@@ -106,7 +106,6 @@ const Card: React.FC<CardProps> = ({
           Download excel
         </button>
       </div>
-      
     </div>
   );
 };
