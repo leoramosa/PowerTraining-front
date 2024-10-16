@@ -1,17 +1,65 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineUsers } from "react-icons/hi2";
+import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 
 const DashboardPage = () => {
+  const [userCount, setUserCount] = useState(0);
+  const [routinesCount, setRoutinesCount] = useState(0); 
+  const [exercisesCount, setExercisesCount] = useState(0);
+
+  useEffect(() => {
+    const userCountInterval = setInterval(() => {
+      setUserCount((prevCount) => {
+        if (prevCount < 100) {
+          return prevCount + 5; 
+        } else {
+          clearInterval(userCountInterval);
+          return prevCount;
+        }
+      });
+    }, 30); 
+
+    
+    const routinesCountInterval = setInterval(() => {
+      setRoutinesCount((prevCount) => {
+        if (prevCount < 82) {
+          return prevCount + 5; 
+        } else {
+          clearInterval(routinesCountInterval);
+          return prevCount; 
+        }
+      });
+    }, 30); 
+
+   
+    const exercisesCountInterval = setInterval(() => {
+      setExercisesCount((prevCount) => {
+        if (prevCount < 25) {
+          return prevCount + 5; 
+        } else {
+          clearInterval(exercisesCountInterval);
+          return prevCount; 
+        }
+      });
+    }, 30); 
+
+    return () => {
+      clearInterval(userCountInterval);
+      clearInterval(routinesCountInterval);
+      clearInterval(exercisesCountInterval);
+    };
+  }, []);
+
   return (
     <>
       <div className="min-h-screen pb-20">
         <div className="bg-[url('/images/backdash.jpg')] py-10 bg-cover bg-top rounded-lg relative shadow-lg">
-          <p className="text-black text-3xl  px-5">Welcome to your dashboard</p>
-          <p className="text-black w-1/2 pt-5 pl-5">
+          <p className="text-black text-4xl font-bold px-5">Welcome to your dashboard</p>
+          <p className="text-black w-3/4 pt-5 pl-5 text-lg">
             We are here to help you manage your clients and create personalized
             routines that maximize their results. Start organizing your
             workouts, monitor your clients progress, and continue to boost their
@@ -19,42 +67,48 @@ const DashboardPage = () => {
           </p>
         </div>
 
-        <div className="flex pt-5">
-          <Link href="/dashboard/users" className="w-1/2">
-            <div className="flex h-56 p-5 bg-[#ffac4d] mr-3 rounded-md py-4 text-center text-2xl shadow-lg">
-              <div className="h-fit p-4 rounded-lg bg-[#f9911e]">
-                <HiOutlineUsers />
+        <div className="flex pt-5 space-x-3">
+          <Link href="/dashboard/users" className="w-1/3">
+            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
+              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                <HiOutlineUsers className="text-4xl text-white" />
               </div>
-              <div className="text-left pl-5">
-                <p className="m-0 p-0">Users</p>
-                <p className="text-black p-0 m-0 text-[14px]">(0) registered</p>
-              </div>
-            </div>
-          </Link>
-          <Link href="/dashboard/users" className="w-1/2">
-            <div className="flex h-56 p-5 bg-[#242424] mr-3 rounded-md py-4 text-center text-2xl shadow-lg">
-              <div className="h-fit p-4 rounded-lg bg-[#000000da]">
-                <LiaDumbbellSolid className="text-white" />
-              </div>
-              <div className="text-left pl-5">
-                <p className="m-0 p-0 text-white">Workout</p>
-                <p className="text-white p-0 m-0 text-[14px]">12 routines</p>
+              <div className="text-left pl-5 flex flex-col justify-center items-start">
+                <p className="text-3xl font-bold">Users</p>
+                <p className="text-6xl font-bold">{userCount}</p>
+                <p className="text-sm">(registered)</p>
               </div>
             </div>
           </Link>
-          <Link href="/dashboard/users" className="w-1/2">
-            <div className="flex h-56 p-5 bg-[#696969]  rounded-md py-4 text-center text-2xl shadow-lg">
-              <div className="h-fit p-4 rounded-lg bg-[#303030da]">
-                <LiaDumbbellSolid className="text-white" />
+
+          <Link href="/dashboard/routine" className="w-1/3">
+            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
+              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                <LiaDumbbellSolid className="text-4xl text-white" />
               </div>
-              <div className="text-left pl-5">
-                <p className="m-0 p-0 text-white">Workout</p>
-                <p className="text-white p-0 m-0 text-[14px]">12 routines</p>
+              <div className="text-left pl-5 flex flex-col justify-center items-start">
+                <p className="text-3xl font-bold">Routines</p>
+                <p className="text-6xl font-bold">{routinesCount}</p> {/* Muestra la cantidad real de rutinas */}
+                <p className="text-sm">(total)</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/dashboard/exercise" className="w-1/3">
+            <div className="flex h-64 p-5 bg-primary rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-white">
+              <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
+                <FaDumbbell className="text-4xl text-white" />
+              </div>
+              <div className="text-left pl-5 flex flex-col justify-center items-start">
+                <p className="text-3xl font-bold">Exercises</p>
+                <p className="text-6xl font-bold">{exercisesCount}</p>
+                <p className="text-sm">(available)</p>
               </div>
             </div>
           </Link>
         </div>
-        <div className="min-h bg-white shadow-lg rounded-lg mt-5">
+
+        <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
           <DashboardUserProgress />
         </div>
       </div>

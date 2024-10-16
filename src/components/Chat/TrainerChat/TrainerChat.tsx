@@ -139,10 +139,18 @@ const TrainerChat: React.FC = () => {
         clearTimeout(typingTimeoutRef.current);
       }
 
-      socket.emit("typing", { senderId: user.id, isTyping: true });
+      socket.emit("typing", {
+        senderId: user.id,
+        isTyping: true,
+        receiverId: selectedUser,
+      });
 
       typingTimeoutRef.current = setTimeout(() => {
-        socket.emit("typing", { senderId: user.id, isTyping: false });
+        socket.emit("typing", {
+          senderId: user.id,
+          isTyping: false,
+          receiverId: selectedUser,
+        });
       }, 1000); // Deja de enviar "typing" después de 1 segundo de inactividad
     }
   };

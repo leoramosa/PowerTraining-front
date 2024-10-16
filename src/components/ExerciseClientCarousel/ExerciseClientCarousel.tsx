@@ -7,7 +7,7 @@ import { ITrainingExercise } from "@/interface/IRoutineClientRequest";
 
 interface ExerciseCarouselProps {
   exercises: ITrainingExercise[];
-  onComplete: (exerciseId: number) => void;
+  onComplete: (exerciseId: number, rpe: number) => void;
 }
 
 const ExerciseClientCarousel: React.FC<ExerciseCarouselProps> = ({
@@ -30,7 +30,7 @@ const ExerciseClientCarousel: React.FC<ExerciseCarouselProps> = ({
 
   return (
     <>
-    <div className="mb-1 text-sm font-semibold text-gray-400">
+    <div className="mb-1 text-sm font-semibold text-gray-500">
         <p className="bg-gray-100 px-2 py-1 rounded-md">Exercise {currentExerciseIndex + 1} of {exercises.length}</p>
       </div>
     <div className="relative flex items-center justify-center">
@@ -58,7 +58,7 @@ const ExerciseClientCarousel: React.FC<ExerciseCarouselProps> = ({
           >
             <ExerciseClientCard
               exercise={exercise}
-              onComplete={() => onComplete(exercise.id)}
+              onComplete={(rpe) => onComplete(exercise.id, rpe)}
             />
           </div>
         ))}

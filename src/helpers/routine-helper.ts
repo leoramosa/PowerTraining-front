@@ -5,7 +5,8 @@ import {
   IRoutineWizard,
 } from "@/interface/IRoutine";
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
-import { IRoutine, ITrainingExercise } from "@/interface/IRoutineClientRequest";
+import { IRoutine } from "@/interface/IRoutineClientRequest";
+import { ITrainingDayResById, IRoutineResById, IExerciseResById } from "@/interface/IRoutineByUserId";
 //import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -377,7 +378,7 @@ export async function getRoutinesByUserId(
       throw new Error("No authentication token found");
     }
 
-    const res = await fetch(`${APIURL}/routine/`, {
+    const res = await fetch(`${APIURL}/routine/user/${id}`, {
       method: "GET",
       cache: "no-cache",
       headers: {
@@ -390,35 +391,25 @@ export async function getRoutinesByUserId(
       throw new Error(`Failed to fetch routine by id. Status: ${res.status}`);
     }
 
-    const routine: IPaginatedRoutines = await res.json();
+    const routines: IRoutineResById  = await res.json();
 
     // Verificar la estructura de `routine` aquí
-    if (!routine || !Array.isArray(routine.items)) {
+    if (!routines || !Array.isArray(routines)) {
       throw new Error("Unexpected routine structure received");
     }
 
-    // Filtrar las rutinas por el ID de usuario
-    const routinesByUser = {
-      ...routine,
-      items: routine.items.filter(r => r.user.id === id),
-    };
-
-    if (!routinesByUser.items.length) {
-      console.warn("No routines found for this user"); // Cambié esto a un console.warn
-    }
-
-    const routinesByUser2 = routinesByUser.items.map((routine) => ({
+    const routinesByUser2 = routines.map((routine) => ({
       id: routine.id,
       name: routine.name,
       description: routine.description,
       startDate: routine.startDate,
       endDate: routine.endDate,
       completed: routine.completed,
-      trainingDays: routine.trainingDays.map((training) => ({
+      trainingDays: routine.trainingDays.map((training: ITrainingDayResById) => ({
         id: training.id,
         date: training.date,
         description: training.description,
-        exercises: training.exercises.map((exe) => ({
+        exercises: training.exercises.map((exe: IExerciseResById) => ({
           id: exe.id,
           series: exe.series,
           repetitions: exe.repetitions,
@@ -430,7 +421,7 @@ export async function getRoutinesByUserId(
       })),
     }));
 
-    return routinesByUser2; // Devolver las rutinas filtradas
+    return routinesByUser2; 
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -444,13 +435,14 @@ export async function getRoutinesByUserId(
 //Client requests
 
 
-export async function modifyTrainingExerciseById(id: number | undefined, token: string, trainingExercises: ITrainingExercise | undefined) {
+export async function modifyTrainingExerciseById(id: number | undefined, token: string, rpe: number | null) {
   if (!id) {
     throw new Error("Training id is required");
   }
-  if(!trainingExercises){
-    throw new Error("Trainig data Id is required");
+  if(!rpe){
+    throw new Error("Trainig data rpe is required");
   }
+  console.log(rpe)
   try {
     const res = await fetch(`${APIURL}/user-routine-exercises/${id}`, {
       method: "PATCH",
@@ -460,7 +452,7 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
       },
       body: JSON.stringify({
         completed: true,
-        rpe: trainingExercises.rpe
+        rpe: rpe
       })
     });
     if (!res.ok) {
