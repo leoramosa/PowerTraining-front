@@ -8,8 +8,8 @@ import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardU
 
 const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
-  const [routinesCount, setRoutinesCount] = useState(0); // Inicialmente 0
-  const [exercisesCount, setExercisesCount] = useState(0); // Cambia esto al número real
+  const [routinesCount, setRoutinesCount] = useState(0); 
+  const [exercisesCount, setExercisesCount] = useState(0);
 
   useEffect(() => {
     const userCountInterval = setInterval(() => {

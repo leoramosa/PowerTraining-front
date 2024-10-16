@@ -14,16 +14,17 @@ const DayClientSection: React.FC<DayClientSectionProps> = ({ day, onProgressUpda
   const [isOpen, setIsOpen] = useState(false);
   const [exercises, setExercises] = useState<ITrainingExercise[]>(day.exercises);
 
-  const handleCompleteExercise = async (exerciseId: number) => {
+  const handleCompleteExercise = async (exerciseId: number, rpe: number) => {
+    console.log("------------------> Valor rpe: ", rpe)
     const updatedExercises = exercises.map((ex) =>
-      ex.id === exerciseId ? { ...ex, completed: true } : ex
+      ex.id === exerciseId ? { ...ex, completed: true, rpe: rpe } : ex
     );
     setExercises(updatedExercises); 
     const trainingExercise: ITrainingExercise | undefined = exercises.find((ex) =>
       ex.id === exerciseId
     );
     const token = localStorage.getItem("authToken");
-    await modifyTrainingExerciseById(exerciseId, token ? token : "", trainingExercise);
+    await modifyTrainingExerciseById(exerciseId, token ? token : "", rpe);
     console.log('Updated Exercises:', updatedExercises); 
     onProgressUpdate(updatedExercises); 
   };
@@ -47,7 +48,7 @@ const DayClientSection: React.FC<DayClientSectionProps> = ({ day, onProgressUpda
     <div className={`mt-1 py-3 px-1 ${cardStyle}`}>
       {/* Contenedor del título y porcentaje */}
       <div
-        className="flex justify-between items-center cursor-pointer  text-gray-500 bg-gray-50 rounded-md px-2 py-1"
+        className="flex justify-between items-center cursor-pointer  text-gray-500 bg-gray-200 rounded-md px-2 py-1"
         onClick={toggleOpen}
       >
         <h3 className={`text-md font-bold flex items-center`}>
@@ -55,7 +56,7 @@ const DayClientSection: React.FC<DayClientSectionProps> = ({ day, onProgressUpda
             icon={isOpen ? faMinusCircle : faPlusCircle}
             className="mr-2"
           />
-          {day.date} {day.description}
+          {day.date}:{" "}{day.description}
         </h3>
 
         {/* Mostrar ícono de completado o porcentaje */}

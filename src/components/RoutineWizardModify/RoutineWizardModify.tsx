@@ -28,6 +28,8 @@ const RoutineWizardModify: React.FC<RoutineWizardProps2> = ({
   const [trainingDays, setTrainingDays] = useState<TrainingDay[]>([]);
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [routine, setRoutine] = useState<IRoutineWizard>(routineMod);
+  const [buttonConfirmDisabled, setButtonConfirmDisabled] = useState<boolean>(false)
+
   //console.log(routineMod)
   const nextStep = () => setStep((prevStep) => prevStep + 1);
   //const prevStep = () => setStep((prevStep) => prevStep - 1);
@@ -109,6 +111,7 @@ const RoutineWizardModify: React.FC<RoutineWizardProps2> = ({
   };
 
   const handleConfirm = async () => {
+    setButtonConfirmDisabled(true)
     const newRoutine: IRoutineWizard = {
       routineData,
       trainingDays,
@@ -211,10 +214,11 @@ const RoutineWizardModify: React.FC<RoutineWizardProps2> = ({
           <div>
             <SummaryRoutine {...routine} />
             <div className="flex flex-row justify-end my-2">
-              <ButtonPrimary
+            <ButtonPrimary
                 type="button"
-                text="Modify Routine"
+                text={buttonConfirmDisabled ? "Save..." : "Modify Routine"}
                 onClick={handleConfirm}
+                disabled={buttonConfirmDisabled}
               />
             </div>
           </div>
