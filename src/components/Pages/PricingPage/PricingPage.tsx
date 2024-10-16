@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useCartStore } from "@/stores/useCart";
 import CardSubscription from "@/components/CardSubscription/CardSubscription";
-//import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
 import TitleH1 from "@/components/titles/TitleH1";
 
 interface Plan {
@@ -18,7 +17,7 @@ interface Plan {
 const PricingPage = () => {
   const [plans, setPlans] = useState<Plan[]>([]);
   const user = useAuthStore((state) => state.user);
-  const { addToCart, cartItems } = useCartStore();
+  const { addToCart } = useCartStore();
   const updateUserSubscription = useAuthStore(
     (state) => state.updateUserSubscription
   );

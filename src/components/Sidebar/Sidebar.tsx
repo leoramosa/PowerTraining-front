@@ -6,7 +6,7 @@ import { MdDashboard } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers, FaFilePdf } from "react-icons/fa";
-import { FaRunning, FaDumbbell, FaRegChartBar } from "react-icons/fa";
+import { FaRunning, FaDumbbell } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { RiProfileLine } from "react-icons/ri";

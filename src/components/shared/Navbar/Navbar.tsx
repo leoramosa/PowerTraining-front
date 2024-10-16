@@ -14,7 +14,6 @@ import {
 import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
@@ -23,7 +22,6 @@ const Navbar: React.FC = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
-  const router = useRouter();
 
   const user = useAuthStore((state) => state.user);
   console.log("Datos del usuario:", user);
