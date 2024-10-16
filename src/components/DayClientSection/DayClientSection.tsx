@@ -20,9 +20,9 @@ const DayClientSection: React.FC<DayClientSectionProps> = ({ day, onProgressUpda
       ex.id === exerciseId ? { ...ex, completed: true, rpe: rpe } : ex
     );
     setExercises(updatedExercises); 
-    const trainingExercise: ITrainingExercise | undefined = exercises.find((ex) =>
+    /*const trainingExercise: ITrainingExercise | undefined = exercises.find((ex) =>
       ex.id === exerciseId
-    );
+    );*/
     const token = localStorage.getItem("authToken");
     await modifyTrainingExerciseById(exerciseId, token ? token : "", rpe);
     console.log('Updated Exercises:', updatedExercises); 
