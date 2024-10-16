@@ -34,7 +34,7 @@ export const useSubscriptionStore = create<ISubscriptionState>((set) => ({
     try {
       const activeSubscription = await ActiveSubscription(userId, token);
       set({ subscription: activeSubscription, loading: false });
-    } catch (error: any) {
+    } catch (error: Error | any) {
       set({ subscription: null, loading: false, error: error.message });
     }
   },

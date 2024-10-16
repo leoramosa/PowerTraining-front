@@ -8,8 +8,6 @@ import DashboardUserProgress2 from "@/components/DashboardUserProgress/Dashboard
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
-import { useSearchParams } from "next/navigation"; //
-import { toast } from "sonner";
 
 const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
@@ -18,8 +16,7 @@ const DashboardPage = () => {
   const { user, token } = useAuthStore(); // Obtenemos el token aquí
   const router = useRouter();
 
-  const { subscription, fetchSubscription, loading, error } =
-    useSubscriptionStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
 
   useEffect(() => {
     if (user && token) {
