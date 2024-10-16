@@ -5,7 +5,7 @@ import {
   IRoutineWizard,
 } from "@/interface/IRoutine";
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
-import { IRoutine, ITrainingExercise } from "@/interface/IRoutineClientRequest";
+import { IRoutine } from "@/interface/IRoutineClientRequest";
 import { ITrainingDayResById, IRoutineResById, IExerciseResById } from "@/interface/IRoutineByUserId";
 //import exercises from "./exercises";
 
