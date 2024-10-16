@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,8 +7,6 @@ import { usePathname } from "next/navigation";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers, FaFilePdf  } from "react-icons/fa";
 import { FaRunning, FaDumbbell, FaRegChartBar  } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
-
 import { LuMessagesSquare } from "react-icons/lu";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { RiProfileLine } from "react-icons/ri";
