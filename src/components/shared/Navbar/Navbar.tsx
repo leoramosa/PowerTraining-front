@@ -49,19 +49,17 @@ const Navbar: React.FC = () => {
   // });
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm(
-      "Are you sure you want to logout?"
-    );
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       signOut();
-      document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       localStorage.removeItem("authToken");
       localStorage.removeItem("authUser");
       localStorage.removeItem("authTokenProvider");
       localStorage.removeItem("authUserProvider");
 
       toast.success("Logout successful");
-      router.push("/");
     }
   };
 
@@ -216,15 +214,15 @@ const Navbar: React.FC = () => {
                     onClick={closeDropdown}
                   >
                     <CiViewList className="mr-2 text-gray-400" />
-                    Admin Board
+                    Dashboard
                   </Link>
                   <Link
-                    href="/dashboard/exercise"
+                    href="/dashboard/profile"
                     className="px-4 py-2 hover:bg-gray-100 flex items-center"
                     onClick={closeDropdown}
                   >
                     <FaRegUser className="mr-2 text-gray-400" />
-                    Exercise Board
+                    Profile
                   </Link>
                   <button
                     onClick={handleLogout}

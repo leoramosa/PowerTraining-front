@@ -7,15 +7,28 @@ import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress2 from "@/components/DashboardUserProgress/DashboardUserProgress2";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
+import { useSearchParams } from "next/navigation"; //
+import { toast } from "sonner";
 
 const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
   const [routinesCount, setRoutinesCount] = useState(0); // Inicialmente 0
   const [exercisesCount, setExercisesCount] = useState(0); // Cambia esto al número real
-  const user = useAuthStore((state) => state.user);
+  const { user, token } = useAuthStore(); // Obtenemos el token aquí
   const router = useRouter();
 
-  const showBlur = user?.role === "Admin" && !user?.isSubscribed;
+  const { subscription, fetchSubscription, loading, error } =
+    useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   useEffect(() => {
     const userCountInterval = setInterval(() => {

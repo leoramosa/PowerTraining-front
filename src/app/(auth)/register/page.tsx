@@ -1,4 +1,4 @@
-import FormRegister from "@/components/Fomrs/FormRegister/FormRegister";
+import FormRegister from "@/components/Forms/FormRegister/FormRegister";
 import React from "react";
 
 const register = () => {

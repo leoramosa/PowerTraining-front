@@ -1,7 +1,12 @@
+import { ISubscription } from "@/interface/ISubscription";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function ActiveSubscription(userId: string, token: string) {
+export async function ActiveSubscription(
+  userId: string,
+  token: string
+): Promise<ISubscription | null> {
   try {
     const response = await fetch(`${API_URL}/subscriptions/user/${userId}`, {
       method: "GET",
@@ -18,15 +23,14 @@ export async function ActiveSubscription(userId: string, token: string) {
       );
     }
 
-    const subscriptions = await response.json();
+    const subscriptions: ISubscription[] = await response.json();
     const activeSubscription = subscriptions.find(
-      (sub: any) =>
-        sub.paymentStatus === "pending" || sub.paymentStatus === "approved"
+      (sub: any) => sub.paymentStatus === "approved"
     );
 
-    // if (!activeSubscription) {
-    //   throw new Error("No hay suscripciones activas.");
-    // }
+    if (!activeSubscription) {
+      throw new Error("No hay suscripciones activas.");
+    }
 
     return activeSubscription;
   } catch (error: any) {

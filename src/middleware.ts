@@ -1,78 +1,80 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { jwtDecode } from "jwt-decode"; // Asegúrate de tener esta librería instalada
+import { jwtDecode } from "jwt-decode";
 
 interface TokenPayload {
-  role: string; // Asumimos que el token contiene el rol del usuario
+  role: string;
 }
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("authToken"); // Obtenemos el token de la cookie
-
+  const token = req.cookies.get("authToken")?.value; // Obtenemos el token de la cookie
   const publicRoutes = [
     "/login",
-    "/signup",
+    "/register",
     "/",
     "/reset-password",
     "/reset-password-confirm",
   ]; // Rutas públicas
 
-  // Si hay un token, decodificamos para obtener el rol
+  // Verificamos si estamos en una ruta pública
+  const isPublicRoute = publicRoutes.includes(req.nextUrl.pathname);
+
+  // Si hay token y el usuario intenta acceder a rutas públicas, redirigimos a /dashboard
+  if (token && isPublicRoute) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  // Si no hay token y el usuario intenta acceder a rutas protegidas, lo redirigimos a /login
+  if (!token && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  // Si hay token, decodificamos para obtener el rol
   let decodedToken: TokenPayload | null = null;
   if (token) {
     try {
-      decodedToken = jwtDecode(token.value);
+      decodedToken = jwtDecode(token);
     } catch (error) {
-      return NextResponse.redirect(new URL("/", req.url)); // Si el token es inválido
+      // Si el token es inválido, redirigir a la página de login
+      return NextResponse.redirect(new URL("/login", req.url));
     }
-  }
-
-  // Redirigir a /dashboard si el usuario está logueado y accede a rutas públicas
-  if (decodedToken && publicRoutes.includes(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", req.url)); // Redirigir a dashboard si está logueado
-  }
-
-  // Si el token no está presente, redirigir a login
-  if (!token) {
-    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Validar acceso a rutas restringidas según el rol
   if (decodedToken) {
-    // Rutas solo para el Admin
     const adminRoutes = [
       "/dashboard/exercise",
       "/dashboard/reports",
       "/dashboard/routine",
       "/dashboard/trash",
     ];
-
-    // Rutas solo para el User
     const userRoutes = ["/dashboard/client/routine"];
 
+    // Si el usuario intenta acceder a rutas de Admin sin ser Admin
     if (
       adminRoutes.includes(req.nextUrl.pathname) &&
       decodedToken.role !== "Admin"
     ) {
       return NextResponse.redirect(
         new URL("/dashboard?error=not-authorized", req.url)
-      ); // Redirigir si no es Admin
+      );
     }
 
+    // Si el usuario intenta acceder a rutas de User sin ser User
     if (
       userRoutes.includes(req.nextUrl.pathname) &&
       decodedToken.role !== "User"
     ) {
       return NextResponse.redirect(
         new URL("/dashboard?error=not-authorized", req.url)
-      ); // Redirigir si no es User
+      );
     }
   }
 
   return NextResponse.next(); // Permitir acceso a rutas protegidas
 }
 
-// Definir qué rutas aplicar middleware
+// Definir en qué rutas se aplica el middleware
 export const config = {
   matcher: [
     "/dashboard/:path*",
@@ -83,5 +85,7 @@ export const config = {
     "/dashboard/reports",
     "/dashboard/routine",
     "/dashboard/trash",
-  ], // Rutas protegidas
+    "/login",
+    "/register",
+  ], // Rutas protegidas y públicas que queremos manejar
 };

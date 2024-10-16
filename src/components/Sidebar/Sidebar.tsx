@@ -53,27 +53,33 @@ const Sidebar = () => {
           href="/dashboard/profile"
           active={pathname === "/dashboard/profile"}
         />
-        <SidebarItem
-          icon={<MdOutlinePayment />}
-          label="Subscription"
-          href="/dashboard/subscription"
-          isOpen={isOpen}
-          active={pathname === "/dashboard/subscription"}
-        />
-        <SidebarItem
-          icon={<FaUsers />}
-          label="Customers"
-          isOpen={isOpen}
-          href="/dashboard/users"
-          active={pathname === "/dashboard/users"}
-        />
-        <SidebarItem
-          icon={<FaRunning />}
-          label="Exercises"
-          isOpen={isOpen}
-          href="/dashboard/exercise"
-          active={pathname === "/dashboard/exercise"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<MdOutlinePayment />}
+            label="Subscription"
+            href="/dashboard/subscription"
+            isOpen={isOpen}
+            active={pathname === "/dashboard/subscription"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaUsers />}
+            label="Customers"
+            isOpen={isOpen}
+            href="/dashboard/users"
+            active={pathname === "/dashboard/users"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaRunning />}
+            label="Exercises"
+            isOpen={isOpen}
+            href="/dashboard/exercise"
+            active={pathname === "/dashboard/exercise"}
+          />
+        )}
         {user?.role === "Admin" && (
           <SidebarItem
             icon={<LuMessagesSquare />}
@@ -83,28 +89,43 @@ const Sidebar = () => {
             active={pathname === "/dashboard/chats"}
           />
         )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaDumbbell />}
+            label="Routines"
+            isOpen={isOpen}
+            href="/dashboard/routine"
+            active={pathname === "/dashboard/routine"}
+          />
+        )}
+        {user?.role === "User" && (
+          <SidebarItem
+            icon={<FaDumbbell />}
+            label="Routines"
+            isOpen={isOpen}
+            href="/dashboard/client/routine"
+            active={pathname === "/dashboard/client/routine"}
+          />
+        )}
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaFilePdf />}
+            label="Reporting"
+            isOpen={isOpen}
+            href="/dashboard/reports"
+            active={pathname === "/dashboard/reports"}
+          />
+        )}
 
-        <SidebarItem
-          icon={<FaDumbbell />}
-          label="Routines"
-          isOpen={isOpen}
-          href="/dashboard/routine"
-          active={pathname === "/dashboard/routine"}
-        />
-        <SidebarItem
-          icon={<FaFilePdf />}
-          label="Reporting"
-          isOpen={isOpen}
-          href="/dashboard/reports"
-          active={pathname === "/dashboard/reports"}
-        />
-        <SidebarItem
-          icon={<FaTrash />}
-          label="Trash"
-          isOpen={isOpen}
-          href="/dashboard/trash"
-          active={pathname === "/dashboard/trash"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<FaTrash />}
+            label="Trash"
+            isOpen={isOpen}
+            href="/dashboard/trash"
+            active={pathname === "/dashboard/trash"}
+          />
+        )}
       </nav>
     </div>
   );
