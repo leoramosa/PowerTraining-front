@@ -1,4 +1,4 @@
-"use client"; // Asegúrate de que esto esté en la parte superior
+"use client"; 
 
 import React, { useEffect, useState } from "react";
 import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
@@ -9,12 +9,12 @@ import { IRoutine } from "@/interface/IRoutineClientRequest";
 const RoutineClientPage = () => {
   const [routinesData, setRoutinesData] = useState<IRoutine[]>([]);
   const [currentDate, setCurrentDate] = useState("");
-  const [loading, setLoading] = useState(true); // Nuevo estado para carga
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState<string | null>(null); 
 
   useEffect(() => {
     const fetchRoutinesByUser = async () => {
-      setLoading(true); // Indicar que se está cargando
+      setLoading(true); 
       try {
         const storedUser = localStorage.getItem("authUser");
         if (storedUser) {
@@ -35,20 +35,20 @@ const RoutineClientPage = () => {
         console.error("Error fetching routines by user, please try again.", error);
         setError("Error fetching routines, please try again.");
       } finally {
-        setLoading(false); // Terminar el estado de carga
+        setLoading(false); 
       }
     };
 
-    fetchRoutinesByUser(); // Fetch data
-    setCurrentDate(new Date().toISOString().split("T")[0]); // Establecer la fecha actual
-  }, []); // Empty dependency array ensures this runs only once
+    fetchRoutinesByUser(); 
+    setCurrentDate(new Date().toISOString().split("T")[0]); 
+  }, []); 
 
   if (loading) {
-    return <p>Loading...</p>; // Mensaje de carga
+    return <p>Loading...</p>; 
   }
 
   if (error) {
-    return <p>{error}</p>; // Mensaje de error
+    return <p>{error}</p>;
   }
 
   return (

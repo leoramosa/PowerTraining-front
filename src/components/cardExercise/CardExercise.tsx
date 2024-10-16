@@ -48,6 +48,9 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
         videoUrl.endsWith(".jpeg") ? (
           <Image
             src={videoUrl}
+            width={500} 
+            height={300} 
+            layout="responsive"
             alt="Imagen alternativa"
             className="rounded-lg w-full h-auto object-cover"
           />

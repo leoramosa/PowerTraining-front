@@ -1,5 +1,3 @@
-import { setCookie } from "nookies"; // Utilidad para manejar cookies en Next.js
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 import {
   IRegisterProps,
@@ -48,9 +46,6 @@ export async function LoginUser(userData: ILoginProps) {
     // Guardar el token en localStorage después de un inicio de sesión exitoso
     if (data.token) {
       localStorage.setItem("authToken", data.token);
-
-      // Guardar el token en una cookie
-      setCookie(null, "authToken", data.token, { path: "/", maxAge: 86400 });
     }
 
     return data;
@@ -59,6 +54,47 @@ export async function LoginUser(userData: ILoginProps) {
     throw new Error(error.message || "An unexpected error occurred.");
   }
 }
+// export async function getUsersDB(
+//   limit: number = 5,
+//   page: number = 1,
+//   filtersBy: IUserFilters = {}
+// ): Promise<IUserData> {
+//   let url = `${API_URL}/users?`;
+
+//   if (filtersBy) {
+//     const { name, lastname, email, birthday } = filtersBy;
+//     const queryParams = new URLSearchParams();
+//     if (name) queryParams.append("name", encodeURIComponent(name));
+//     if (lastname) queryParams.append("lastname", encodeURIComponent(lastname));
+//     if (email) queryParams.append("email", encodeURIComponent(email));
+//     if (birthday) queryParams.append("birthday", encodeURIComponent(birthday));
+//     url += `&${queryParams.toString()}&limit=${limit}&page=${page}`;
+//   } else {
+//     url += `limit=${limit}&page=${page}`;
+//   }
+
+//   console.log(url);
+
+//   console.log("Fetching users from:", url); // Log the URL being fetched
+
+//   try {
+//     const res = await fetch(url, { cache: "no-cache" });
+//     if (!res.ok) {
+//       throw new Error(`Error fetching users: ${res.status} ${res.statusText}`);
+//     }
+//     const resData = await res.json();
+//     console.log("Fetched users data:", resData);
+//     return resData;
+//   } catch (error: unknown) {
+//     if (error instanceof Error) {
+//       console.error("Error in getUsersDB:", error);
+//       throw new Error(`Failed to get users: ${error.message}`);
+//     } else {
+//       console.error("Unexpected error:", error);
+//       throw new Error("An unexpected error occurred");
+//     }
+//   }
+// }
 
 export async function getUsersDB(
   limit: number = 5,
@@ -152,26 +188,4 @@ export const deleteUser = async (id: string) => {
   }
 
   return response.json();
-};
-
-export const getUserById2 = async (id: string, token: string) => {
-  try {
-    const response = await fetch(`${API_URL}/users/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Error al obtener el usuario");
-    }
-
-    return response.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    console.error("Error creating routine:", error);
-    throw new Error(error.message || "Error desconocido");
-  }
 };

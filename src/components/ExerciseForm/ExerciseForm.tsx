@@ -146,17 +146,17 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
 
   const handleSeriesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setSeries(value); // Establece 0 si el valor es NaN
+    setSeries(value); 
   };
   
   const handleRepetitionsChange = (e:  React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setRepetitions(value); // Establece 0 si el valor es NaN
+    setRepetitions(value);
   };
   
   const handleWeightChange = (e:  React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setWeight(value); // Establece 0 si el valor es NaN
+    setWeight(value); 
   };
 
   return (

@@ -8,11 +8,15 @@ import { MdOutlinePayment } from "react-icons/md";
 import { FaTrash, FaUsers, FaFilePdf  } from "react-icons/fa";
 import { FaRunning, FaDumbbell, FaRegChartBar  } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
+
 import { LuMessagesSquare } from "react-icons/lu";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { RiProfileLine } from "react-icons/ri";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
+  const { user } = useAuthStore();
 
   return (
     <div
@@ -40,6 +44,13 @@ const Sidebar = () => {
           active={pathname === "/dashboard"}
         />
         <SidebarItem
+          icon={<RiProfileLine />}
+          label="Profile"
+          isOpen={isOpen}
+          href="/dashboard/profile"
+          active={pathname === "/dashboard/profile"}
+        />
+        <SidebarItem
           icon={<MdOutlinePayment />}
           label="Subscription"
           href="/dashboard/subscription"
@@ -60,13 +71,16 @@ const Sidebar = () => {
           href="/dashboard/exercise"
           active={pathname === "/dashboard/exercise"}
         />
-        <SidebarItem
-          icon={<LuMessagesSquare />}
-          label="Chats"
-          isOpen={isOpen}
-          href="/dashboard/chats"
-          active={pathname === "/dashboard/chats"}
-        />
+        {user?.role === "Admin" && (
+          <SidebarItem
+            icon={<LuMessagesSquare />}
+            label="Chats"
+            isOpen={isOpen}
+            href="/dashboard/chats"
+            active={pathname === "/dashboard/chats"}
+          />
+        )}
+
         <SidebarItem
           icon={<FaDumbbell />}
           label="Routines"
@@ -94,14 +108,6 @@ const Sidebar = () => {
           isOpen={isOpen}
           href="/dashboard/trash"
           active={pathname === "/dashboard/trash"}
-        />
-
-        <SidebarItem
-          icon={<IoIosSettings />}
-          label="Settings"
-          isOpen={isOpen}
-          href="/dashboard/settings"
-          active={pathname === "/dashboard/settings"}
         />
       </nav>
     </div>

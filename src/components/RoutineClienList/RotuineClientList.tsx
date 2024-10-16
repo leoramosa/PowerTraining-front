@@ -29,8 +29,6 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   const maxVisibleCards = 4;
   const [visibleRoutines, setVisibleRoutines] = useState<IRoutine[]>([]);
   const [startIndex, setStartIndex] = useState<number>(0);
-  //const [endIndex, setEndIndex] = useState<number>(0);
-
 
   useEffect(() => {
     if (!routines || routines.length === 0) return;
@@ -89,7 +87,6 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
       startIndexR + maxVisibleCards,
       orderedRoutines.length
     );
-    //setEndIndex(endIndexR);
     setVisibleRoutines(orderedRoutines.slice(startIndexR, endIndexR))
   },[orderedRoutines]);
 
@@ -103,16 +100,15 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   
     const newRoutine = await modifyRoutineCompletedById(idRoutine, token ? token : "");
     console.log(newRoutine)
-    // Actualizar el estado de las rutinas
     setOrderedRoutines((prevRoutines) =>
       prevRoutines.map((routine) => {
         if (routine.id === idRoutine) {
           return {
             ...routine,
-            completed: completed, // Actualiza el estado 'completed'
+            completed: completed, 
           };
         }
-        return routine; // Retorna las rutinas sin cambios
+        return routine; 
       })
     );
 

@@ -43,7 +43,6 @@ const RoutineClientCard: React.FC<RoutineCardProps> = ({
     }
   }, [routine, currentDate]);
 
-  // Función para calcular el progreso de la rutina
   const calculateProgress = (trainingDays: ITrainingDay[]) => {
     const totalDays = trainingDays.length;
     const completedDays = trainingDays.filter((day) =>

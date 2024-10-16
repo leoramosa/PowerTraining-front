@@ -14,7 +14,7 @@ import TitleH2 from "../titles/TitleH2";
 const RoutineForm: React.FC<IRoutineFormProps> = ({
   onSubmit,
   routineData,
-  disabledSearchUser
+  disabledSearchUser,
 }) => {
   const initialState = {
     userId: "",
@@ -34,39 +34,42 @@ const RoutineForm: React.FC<IRoutineFormProps> = ({
   const [users, setUsers] = useState<IUserPartial[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   //const [filtersBy, setFiltersBy] = useState<{ name?: string }>({});
+  const [dateError, setDateError] = useState<string>("");
+  const [assignedDateError, setAssignedDateError] = useState<string>("");
 
   useEffect(() => {
     console.log(routineData);
     dataRoutine && setDataRoutine(routineData);
-    dataRoutine && setSelectedUser({
-      id: dataRoutine.userId,
-      name: dataRoutine.userName,
-      lastname: dataRoutine.userLastName,
-    })
+    dataRoutine &&
+      setSelectedUser({
+        id: dataRoutine.userId,
+        name: dataRoutine.userName,
+        lastname: dataRoutine.userLastName,
+      });
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (
-      selectedUser &&
-      dataRoutine.name &&
-      dataRoutine.startDate &&
-      dataRoutine.endDate
-    ) {
-      console.log("select user", selectedUser);
-      const updatedDataRoutine: IRoutineForm = {
-        ...dataRoutine,
-        userId: selectedUser.id,
-        userName: selectedUser.name,
-        userLastName: selectedUser.lastname,
-      };
-      console.log("Datos enviados:", updatedDataRoutine);
-      onSubmit(updatedDataRoutine);
-      setDataRoutine(updatedDataRoutine);
-    } else {
-      alert("Por favor completa todos los campos");
-    }
+    
+      if (
+        selectedUser &&
+        dataRoutine.name &&
+        dataRoutine.startDate &&
+        dataRoutine.endDate
+      ) {
+        console.log("select user", selectedUser);
+        const updatedDataRoutine: IRoutineForm = {
+          ...dataRoutine,
+          userId: selectedUser.id,
+          userName: selectedUser.name,
+          userLastName: selectedUser.lastname,
+        };
+        console.log("Datos enviados:", updatedDataRoutine);
+        onSubmit(updatedDataRoutine);
+        setDataRoutine(updatedDataRoutine);
+      } else {
+        alert("Por favor completa todos los campos");
+      }
   };
 
   const handleChange = (name: string, value: string) => {
@@ -125,6 +128,40 @@ const RoutineForm: React.FC<IRoutineFormProps> = ({
     setSelectedUser(user);
   };
 
+  useEffect(() => {
+    if (dataRoutine) {
+      const { startDate, endDate } = dataRoutine;
+      validateDates(startDate, endDate);
+    }
+  }, [dataRoutine]);
+
+  const validateDates = (startDate: string, endDate: string) => {
+    let isValid = true;
+    setDateError("");
+    setAssignedDateError("");
+    //console.log("startDate: ", startDate);
+    //console.log("endDate: ", endDate);
+
+    if (startDate && endDate) {
+      const start = Date.parse(startDate);
+      const end = Date.parse(endDate);
+
+      if (start >= end) {
+        setDateError("Start date must be before end date.");
+        isValid = false;
+      }
+
+      const diffDays =
+        (new Date(endDate).getTime() - new Date(startDate).getTime()) /
+        (1000 * 60 * 60 * 24);
+      if (diffDays < 6) {
+        setDateError("The routine must span at least 7 days.");
+        isValid = false;
+      }
+      return isValid;
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="border rounded-md p-2 my-2">
@@ -181,6 +218,13 @@ const RoutineForm: React.FC<IRoutineFormProps> = ({
             />
           </div>
         </div>
+        <div className="flex justify-end">
+          {dateError && <label className="text-red-500 font-xs">{dateError}</label>}
+          {assignedDateError && (
+            <label className="text-red-500 font-xs">{assignedDateError}</label>
+          )}
+        </div>
+
         <InputForm
           label="Description"
           type="textarea2"
