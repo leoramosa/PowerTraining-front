@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import InputFormLogin from "@/components/inputs/InputFormLogin/InputFormLogin";
-import ButtonApp from "@/components/buttons/ButtonApp/ButtonApp";
 import { IRegisterProps, TRegisterError } from "@/interface/IUsers";
 import { createUser } from "@/Services/userService";
 import { validateRegisterForm } from "@/validations/validationsUser";

@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Badge from "../badges/BadgeUser/BadgeUser";
 import ContainerWeb from "../containers/ContainerWeb/ContainerWeb";
 import { BsBoxArrowUpRight } from "react-icons/bs";
-import { ActiveSubscription } from "@/Services/subscriptionService"; // Servicio actualizado
-import { ISubscription } from "@/interface/ISubscription";
 import ButtonApp from "../buttons/ButtonApp/ButtonApp";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -27,7 +25,9 @@ const SubscriptionMercado: React.FC<{ id: string }> = ({ id }) => {
     user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   return subscription ? (
-    <ContainerWeb className="">
+    <ContainerWeb
+      className={`${showBlur ? "backdrop-blur-sm opacity-90" : ""} `}
+    >
       <div className="flex justify-between items-center border-b-2 p-5">
         <div className="">
           <p className="text-lg font-semibold">Subscription & Billing</p>

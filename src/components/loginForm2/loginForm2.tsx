@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { ILoginProps } from "@/interface/ILogin";
 import { toast } from "sonner";
-import InputFormLogin from "../inputs/InputFormLogin/InputFormLogin";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
@@ -20,7 +19,7 @@ interface AuthFormProps {
   type: "login" | "register";
 }
 
-const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
+const LoginForm: React.FC<AuthFormProps> = ({}) => {
   const initialState = {
     email: "",
     password: "",
@@ -77,7 +76,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
     setTouched({ ...touched, [name]: true });
   };
 
-  const returnUrl = decodeURIComponent(searchParams.get("returnUrl") || "/");
+  // const returnUrl = decodeURIComponent(searchParams.get("returnUrl") || "/");
 
   /*************  ✨ Codeium Command ⭐  *************/
   /**
@@ -241,6 +240,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ type }) => {
               </form>
               <hr className="pt-2 border-gray-600 " />
               <button
+                type="button"
                 onClick={handleGoogleSignIn}
                 className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-black hover:border-gray-600 hover:border text-white py-3 mt-5"
               >
