@@ -61,7 +61,7 @@ const SubscriptionMercado: React.FC<{ id: string }> = () => {
             </p>
           </div>
           <div className="">
-            <Badge status="without-routine" />
+            <Badge status="Active-ok" />
           </div>
         </div>
         <div className=" w-1/2 border-2 ml-2 px-5 py-8 flex items-center justify-between rounded-lg">

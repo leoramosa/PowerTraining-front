@@ -100,7 +100,7 @@ const ListRowUser: React.FC = () => {
   ];
 
   return (
-    <main className="p-4">
+    <main className=" w-full">
       <div className="flex justify-between mb-4">
         <SearchInput
           value={searchValue}

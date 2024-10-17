@@ -35,7 +35,7 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
     <>
       <ItemInfo key={user.id} className="relative flex">
         <div className="flex items-center">
-          <AvatarUser name={user.name} className="mr-2" />
+          <AvatarUser name={user.name} className="mr-2 bg-primary" />
           <p>
             {user.name} {user.lastName}
           </p>

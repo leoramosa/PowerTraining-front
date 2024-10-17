@@ -178,7 +178,7 @@ const TrainerChat: React.FC = () => {
     users.find((u) => u.id === selectedUser)?.name || "Usuario";
 
   return (
-    <>
+    <div className="p-10">
       <div className="">
         <TitleH1>Chats</TitleH1>
         <div className="flex pb-3 text-gray-400 ">
@@ -226,9 +226,9 @@ const TrainerChat: React.FC = () => {
           {selectedUser ? (
             <>
               {/* Chat header */}
-              <div className="flex items-center p-4 border-b ">
+              <div className="flex items-center p-4 border-b bg-gradient-to-l from-[#ffeeb5]  to-primary rounded-t-lg">
                 <AvatarUser
-                  className="w-10 h-10 mr-2 bg-gray-500"
+                  className="w-10 h-10 mr-2 text-primary bg-white"
                   name={selectedUserName}
                 />
                 {selectedUserName}
@@ -236,7 +236,7 @@ const TrainerChat: React.FC = () => {
 
               {/* Chat messages */}
               <div
-                className="flex-1 messages-scroll flex-col overflow-y-auto px-5  h-full"
+                className="flex-1 messages-scroll flex-col overflow-y-auto px-5 pt-4  h-full"
                 ref={messagesEndRef}
               >
                 {messages.map((msg, index) => (
@@ -310,7 +310,7 @@ const TrainerChat: React.FC = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

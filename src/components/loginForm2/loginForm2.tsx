@@ -78,14 +78,6 @@ const LoginForm: React.FC<AuthFormProps> = ({}) => {
 
   // const returnUrl = decodeURIComponent(searchParams.get("returnUrl") || "/");
 
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Handles the change of an input field in the form, updating the
-   * `dataUser` state with the new value.
-   * @param {React.ChangeEvent<HTMLInputElement>} e - The event of the input field change.
-   * @returns {void}
-   */
-  /******  250e677a-62cf-49f9-acc2-0678a8eede4e  *******/
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDataUser({ ...dataUser, [e.target.name]: e.target.value });
   };
@@ -242,7 +234,7 @@ const LoginForm: React.FC<AuthFormProps> = ({}) => {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-black hover:border-gray-600 hover:border text-white py-3 mt-5"
+                className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-[#414040] hover:border-gray-600 hover:border text-white py-3 mt-5"
               >
                 <GoogleLogo />
                 Or sign in with Google

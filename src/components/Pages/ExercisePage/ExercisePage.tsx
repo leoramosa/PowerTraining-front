@@ -394,7 +394,7 @@ const ExercisePage = () => {
   };
 
   return (
-    <main className="">
+    <main className=" p-10">
       <ContainerWeb>
         <div className="">
           <TitleH1>Exercises</TitleH1>

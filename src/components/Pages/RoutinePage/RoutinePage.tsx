@@ -120,7 +120,7 @@ const RoutinePage = () => {
   };
 
   return (
-    <main className=" ">
+    <main className=" p-5">
       <ContainerWeb className="">
         <div className="flex justify-between my-4 mt-6">
           <TitleH1>Routines</TitleH1>

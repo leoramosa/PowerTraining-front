@@ -21,8 +21,11 @@ const UserProfile = () => {
 
   return (
     <div className=" bg-white rounded-lg h-full shadow-lg pb-10">
-      <div className=" bg-gradient-to-l from-[#ffeeb5]  to-primary p-6 pl-10 rounded-t-lg">
+      <div className=" bg-gradient-to-l from-[#ffeeb5]  to-primary p-6 pl-10 rounded-t-lg flex justify-between items-center">
         <h1 className="text-2xl font-bold">Profile</h1>
+        <h2 className="text-xl font-bold">
+          {user.role === "Admin" ? "Trainer" : "Client"}
+        </h2>
       </div>
       <div className="flex justify-between px-10 pt-10 ">
         <div className="flex items-center ">

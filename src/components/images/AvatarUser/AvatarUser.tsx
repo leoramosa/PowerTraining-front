@@ -5,7 +5,7 @@ const AvatarUser: React.FC<IAvatarUserProps> = ({
   size = "md",
   className,
   backgroundColor = "",
-  textColor = "text-white",
+  textColor = "",
 }) => {
   const getInitial = (name: string) => {
     return name.charAt(0).toUpperCase();

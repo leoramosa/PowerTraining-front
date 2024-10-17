@@ -1,5 +1,4 @@
 "use client";
-import ContainerWeb from "@/components/containers/ContainerWeb/ContainerWeb";
 import TitleH1 from "@/components/titles/TitleH1";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -213,7 +212,7 @@ const TrashPage: React.FC = () => {
   };
 
   return (
-    <ContainerWeb>
+    <div className="p-8">
       {loading ? ( // Condicionalmente muestra el spinner
         <div className="flex justify-center items-center min-h-[300px]">
           <Spinner /> {/* Aquí iría tu spinner */}
@@ -314,7 +313,7 @@ const TrashPage: React.FC = () => {
           </button>
         </div>
       )}
-    </ContainerWeb>
+    </div>
   );
 };
 

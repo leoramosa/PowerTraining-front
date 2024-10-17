@@ -93,8 +93,8 @@ const ReportingPage = () => {
   };*/
 
   return (
-    <div className=" bg-white ">
-      <div className="w-full h-full p-4">
+    <div className=" bg-white p-5 rounded-lg">
+      <div className="w-full h-full p-2">
         <h1 className="text-3xl font-bold text-gray-700 ">Download Reports</h1>
       </div>
       <div className="w-full h-full flex flex-col items-center justify-center p-4">
