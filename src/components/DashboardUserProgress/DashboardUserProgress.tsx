@@ -20,9 +20,9 @@ interface UserProgress {
 
 // Función para determinar el color según el progreso
 const getColorBasedOnProgress = (progress: number) => {
-  if (progress < 30) return "#ff4d4d"; // Rojo para <30%
-  if (progress >= 30 && progress <= 70) return "#ffcc00"; // Amarillo para 30%-70%
-  return "#4caf50"; // Verde para >70%
+  if (progress < 30) return "#fff784"; // Rojo para <30%
+  if (progress >= 30 && progress <= 70) return "#ffc451"; // Amarillo para 30%-70%
+  return "#f9911e"; // Verde para >70%
 };
 
 // Función para seleccionar un objetivo (goal) aleatorio
