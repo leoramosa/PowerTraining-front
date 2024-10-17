@@ -103,7 +103,7 @@ const DashboardClientPage = () => {
             Welcome to your dashboard
           </p>
           <p className="text-white w-3/4 pt-5 pl-7 text-lg">
-            We're here to support you on your fitness journey. Access your
+            We are here to support you on your fitness journey. Access your
             personalized workout routines, track your progress, and stay focused
             on reaching your goals. Everything you need to improve your
             performance is right at your fingertips. Let is take your fitness to
