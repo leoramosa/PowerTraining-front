@@ -135,7 +135,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
       if (userLocal) {
         const user = JSON.parse(userLocal);
         const response = await fetch(
-          APIURL + "/pdfreports/userroutine/pdf?email=" + user.email,
+          APIURL + "/pdfreports/userroutine/"+user.email,
           {
             method: "GET",
             headers: {
