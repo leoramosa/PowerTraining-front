@@ -69,13 +69,12 @@ const TrainerChat: React.FC = () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
-        if (message.sender?.id === selectedUser) {
-          setMessages((prevMessages) => [...prevMessages, message]);
-        } else {
+        // Verifica si el mensaje es entrante (de un usuario al admin)
+        if (message.receiverId === user?.id) {
           setUsers((prevUsers) => {
-            // Actualiza el estado de hasNewMessage y lastMessageTimestamp
+            // Actualiza el estado de hasNewMessage y lastMessageTimestamp solo para mensajes entrantes
             const updatedUsers = prevUsers.map((user) =>
-              user.id === message.sender?.id
+              user.id === message.senderId
                 ? {
                     ...user,
                     hasNewMessage: true,
@@ -113,6 +112,9 @@ const TrainerChat: React.FC = () => {
 
             return updatedUsers;
           });
+        } else if (message.senderId === selectedUser) {
+          // Si el mensaje es del admin al usuario seleccionado, solo actualiza los mensajes
+          setMessages((prevMessages) => [...prevMessages, message]);
         }
       });
     }
