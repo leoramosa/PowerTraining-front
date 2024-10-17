@@ -83,6 +83,7 @@ const ExercisePage = () => {
       const response = await getExercisesDB(limit, currentPage, filters);
       setTotalPages(calculateTotalPages(response.count, limit));
       setListExercises(response.data);
+      console.log("paso por aqui")
     } catch (error) {
       console.error("Error fetching exercises, please try again.");
     }
@@ -102,7 +103,9 @@ const ExercisePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {}, [dataExercise, listExercises, createOrUpdateItem]);
+  useEffect(() => {
+    console.log("------> ",listExercises)
+  }, [dataExercise, listExercises, createOrUpdateItem, filters]);
 
   useEffect(() => {
     if (user) {
@@ -114,6 +117,7 @@ const ExercisePage = () => {
   //####### Handle Search
   const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
+    console.log(newValue)
     setSearchValue(newValue);
   };
 
@@ -134,11 +138,11 @@ const ExercisePage = () => {
           } else {
             setFilters(filterInitialValues);
           }
-
+          /*
           const response = await getExercisesDB(limit, currentPage, filters);
           setTotalPages(calculateTotalPages(response.count, limit));
           setListExercises(response.data);
-
+          */
           resolve("Exercises fetched successfully!");
         } catch (error) {
           reject("Error fetching exercises, please try again.");
