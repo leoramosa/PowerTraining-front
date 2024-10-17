@@ -74,11 +74,22 @@ const TrainerChat: React.FC = () => {
         } else {
           setUsers((prevUsers) => {
             // Actualiza el estado de hasNewMessage
-            return prevUsers.map((user) =>
+            const updatedUsers = prevUsers.map((user) =>
               user.id === message.sender?.id
                 ? { ...user, hasNewMessage: true }
                 : user
             );
+
+            // Mueve el usuario que envió el mensaje al principio de la lista
+            const userIndex = updatedUsers.findIndex(
+              (user) => user.id === message.sender?.id
+            );
+            if (userIndex !== -1) {
+              const [userWithNewMessage] = updatedUsers.splice(userIndex, 1);
+              updatedUsers.unshift(userWithNewMessage);
+            }
+
+            return updatedUsers;
           });
         }
       });
