@@ -450,9 +450,9 @@ const ExercisePage = () => {
         {/* List of exercises */}
         <div className="">
           {/* If not exist exercises */}
-          {!listExercises ||
+          {(!listExercises ||
             listExercises.length === 0 ||
-            (listExercises[0].id === "" && (
+            listExercises[0].id === "") && (
               <div className="mt-3">
                 <ItemInfo>
                   <p className="text-gray-500 font-semibold">
@@ -461,8 +461,8 @@ const ExercisePage = () => {
                   </p>
                 </ItemInfo>
               </div>
-            ))}
-          {listExercises.length > 0 &&
+            )}
+          {listExercises && listExercises.length > 0 &&
             listExercises[0].id != "" &&
             listExercises.map((exercise, i) => {
               return (
