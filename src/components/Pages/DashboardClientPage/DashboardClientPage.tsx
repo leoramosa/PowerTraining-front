@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import { FaCalendarWeek } from "react-icons/fa";
-import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
+import ClientProgress from "@/components/ClientProgress/ClientProgress";
 import { getRoutinesByUserId } from "@/helpers/routine-helper";
 import { useAuthStore } from "@/stores/userAuthStore";
 
@@ -159,7 +159,7 @@ const DashboardClientPage = () => {
 
       {/* Progreso del usuario: Aqui Marian :) */}
       <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
-        <DashboardUserProgress />
+        <ClientProgress />
       </div>
     </div>
   );
