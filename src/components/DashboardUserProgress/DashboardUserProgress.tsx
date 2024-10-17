@@ -94,7 +94,7 @@ const DashboardUserProgress: React.FC = () => {
       <div className="bg-white shadow-lg rounded-lg p-5">
         <p className="text-black text-2xl mb-5">Users Goal Progress</p>
 
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={200}>
           <BarChart data={userProgressData}>
             <YAxis domain={[0, 100]} />
             <Tooltip

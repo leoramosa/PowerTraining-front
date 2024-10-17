@@ -9,32 +9,22 @@ import { ISubscription } from "@/interface/ISubscription";
 import ButtonApp from "../buttons/ButtonApp/ButtonApp";
 import Link from "next/link";
 import { format } from "date-fns";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import { useAuthStore } from "@/stores/userAuthStore";
 
 const SubscriptionMercado: React.FC<{ id: string }> = ({ id }) => {
-  const [subscription, setSubscription] = useState<ISubscription | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { user, token } = useAuthStore(); // Obtenemos el token aquí
+
+  const { subscription, fetchSubscription } = useSubscriptionStore();
 
   useEffect(() => {
-    const loadSubscription = async () => {
-      try {
-        const token = localStorage.getItem("authToken"); // Obtén el token del localStorage
-        if (!token) {
-          setError("No estás autenticado.");
-          return;
-        }
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
 
-        const activeSub = await ActiveSubscription(id, token); // Llama al servicio con el token
-        setSubscription(activeSub);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        setError(err.message || "No se pudo cargar la suscripción activa.");
-      }
-    };
-
-    loadSubscription();
-  }, [id]);
-
-  if (error) return <div>{error}</div>;
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   return subscription ? (
     <ContainerWeb className="">
@@ -88,11 +78,11 @@ const SubscriptionMercado: React.FC<{ id: string }> = ({ id }) => {
       </div>
     </ContainerWeb>
   ) : (
-    <div className="flex justify-center w-full items-center h-full flex-col">
+    <div className="flex justify-center w-full items-center h-full flex-col bg-white rounded-lg shadow-lg">
       <p className="font-normal text-lg pb-3">Choose Pricing Subscription</p>
       <Link href="/pricing">
         <ButtonApp
-          className="px-5 py-2"
+          className="px-5 py-2 shadow-lg"
           type="button"
           variant="login"
           size="md"

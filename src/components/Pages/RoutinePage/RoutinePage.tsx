@@ -10,6 +10,9 @@ import RoutineWizardModify from "@/components/RoutineWizardModify/RoutineWizardM
 import { IRoutineWizard } from "@/interface/IRoutine";
 import showGenericAlert from "@/components/alert/alert";
 import { toast } from "sonner";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import { useRouter } from "next/navigation";
 
 const RoutinePage = () => {
   const initialStateRoutineData = {
@@ -34,56 +37,68 @@ const RoutinePage = () => {
     useState<IRoutineWizard>(initialStateRoutine);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const { user, token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
   const closeModalx = async () => {
-      await showGenericAlert({
-        title: "Are you sure?",
-        text: "You will lose all your information if you close the form. Do you really want to proceed?",
-        icon: "warning",
-        buttons: [
-          {
-            text: "Confirm",
-            action: () => {
-              setIsModalOpen(false);
-              toast.info("Form closed without saving");
-            },
-            isConfirm: true,
+    await showGenericAlert({
+      title: "Are you sure?",
+      text: "You will lose all your information if you close the form. Do you really want to proceed?",
+      icon: "warning",
+      buttons: [
+        {
+          text: "Confirm",
+          action: () => {
+            setIsModalOpen(false);
+            toast.info("Form closed without saving");
           },
-          {
-            text: "Cancel",
-            action: () => {
-              toast.info("Form closure cancelled");
-            },
-            isConfirm: false,
+          isConfirm: true,
+        },
+        {
+          text: "Cancel",
+          action: () => {
+            toast.info("Form closure cancelled");
           },
-        ],
-      });
+          isConfirm: false,
+        },
+      ],
+    });
   };
 
   const openModalMod = () => setIsModalOpenMod(true);
   const closeModalMod = () => setIsModalOpenMod(false);
   const closeModalModx = async () => {
-      await showGenericAlert({
-        title: "Are you sure?",
-        text: "You will lose all your information if you close the form. Do you really want to proceed?",
-        icon: "warning",
-        buttons: [
-          {
-            text: "Confirm",
-            action: () => {
-              setIsModalOpenMod(false);
-              toast.info("Form closed without saving");
-            },
-            isConfirm: true,
+    await showGenericAlert({
+      title: "Are you sure?",
+      text: "You will lose all your information if you close the form. Do you really want to proceed?",
+      icon: "warning",
+      buttons: [
+        {
+          text: "Confirm",
+          action: () => {
+            setIsModalOpenMod(false);
+            toast.info("Form closed without saving");
           },
-          {
-            text: "Cancel",
-            action: () => {
-              toast.info("Form closure cancelled");
-            },
-            isConfirm: false,
+          isConfirm: true,
+        },
+        {
+          text: "Cancel",
+          action: () => {
+            toast.info("Form closure cancelled");
           },
-        ],
-      });
+          isConfirm: false,
+        },
+      ],
+    });
   };
 
   const [refreshRoutines, setRefreshRoutines] = useState(false);
@@ -105,8 +120,8 @@ const RoutinePage = () => {
   };
 
   return (
-    <main className="">
-      <ContainerWeb>
+    <main className=" ">
+      <ContainerWeb className="">
         <div className="flex justify-between my-4 mt-6">
           <TitleH1>Routines</TitleH1>
           <ButtonPrimary text="New routine" onClick={openModal} />
@@ -159,6 +174,21 @@ const RoutinePage = () => {
           openModalMod={openModalMod}
         />
       </ContainerWeb>
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
     </main>
   );
 };

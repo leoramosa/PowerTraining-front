@@ -5,6 +5,8 @@ import { useAuthStore } from "@/stores/userAuthStore";
 import axios from "axios";
 import AvatarUser from "../../../components/images/AvatarUser/AvatarUser";
 import TitleH1 from "../../../components/titles/TitleH1";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import { useRouter } from "next/navigation";
 
 const TrainerChat: React.FC = () => {
   const { user } = useAuthStore(); // El admin actual logueado
@@ -17,6 +19,18 @@ const TrainerChat: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null); // Usuario seleccionado
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
+  const { token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   // Obtener lista de usuarios ordenados desde la API.
   const fetchUsers = async () => {
@@ -69,52 +83,17 @@ const TrainerChat: React.FC = () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
-        // Verifica si el mensaje es entrante (de un usuario al admin)
-        if (message.receiverId === user?.id) {
+        if (message.sender?.id === selectedUser) {
+          setMessages((prevMessages) => [...prevMessages, message]);
+        } else {
           setUsers((prevUsers) => {
-            // Actualiza el estado de hasNewMessage y lastMessageTimestamp solo para mensajes entrantes
-            const updatedUsers = prevUsers.map((user) =>
-              user.id === message.senderId
-                ? {
-                    ...user,
-                    hasNewMessage: true,
-                    lastMessageTimestamp: new Date(),
-                  }
+            // Actualiza el estado de hasNewMessage
+            return prevUsers.map((user) =>
+              user.id === message.sender?.id
+                ? { ...user, hasNewMessage: true }
                 : user
             );
-
-            // Ordenar usuarios: primero por timestamp más reciente, luego los que tienen lastMessageTimestamp como null
-            updatedUsers.sort((a, b) => {
-              if (
-                a.lastMessageTimestamp === null &&
-                b.lastMessageTimestamp !== null
-              ) {
-                return 1; // b debe ir antes que a
-              }
-              if (
-                a.lastMessageTimestamp !== null &&
-                b.lastMessageTimestamp === null
-              ) {
-                return -1; // a debe ir antes que b
-              }
-              if (
-                a.lastMessageTimestamp === null &&
-                b.lastMessageTimestamp === null
-              ) {
-                return 0; // ambos son iguales
-              }
-              // Si ambos tienen timestamp, ordenar por fecha más reciente
-              return (
-                new Date(b.lastMessageTimestamp).getTime() -
-                new Date(a.lastMessageTimestamp).getTime()
-              );
-            });
-
-            return updatedUsers;
           });
-        } else if (message.senderId === selectedUser) {
-          // Si el mensaje es del admin al usuario seleccionado, solo actualiza los mensajes
-          setMessages((prevMessages) => [...prevMessages, message]);
         }
       });
     }
@@ -215,10 +194,10 @@ const TrainerChat: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-">
+      <div className="flex">
         {/* Panel lateral para seleccionar usuarios */}
 
-        <div className="w-1/4 bg-white rounded-lg mr-5 shadow-lg border-r p-4">
+        <div className="w-1/4 bg-white rounded-lg mr-5 shadow-lg border-r p-4 overflow-y-auto h-[calc(100vh-372px)]">
           <div className="text-gray-400 border-b mb-4">Select a chat</div>
           {users
             .filter((u) => u.id !== user?.id) // Filtra para que no muestre al admin
@@ -315,6 +294,21 @@ const TrainerChat: React.FC = () => {
             </div>
           )}
         </div>
+        {showBlur && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+            <h2 className="text-white text-2xl mb-4">
+              You need to subscribe first!
+            </h2>
+            <button
+              className="bg-primary  text-black font-bold py-2 px-4 rounded"
+              onClick={() => {
+                router.push("/pricing");
+              }}
+            >
+              Subscribe Now
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

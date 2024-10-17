@@ -3,12 +3,18 @@ export interface ILoginProps {
   password: string;
 }
 
+export interface ILoginError {
+  email?: string;
+  password?: string;
+}
+
 export interface IRegisterProps {
   name: string;
   lastName: string;
   birthDay: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 export interface IUser {
   id: string;

@@ -111,14 +111,7 @@ const Navbar: React.FC = () => {
                       <FaRegUser className="mr-2 text-gray-400" />
                       My Profile
                     </Link>
-                    <Link
-                      href="/myaccount/orders"
-                      className="dropdown-item px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"
-                      onClick={closeDropdown}
-                    >
-                      <CiViewList className="mr-2 text-gray-400" />
-                      My Orders
-                    </Link>
+
                     <button
                       onClick={handleLogout}
                       className="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -189,9 +182,9 @@ const Navbar: React.FC = () => {
         ></div>
 
         {/* Desktop Icons */}
-        <div className="hidden lg:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-4 ">
           {user ? (
-            <div className="relative">
+            <div className="relative ">
               <button
                 className="flex items-center"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -205,7 +198,7 @@ const Navbar: React.FC = () => {
                 <IoIosArrowDown className="ml-1" />
               </button>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-50">
                   <Link
                     href="/dashboard"
                     className="dropdown-item px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"

@@ -18,6 +18,7 @@ import showGenericAlert from "@/components/alert/alert";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/userAuthStore";
 import Spinner from "@/components/Spinner/Spinner";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
 
 interface ICategory {
   id: string;
@@ -35,6 +36,18 @@ const TrashPage: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   console.log(user);
   const router = useRouter();
+
+  const { token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
   const fetchCategories = async () => {
     const exampleCategories: ICategory[] = [
       {
@@ -283,6 +296,22 @@ const TrashPage: React.FC = () => {
               </p>
             )
           )}
+        </div>
+      )}
+
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
         </div>
       )}
     </ContainerWeb>

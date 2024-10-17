@@ -14,6 +14,7 @@ export function middleware(req: NextRequest) {
     "/",
     "/reset-password",
     "/reset-password-confirm",
+    "/register/trainer",
   ]; // Rutas públicas
 
   // Verificamos si estamos en una ruta pública
@@ -47,6 +48,8 @@ export function middleware(req: NextRequest) {
       "/dashboard/reports",
       "/dashboard/routine",
       "/dashboard/trash",
+      "/dashboard/chats",
+      "/register/trainer",
     ];
     const userRoutes = ["/dashboard/client/routine"];
 
@@ -85,6 +88,7 @@ export const config = {
     "/dashboard/reports",
     "/dashboard/routine",
     "/dashboard/trash",
+    "/register/trainer",
     "/login",
     "/register",
   ], // Rutas protegidas y públicas que queremos manejar

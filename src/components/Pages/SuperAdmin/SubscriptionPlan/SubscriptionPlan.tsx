@@ -113,52 +113,74 @@ const SubscriptionPlan = () => {
 
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-4 rounded">
-            <h2 className="text-xl mb-4">Create New Plan</h2>
-            <input
-              type="text"
-              placeholder="Name"
-              value={newPlan.name}
-              onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })}
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              value={newPlan.price}
-              onChange={(e) =>
-                setNewPlan({ ...newPlan, price: parseInt(e.target.value) })
-              }
-              className="border p-2 mb-2 w-full"
-            />
-            <input
-              type="number"
-              placeholder="Duration in Months"
-              value={newPlan.durationInMonths}
-              onChange={(e) =>
-                setNewPlan({
-                  ...newPlan,
-                  durationInMonths: parseInt(e.target.value),
-                })
-              }
-              className="border p-2 mb-2 w-full"
-            />
-            <div className="mb-2">
+          <div className="bg-white p-4 w-1/3 rounded">
+            <h2 className="text-xl mb-4">Create New Subscription Plan</h2>
+            <div className="">
+              <label htmlFor="">Plan Name</label>
               <input
                 type="text"
-                placeholder="Add a feature"
-                value={featureInput}
-                onChange={(e) => setFeatureInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAddFeature()}
-                className="border p-2 w-full"
+                placeholder="Example: Standard, Premium, Pro"
+                value={newPlan.name}
+                onChange={(e) =>
+                  setNewPlan({ ...newPlan, name: e.target.value })
+                }
+                className="border p-2 mb-2 w-full"
               />
-              <button
-                className="bg-blue-500 text-white px-4 py-2 mt-2 rounded"
-                onClick={handleAddFeature}
-              >
-                Add Feature
-              </button>
             </div>
+
+            <div className="">
+              <label className="mb-2" htmlFor="">
+                Price
+              </label>
+              <input
+                type="number"
+                placeholder="Price"
+                value={newPlan.price}
+                onChange={(e) =>
+                  setNewPlan({ ...newPlan, price: parseInt(e.target.value) })
+                }
+                className="border p-2 mb-2 w-full"
+              />
+            </div>
+
+            <div className="">
+              <label>Duration in Months</label>
+              <input
+                type="number"
+                placeholder="Duration in Months"
+                value={newPlan.durationInMonths}
+                onChange={(e) =>
+                  setNewPlan({
+                    ...newPlan,
+                    durationInMonths: parseInt(e.target.value),
+                  })
+                }
+                className="border p-2 mb-2 w-full"
+              />
+            </div>
+
+            <div className="pb-5">
+              <label>Add a feature</label>
+              <div className="mb-2 flex items-center">
+                <input
+                  type="text"
+                  placeholder="Add a feature"
+                  value={featureInput}
+                  onChange={(e) => setFeatureInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAddFeature()}
+                  className="border p-2 w-full"
+                />
+                <div className="">
+                  <button
+                    className="bg-primary text-white px-1 ml-3 whitespace-nowrap py-2 rounded"
+                    onClick={handleAddFeature}
+                  >
+                    Add Feature
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <ul className="list-disc pl-5 mb-2">
               {newPlan.features.map((feature, index) => (
                 <li key={index} className="flex justify-between items-center">

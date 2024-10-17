@@ -5,9 +5,9 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
-import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
-import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
 //import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { getCountersHome } from "@/helpers/routine-helper";
 
@@ -15,9 +15,8 @@ const DashboardPage = () => {
   const [userCount, setUserCount] = useState(0);
   const [routinesCount, setRoutinesCount] = useState(0); // Inicialmente 0
   const [exercisesCount, setExercisesCount] = useState(0); // Cambia esto al número real
-  const { user, token } = useAuthStore(); // Obtenemos el token aquí
   const router = useRouter();
-
+  const { user, token } = useAuthStore();
   const { subscription, fetchSubscription } = useSubscriptionStore();
 
   useEffect(() => {
@@ -29,7 +28,11 @@ const DashboardPage = () => {
   const showBlur =
     user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
-  const [targetCounts, setTargetCounts] = useState<{ users: number, routines: number, exercises: number } | null>(null);
+  const [targetCounts, setTargetCounts] = useState<{
+    users: number;
+    routines: number;
+    exercises: number;
+  } | null>(null);
   const valueIncrement: number = 2;
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const DashboardPage = () => {
         console.log(data);
         setTargetCounts(data);
       } catch (error) {
-        console.error('Error fetching statistics:', error);
+        console.error("Error fetching statistics:", error);
       }
     };
     fetchStatistics();
@@ -52,35 +55,35 @@ const DashboardPage = () => {
       const userCountInterval = setInterval(() => {
         setUserCount((prevCount) => {
           if (prevCount < users) {
-            return prevCount + valueIncrement; 
+            return prevCount + valueIncrement;
           } else {
             clearInterval(userCountInterval);
             return prevCount;
           }
         });
-      }, 30); 
+      }, 30);
 
       const routinesCountInterval = setInterval(() => {
         setRoutinesCount((prevCount) => {
           if (prevCount < routines) {
-            return prevCount + valueIncrement; 
+            return prevCount + valueIncrement;
           } else {
             clearInterval(routinesCountInterval);
-            return prevCount; 
+            return prevCount;
           }
         });
-      }, 30); 
+      }, 30);
 
       const exercisesCountInterval = setInterval(() => {
         setExercisesCount((prevCount) => {
           if (prevCount < exercises) {
-            return prevCount + valueIncrement; 
+            return prevCount + valueIncrement;
           } else {
             clearInterval(exercisesCountInterval);
-            return prevCount; 
+            return prevCount;
           }
         });
-      }, 30); 
+      }, 30);
 
       return () => {
         clearInterval(userCountInterval);
@@ -140,9 +143,9 @@ const DashboardPage = () => {
             </Link>
 
             <Link href="/dashboard/exercise" className="w-1/3">
-              <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-60">
+              <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
                 <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
-                  <FaDumbbell className="text-4xl text-white" />
+                  <FaDumbbell className="text-4xl text-primary" />
                 </div>
                 <div className="text-left pl-5 flex flex-col justify-center items-start">
                   <p className="text-3xl font-bold">Exercises</p>
@@ -161,7 +164,7 @@ const DashboardPage = () => {
         </div>
       </div>
       {showBlur && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-50 w-full">
+        <div className="absolute inset-0 flex flex-col h-full items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
           <h2 className="text-white text-2xl mb-4">
             You need to subscribe first!
           </h2>

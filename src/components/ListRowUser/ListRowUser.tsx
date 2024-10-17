@@ -6,6 +6,9 @@ import { useUsersStore } from "@/stores/usersStore"; // Ensure correct import
 import ListUser from "@/components/ListUser/ListUser";
 import SearchInput from "@/components/search/SearchInput";
 import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useRouter } from "next/navigation";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
 
 const ListRowUser: React.FC = () => {
   const { users, setUsers } = useUsersStore();
@@ -15,6 +18,20 @@ const ListRowUser: React.FC = () => {
   const [filters, setFilters] = useState<IUserFilters>({});
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchSelect, setSearchSelect] = useState<string>("");
+  const user = useAuthStore((state) => state.user);
+
+  const router = useRouter();
+  const { token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   const calculateTotalPages = (totalCount: number, limit: number) => {
     return Math.ceil(totalCount / limit);
@@ -110,6 +127,21 @@ const ListRowUser: React.FC = () => {
           disabled={currentPage === totalPages}
         />
       </div>
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
     </main>
   );
 };

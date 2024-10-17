@@ -36,6 +36,8 @@ import Pagination from "@/components/pagination/Pagination";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+
 const ExercisePage = () => {
   //console.log(data);
 
@@ -57,6 +59,18 @@ const ExercisePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
+
+  const { token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
   //###### Function request api
   const fetchData = async (id?: string) => {
     const exercise: IExercise = await getExerciseById(id);
@@ -437,14 +451,19 @@ const ExercisePage = () => {
         <div className="">
           {/* If not exist exercises */}
           {!listExercises ||
-            (listExercises.length === 0 || listExercises[0].id === "" && (
-              <div className="mt-3"><ItemInfo>
-                <p className="text-gray-500 font-semibold">
-                  No results found. Please try with other filter or recharge page.
-                </p>
-              </ItemInfo></div>
+            listExercises.length === 0 ||
+            (listExercises[0].id === "" && (
+              <div className="mt-3">
+                <ItemInfo>
+                  <p className="text-gray-500 font-semibold">
+                    No results found. Please try with other filter or recharge
+                    page.
+                  </p>
+                </ItemInfo>
+              </div>
             ))}
-          {listExercises.length > 0 && listExercises[0].id != "" && 
+          {listExercises.length > 0 &&
+            listExercises[0].id != "" &&
             listExercises.map((exercise, i) => {
               return (
                 <ExerciseCard
@@ -484,6 +503,21 @@ const ExercisePage = () => {
           />
         )}
       </ContainerWeb>
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
     </main>
   );
 };

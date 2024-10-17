@@ -1,24 +1,40 @@
 "use client";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaFileDownload } from "react-icons/fa";
 import { toast } from "sonner";
+import { useAuthStore } from "@/stores/userAuthStore";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import { useRouter } from "next/navigation";
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 const ReportingPage = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const { user, token } = useAuthStore();
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   const handleExcelDownload = async (reportType: string) => {
     const endpointMap: { [key: string]: string } = {
       "exercise-report": "/excelreports/getAllExercises",
-      "user-report": "/excelreports/AllUsers"
+      "user-report": "/excelreports/AllUsers",
     };
 
     try {
-      const response = await fetch(APIURL+endpointMap[reportType], {
+      const response = await fetch(APIURL + endpointMap[reportType], {
         method: "GET",
         headers: {
-          "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         },
       });
 
@@ -34,18 +50,18 @@ const ReportingPage = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      toast.success("The report has been downloaded successfully")
+      toast.success("The report has been downloaded successfully");
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
-      toast.error("There was an error downloading the report. Please try again later")
+      toast.error(
+        "There was an error downloading the report. Please try again later"
+      );
     }
   };
 
-
   const handlePdfDownload = async () => {
-
     try {
-      const response = await fetch(APIURL+"/pdfreports/active-routines", {
+      const response = await fetch(APIURL + "/pdfreports/active-routines", {
         method: "GET",
         headers: {
           Accept: "application/pdf",
@@ -64,19 +80,19 @@ const ReportingPage = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      toast.success("The report has been downloaded successfully")
+      toast.success("The report has been downloaded successfully");
     } catch (error) {
       console.error("Error al descargar el archivo:", error);
-      toast.error("There was an error downloading the report. Please try again later")
+      toast.error(
+        "There was an error downloading the report. Please try again later"
+      );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 ">
+    <div className=" bg-white ">
       <div className="w-full h-full p-4">
-      <h1 className="text-3xl font-bold text-gray-700 ">
-          Download Reports
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-700 ">Download Reports</h1>
       </div>
       <div className="w-full h-full flex flex-col items-center justify-center p-4">
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full max-w-4xl">
@@ -118,6 +134,22 @@ const ReportingPage = () => {
           />
         </div>
       </div>
+
+      {showBlur && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -163,7 +195,11 @@ const Card: React.FC<CardProps> = ({
         <button
           disabled={disabled}
           onClick={onClick}
-          className={` mt-3 ${!disabled ? "hover:bg-primary bg-gray-500" : "hover:none bg-gray-300"}  text-white px-4 py-2 rounded-full flex items-center justify-center mx-auto transition duration-300 ease-in-out`}
+          className={` mt-3 ${
+            !disabled
+              ? "hover:bg-primary bg-gray-500"
+              : "hover:none bg-gray-300"
+          }  text-white px-4 py-2 rounded-full flex items-center justify-center mx-auto transition duration-300 ease-in-out`}
         >
           <FaFileDownload className="mr-2" />
           Download {nameReport}

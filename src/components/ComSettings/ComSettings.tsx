@@ -20,11 +20,11 @@ const UserProfile = () => {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <div className=" bg-white rounded-lg h-full shadow-lg">
+    <div className=" bg-white rounded-lg h-full shadow-lg pb-10">
       <div className=" bg-gradient-to-l from-[#ffeeb5]  to-primary p-6 pl-10 rounded-t-lg">
         <h1 className="text-2xl font-bold">Profile</h1>
       </div>
-      <div className="flex justify-between px-10 pt-10">
+      <div className="flex justify-between px-10 pt-10 ">
         <div className="flex items-center ">
           <AvatarUser
             name={user.name}

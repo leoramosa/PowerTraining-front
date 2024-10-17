@@ -10,7 +10,9 @@ export default function dashLayout({
     <div className="bg-gray-100 h-full flex flex-col">
       <div className="w-full flex h-full px-5 py-5 mx-auto">
         <Sidebar />
-        <div className="flex-1 ml-5  rounded-lg ">{children}</div>
+        <div className="flex-1 ml-5 bg-white shadow-lg relative rounded-lg ">
+          {children}
+        </div>
         {/* <div className="w-72  ml-5 ">
           <div className="pb-5">
             <p className="text-black text-[12px]">Recently registered</p>
