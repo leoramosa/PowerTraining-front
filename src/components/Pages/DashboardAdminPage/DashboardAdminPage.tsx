@@ -5,29 +5,12 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
-import { useAuthStore } from "@/stores/userAuthStore";
-import { useRouter } from "next/navigation";
-import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
-//import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { getCountersHome } from "@/helpers/routine-helper";
 
 const DashboardAdminPage = () => {
   const [userCount, setUserCount] = useState<number>(0);
-  const [routinesCount, setRoutinesCount] = useState<number>(0); // Inicialmente 0
-  const [exercisesCount, setExercisesCount] = useState<number>(0); // Cambia esto al número real
-  const { user, token } = useAuthStore(); // Obtenemos el token aquí
-  //const router = useRouter();
-
-  const { subscription, fetchSubscription } = useSubscriptionStore();
-
-  useEffect(() => {
-    if (user && token) {
-      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
-    }
-  }, [user, token, fetchSubscription]);
-
-  const showBlur =
-    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
+  const [routinesCount, setRoutinesCount] = useState<number>(0); 
+  const [exercisesCount, setExercisesCount] = useState<number>(0); 
 
   const [targetCounts, setTargetCounts] = useState<{
     users: number;
