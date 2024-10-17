@@ -11,7 +11,8 @@ const ReportingPage = () => {
   const handleExcelDownload = async (reportType: string) => {
     const endpointMap: { [key: string]: string } = {
       "exercise-report": "/excelreports/getAllExercises",
-      "user-report": "/excelreports/AllUsers"
+      "user-report": "/excelreports/AllUsers",
+      "routine-report": "/excelreports/AllRoutines"
     };
 
     try {
@@ -42,7 +43,7 @@ const ReportingPage = () => {
   };
 
 
-  const handlePdfDownload = async () => {
+  /*const handlePdfDownload = async () => {
 
     try {
       const response = await fetch(APIURL+"/pdfreports/active-routines", {
@@ -69,7 +70,7 @@ const ReportingPage = () => {
       console.error("Error al descargar el archivo:", error);
       toast.error("There was an error downloading the report. Please try again later")
     }
-  };
+  };*/
 
   return (
     <div className="min-h-screen bg-gray-100 ">
@@ -110,11 +111,11 @@ const ReportingPage = () => {
             imageUrl="/images/report-3.jpg"
             onClick={() => {
               setSelectedCard("routine-report");
-              handlePdfDownload();
+              handleExcelDownload("routine-report");
             }}
             isSelected={selectedCard === "routine-report"}
             disabled={false}
-            nameReport="pdf"
+            nameReport="excel"
           />
         </div>
       </div>
