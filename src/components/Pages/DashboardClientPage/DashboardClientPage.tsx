@@ -42,7 +42,7 @@ const DashboardClientPage = () => {
           const weeksInRoutine = Math.ceil(daysInRoutine / 7);
           return totalWeeks + weeksInRoutine;
         }, 0);
-        setTargetCounts({routines, weeks, exercises});
+        setTargetCounts({ routines, weeks, exercises });
       } catch (error) {
         console.error("Error fetching statistics:", error);
       }
@@ -53,7 +53,7 @@ const DashboardClientPage = () => {
   useEffect(() => {
     if (targetCounts) {
       const { weeks, routines, exercises } = targetCounts;
-        console.log(weeks, routines, exercises)
+      console.log(weeks, routines, exercises);
       const exercisesCountInterval = setInterval(() => {
         setExercisesCount((prevCount: number) => {
           if (prevCount < weeks) {
@@ -106,7 +106,7 @@ const DashboardClientPage = () => {
             We're here to support you on your fitness journey. Access your
             personalized workout routines, track your progress, and stay focused
             on reaching your goals. Everything you need to improve your
-            performance is right at your fingertips. Let’s take your fitness to
+            performance is right at your fingertips. Let is take your fitness to
             the next level!
           </p>
         </div>
