@@ -213,7 +213,9 @@ const TrainerChat: React.FC = () => {
                 }`}
                 onClick={() => selectUser(user.id)}
               >
-                <span className="flex-1">{user.name}</span>
+                <span className="flex-1">
+                  {user.name} {user.lastName}
+                </span>
                 {user.hasNewMessage && (
                   <span className="ml-2 w-3 h-3 rounded-full bg-orange-500"></span>
                 )}
