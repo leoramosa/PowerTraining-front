@@ -73,21 +73,43 @@ const TrainerChat: React.FC = () => {
           setMessages((prevMessages) => [...prevMessages, message]);
         } else {
           setUsers((prevUsers) => {
-            // Actualiza el estado de hasNewMessage
+            // Actualiza el estado de hasNewMessage y lastMessageTimestamp
             const updatedUsers = prevUsers.map((user) =>
               user.id === message.sender?.id
-                ? { ...user, hasNewMessage: true }
+                ? {
+                    ...user,
+                    hasNewMessage: true,
+                    lastMessageTimestamp: new Date(),
+                  }
                 : user
             );
 
-            // Mueve el usuario que envió el mensaje al principio de la lista
-            const userIndex = updatedUsers.findIndex(
-              (user) => user.id === message.sender?.id
-            );
-            if (userIndex !== -1) {
-              const [userWithNewMessage] = updatedUsers.splice(userIndex, 1);
-              updatedUsers.unshift(userWithNewMessage);
-            }
+            // Ordenar usuarios: primero por timestamp más reciente, luego los que tienen lastMessageTimestamp como null
+            updatedUsers.sort((a, b) => {
+              if (
+                a.lastMessageTimestamp === null &&
+                b.lastMessageTimestamp !== null
+              ) {
+                return 1; // b debe ir antes que a
+              }
+              if (
+                a.lastMessageTimestamp !== null &&
+                b.lastMessageTimestamp === null
+              ) {
+                return -1; // a debe ir antes que b
+              }
+              if (
+                a.lastMessageTimestamp === null &&
+                b.lastMessageTimestamp === null
+              ) {
+                return 0; // ambos son iguales
+              }
+              // Si ambos tienen timestamp, ordenar por fecha más reciente
+              return (
+                new Date(b.lastMessageTimestamp).getTime() -
+                new Date(a.lastMessageTimestamp).getTime()
+              );
+            });
 
             return updatedUsers;
           });
