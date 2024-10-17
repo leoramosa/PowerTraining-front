@@ -4,10 +4,13 @@ import { useAuthStore } from "@/stores/userAuthStore";
 import EditProfileModal from "@/components/Modals/ModalProfileUser/ModalProfileUser";
 import InputFormLogin from "../inputs/InputFormLogin/InputFormLogin";
 import AvatarUser from "../images/AvatarUser/AvatarUser";
+import Link from "next/link";
 
 const UserProfile = () => {
   const user = useAuthStore((state) => state.user);
   const [isModalOpen, setModalOpen] = useState(false);
+
+  
 
   useEffect(() => {
     if (!user) {
@@ -100,9 +103,11 @@ const UserProfile = () => {
       </div>
       <div className=" px-10">
         <p> Password</p>
+        <Link href="/reset-password">
         <button className="bg-gray-800 rounded-lg p-2 py-2 mt-2 block text-md text-white">
           Change password
         </button>
+        </Link>
       </div>
     </div>
   );
