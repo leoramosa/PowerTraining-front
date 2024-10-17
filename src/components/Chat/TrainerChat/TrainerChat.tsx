@@ -69,17 +69,52 @@ const TrainerChat: React.FC = () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       socket.on("message", (message: any) => {
-        if (message.sender?.id === selectedUser) {
-          setMessages((prevMessages) => [...prevMessages, message]);
-        } else {
+        // Verifica si el mensaje es entrante (de un usuario al admin)
+        if (message.receiverId === user?.id) {
           setUsers((prevUsers) => {
-            // Actualiza el estado de hasNewMessage
-            return prevUsers.map((user) =>
-              user.id === message.sender?.id
-                ? { ...user, hasNewMessage: true }
+            // Actualiza el estado de hasNewMessage y lastMessageTimestamp solo para mensajes entrantes
+            const updatedUsers = prevUsers.map((user) =>
+              user.id === message.senderId
+                ? {
+                    ...user,
+                    hasNewMessage: true,
+                    lastMessageTimestamp: new Date(),
+                  }
                 : user
             );
+
+            // Ordenar usuarios: primero por timestamp más reciente, luego los que tienen lastMessageTimestamp como null
+            updatedUsers.sort((a, b) => {
+              if (
+                a.lastMessageTimestamp === null &&
+                b.lastMessageTimestamp !== null
+              ) {
+                return 1; // b debe ir antes que a
+              }
+              if (
+                a.lastMessageTimestamp !== null &&
+                b.lastMessageTimestamp === null
+              ) {
+                return -1; // a debe ir antes que b
+              }
+              if (
+                a.lastMessageTimestamp === null &&
+                b.lastMessageTimestamp === null
+              ) {
+                return 0; // ambos son iguales
+              }
+              // Si ambos tienen timestamp, ordenar por fecha más reciente
+              return (
+                new Date(b.lastMessageTimestamp).getTime() -
+                new Date(a.lastMessageTimestamp).getTime()
+              );
+            });
+
+            return updatedUsers;
           });
+        } else if (message.senderId === selectedUser) {
+          // Si el mensaje es del admin al usuario seleccionado, solo actualiza los mensajes
+          setMessages((prevMessages) => [...prevMessages, message]);
         }
       });
     }

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
-import DashboardUserProgress2 from "@/components/DashboardUserProgress/DashboardUserProgress2";
+import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
@@ -156,7 +156,7 @@ const DashboardPage = () => {
           </div>
 
           <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
-            <DashboardUserProgress2 />
+            <DashboardUserProgress />
           </div>
         </div>
       </div>
