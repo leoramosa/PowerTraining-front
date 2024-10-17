@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
 import { useAuthStore } from "@/stores/userAuthStore";
 
-const SubscriptionMercado: React.FC<{ id: string }> = ({ id }) => {
+const SubscriptionMercado: React.FC<{ id: string }> = () => {
   const { user, token } = useAuthStore(); // Obtenemos el token aquí
 
   const { subscription, fetchSubscription } = useSubscriptionStore();

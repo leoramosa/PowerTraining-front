@@ -8,9 +8,6 @@ import { toast } from "sonner";
 import PasswordRequirements from "../FormRegister/PasswordRequirements";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
-import { signIn, useSession } from "next-auth/react";
-import { useAuthStore } from "@/stores/userAuthStore";
 
 const FormTrainer: React.FC = () => {
   const initialFormData: IRegisterProps = {
@@ -21,8 +18,7 @@ const FormTrainer: React.FC = () => {
     confirmPassword: "",
     password: "",
   };
-  const { data: session } = useSession();
-  const login = useAuthStore((state) => state.login);
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const [formData, setFormData] = useState<IRegisterProps>(initialFormData);
