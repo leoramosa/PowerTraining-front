@@ -18,10 +18,9 @@ export async function ActiveSubscription(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(
+      throw new Error(
         `Error HTTP! status: ${response.status}, message: ${errorText}`
       );
-      return null;
     }
 
     const subscriptions: ISubscription[] = await response.json();
@@ -30,13 +29,11 @@ export async function ActiveSubscription(
     );
 
     if (!activeSubscription) {
-      console.warn("There are no active subscriptions.");
-      return null;
+      throw new Error("No hay suscripciones activas.");
     }
 
     return activeSubscription;
   } catch (error: any) {
-    console.error("Error searching for active subscriptions:", error.message);
-    return null; // Devuelve null en lugar de lanzar el error
+    throw new Error(error.message);
   }
 }
