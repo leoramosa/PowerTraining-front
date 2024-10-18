@@ -1,103 +1,104 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import { FaCalendarWeek } from "react-icons/fa";
 import ClientProgress from "@/components/ClientProgress/ClientProgress";
-import { getRoutinesByUserId } from "@/helpers/routine-helper";
-import { useAuthStore } from "@/stores/userAuthStore";
+// import { getRoutinesByUserId } from "@/helpers/routine-helper";
+// import { useAuthStore } from "@/stores/userAuthStore";
 
 const DashboardClientPage = () => {
-  const [exercisesCount, setExercisesCount] = useState<number>(0);
-  const [weeksCount, setWeeksCount] = useState<number>(0);
-  const [routinesCount, setRoutinesCount] = useState<number>(0);
-  const { user } = useAuthStore(); // Obtenemos el token aquí
+  // const [exercisesCount, setExercisesCount] = useState<number>(0);
+  // const [weeksCount, setWeeksCount] = useState<number>(0);
+  // const [routinesCount, setRoutinesCount] = useState<number>(0);
+  // const { user } = useAuthStore(); // Obtenemos el token aquí
 
-  const [targetCounts, setTargetCounts] = useState<{
-    weeks: number;
-    routines: number;
-    exercises: number;
-  } | null>(null);
-  const valueIncrement: number = 1;
+  // const [targetCounts, setTargetCounts] = useState<{
+  //   weeks: number;
+  //   routines: number;
+  //   exercises: number;
+  // } | null>(null);
+  // const valueIncrement: number = 1;
 
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        const data = await getRoutinesByUserId(user?.id);
-        console.log(data);
+  // useEffect(() => {
+  //   const fetchStatistics = async () => {
+  //     try {
+  //       const data = await getRoutinesByUserId(user?.id);
+  //       console.log(data);
 
-        const routines = data.length;
-        const exercises = data.reduce((totalExercises, routine) => {
-          return (
-            totalExercises +
-            routine.trainingDays.reduce((daysExercises, day) => {
-              // Filtrar solo los ejercicios completados
-              const completedInDay = day.exercises.filter(exercise => exercise.completed).length;
-              return daysExercises + completedInDay;
-            }, 0)
-          );
-        }, 0);
-        
-        console.log(exercises);
+  //       const routines = data.length;
+  //       const exercises = data.reduce((totalExercises, routine) => {
+  //         return (
+  //           totalExercises +
+  //           routine.trainingDays.reduce((daysExercises, day) => {
+  //             // Filtrar solo los ejercicios completados
+  //             const completedInDay = day.exercises.filter(
+  //               (exercise) => exercise.completed
+  //             ).length;
+  //             return daysExercises + completedInDay;
+  //           }, 0)
+  //         );
+  //       }, 0);
 
-        const weeks = data.reduce((totalWeeks, routine) => {
-          const daysInRoutine = routine.trainingDays.length;
-          const weeksInRoutine = Math.ceil(daysInRoutine / 7);
-          return totalWeeks + weeksInRoutine;
-        }, 0);
-        setTargetCounts({ weeks, routines, exercises });
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-    fetchStatistics();
-  }, []);
+  //       console.log(exercises);
 
-  useEffect(() => {
-    if (targetCounts) {
-      const { weeks, routines, exercises } = targetCounts;
-      console.log(weeks, routines, exercises);
-      const exercisesCountInterval = setInterval(() => {
-        setExercisesCount((prevCount: number) => {
-          if (prevCount < exercises) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(exercisesCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  //       const weeks = data.reduce((totalWeeks, routine) => {
+  //         const daysInRoutine = routine.trainingDays.length;
+  //         const weeksInRoutine = Math.ceil(daysInRoutine / 7);
+  //         return totalWeeks + weeksInRoutine;
+  //       }, 0);
+  //       setTargetCounts({ weeks, routines, exercises });
+  //     } catch (error) {
+  //       console.error("Error fetching statistics:", error);
+  //     }
+  //   };
+  //   fetchStatistics();
+  // }, []);
 
-      const routinesCountInterval = setInterval(() => {
-        setRoutinesCount((prevCount: number) => {
-          if (prevCount < routines) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(routinesCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  // useEffect(() => {
+  //   if (targetCounts) {
+  //     const { weeks, routines, exercises } = targetCounts;
+  //     console.log(weeks, routines, exercises);
+  //     const exercisesCountInterval = setInterval(() => {
+  //       setExercisesCount((prevCount: number) => {
+  //         if (prevCount < exercises) {
+  //           return prevCount + valueIncrement;
+  //         } else {
+  //           clearInterval(exercisesCountInterval);
+  //           return prevCount;
+  //         }
+  //       });
+  //     }, 30);
 
-      const weeksCountInterval = setInterval(() => {
-        setWeeksCount((prevCount: number) => {
-          if (prevCount < weeks) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(weeksCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  // const routinesCountInterval = setInterval(() => {
+  //   setRoutinesCount((prevCount: number) => {
+  //     if (prevCount < routines) {
+  //       return prevCount + valueIncrement;
+  //     } else {
+  //       clearInterval(routinesCountInterval);
+  //       return prevCount;
+  //     }
+  //   });
+  // }, 30);
 
-      return () => {
-        clearInterval(weeksCountInterval);
-        clearInterval(routinesCountInterval);
-        clearInterval(exercisesCountInterval);
-      };
-    }
-  }, [targetCounts]);
+  //     const weeksCountInterval = setInterval(() => {
+  //       setWeeksCount((prevCount: number) => {
+  //         if (prevCount < weeks) {
+  //           return prevCount + valueIncrement;
+  //         } else {
+  //           clearInterval(weeksCountInterval);
+  //           return prevCount;
+  //         }
+  //       });
+  //     }, 30);
+
+  //     return () => {
+  //       clearInterval(weeksCountInterval);
+  //       clearInterval(routinesCountInterval);
+  //       clearInterval(exercisesCountInterval);
+  //     };
+  //   }
+  // }, [targetCounts]);
 
   return (
     <div className=" ">
@@ -125,7 +126,7 @@ const DashboardClientPage = () => {
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Routines</p>
-              <p className="text-5xl font-bold text-primary">{routinesCount}</p>
+              {/* <p className="text-5xl font-bold text-primary">{routinesCount}</p> */}
               <p className="text-sm">All routines</p>
             </div>
           </div>
@@ -140,7 +141,7 @@ const DashboardClientPage = () => {
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Exercises Done</p>
               <p className="text-5xl font-bold text-primary">
-                {exercisesCount}
+                {/* {exercisesCount} */}
               </p>
               <p className="text-sm">This Week</p>
             </div>
@@ -154,7 +155,7 @@ const DashboardClientPage = () => {
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Weeks Training</p>
-              <p className="text-5xl font-bold text-primary">{weeksCount}</p>
+              {/* <p className="text-5xl font-bold text-primary">{weeksCount}</p> */}
               <p className="text-sm">Total count</p>
             </div>
           </div>
