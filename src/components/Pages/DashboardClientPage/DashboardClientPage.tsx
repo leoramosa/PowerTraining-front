@@ -101,6 +101,10 @@ const DashboardClientPage = () => {
     }
   }, [targetCounts]);
 
+  {
+    if (!user) return <div>Loading...</div>;
+  }
+
   return (
     <div className=" ">
       <div className="bg-[url('/images/backdash.jpg')]  bg-cover bg-top  relative rounded-lg shadow-lg">
