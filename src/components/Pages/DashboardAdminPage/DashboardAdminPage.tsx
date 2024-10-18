@@ -1,18 +1,33 @@
 "use client";
+import React, { useEffect } from "react";
+
 import Link from "next/link";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
-// import { getCountersHome } from "@/helpers/routine-helper";
 import { useAuthStore } from "@/stores/userAuthStore";
+import { useRouter } from "next/navigation";
+import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
+// import { getCountersHome } from "@/helpers/routine-helper";
 
 const DashboardAdminPage = () => {
   // const [userCount, setUserCount] = useState<number>(0);
   // const [routinesCount, setRoutinesCount] = useState<number>(0);
   // const [exercisesCount, setExercisesCount] = useState<number>(0);
+  const { user, token } = useAuthStore(); // Obtenemos el token aquí
+  const router = useRouter();
 
-  const user = useAuthStore((state) => state.user);
+  const { subscription, fetchSubscription } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (user && token) {
+      fetchSubscription(user.id, token); // Pasamos tanto el ID del usuario como el token
+    }
+  }, [user, token, fetchSubscription]);
+
+  const showBlur =
+    user?.role === "Admin" && subscription?.paymentStatus !== "approved";
 
   // const [targetCounts, setTargetCounts] = useState<{
   //   users: number;
@@ -84,7 +99,7 @@ const DashboardAdminPage = () => {
   }
 
   return (
-    <div className=" ">
+    <div className={`${showBlur ? "backdrop-blur-sm opacity-90" : ""} `}>
       <div className="bg-[url('/images/backdash.jpg')]  bg-cover bg-top  relative rounded-lg shadow-lg">
         <div className="bg-gradient-to-l from-[#f9931e88]  to-[#000000] py-10 rounded-lg">
           <p className="text-primary text-4xl font-bold px-5 pl-7">
@@ -146,6 +161,22 @@ const DashboardAdminPage = () => {
       <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
         <DashboardUserProgress />
       </div>
+
+      {showBlur && user?.role === "Admin" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
+          <h2 className="text-white text-2xl mb-4">
+            You need to subscribe first!
+          </h2>
+          <button
+            className="bg-primary  text-black font-bold py-2 px-4 rounded"
+            onClick={() => {
+              router.push("/pricing");
+            }}
+          >
+            Subscribe Now
+          </button>
+        </div>
+      )}
     </div>
   );
 };
