@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores/userAuthStore";
 import axios from "axios";
 
 const ClientChat: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
+  const { user } = useAuthStore();
   const socket = useSocket();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [messages, setMessages] = useState<any[]>([]);

@@ -83,7 +83,7 @@ const ExercisePage = () => {
       const response = await getExercisesDB(limit, currentPage, filters);
       setTotalPages(calculateTotalPages(response.count, limit));
       setListExercises(response.data);
-      console.log("paso por aqui");
+      console.log("paso por aqui")
     } catch (error) {
       console.error("Error fetching exercises, please try again.");
     }
@@ -104,7 +104,7 @@ const ExercisePage = () => {
   }, []);
 
   useEffect(() => {
-    console.log("------> ", listExercises);
+    console.log("------> ",listExercises)
   }, [dataExercise, listExercises, createOrUpdateItem, filters]);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ const ExercisePage = () => {
   //####### Handle Search
   const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    console.log(newValue);
+    console.log(newValue)
     setSearchValue(newValue);
   };
 
@@ -457,17 +457,16 @@ const ExercisePage = () => {
           {(!listExercises ||
             listExercises.length === 0 ||
             listExercises[0].id === "") && (
-            <div className="mt-3">
-              <ItemInfo>
-                <p className="text-gray-500 font-semibold">
-                  No results found. Please try with other filter or recharge
-                  page.
-                </p>
-              </ItemInfo>
-            </div>
-          )}
-          {listExercises &&
-            listExercises.length > 0 &&
+              <div className="mt-3">
+                <ItemInfo>
+                  <p className="text-gray-500 font-semibold">
+                    No results found. Please try with other filter or recharge
+                    page.
+                  </p>
+                </ItemInfo>
+              </div>
+            )}
+          {listExercises && listExercises.length > 0 &&
             listExercises[0].id != "" &&
             listExercises.map((exercise, i) => {
               return (

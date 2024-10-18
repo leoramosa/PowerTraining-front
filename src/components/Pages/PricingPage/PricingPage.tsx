@@ -5,7 +5,6 @@ import { useAuthStore } from "@/stores/userAuthStore";
 import { useCartStore } from "@/stores/useCart";
 import CardSubscription from "@/components/CardSubscription/CardSubscription";
 import TitleH1 from "@/components/titles/TitleH1";
-import { toast } from "sonner";
 
 interface Plan {
   id: string;
@@ -44,8 +43,7 @@ const PricingPage = () => {
 
   const handleCheckout = async (planId: string) => {
     if (!user) {
-      toast.warning("You must be logged in to subscribe.");
-
+      alert("You must be logged in to subscribe.");
       return;
     }
 

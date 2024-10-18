@@ -19,13 +19,13 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
       await deleteUser(user.id);
       setIsDeleted(true);
     } catch (error) {
-      console.error("Error deleting user", error);
+      console.error("Error al eliminar el usuario:", error);
     }
     console.log(handleDeleteUser);
   };
 
   const handleEditUser = (id: string) => {
-    console.log("Editing User ID:", id);
+    console.log("Editing User ID:", id); // Verifica si esto se imprime en la consola
     setEditingUserId(id);
   };
 
@@ -33,7 +33,7 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
 
   return (
     <>
-      <ItemInfo key={user.id} className="relative  flex">
+      <ItemInfo key={user.id} className="relative flex">
         <div className="flex items-center">
           <AvatarUser name={user.name} className="mr-2 bg-primary" />
           <p>
@@ -41,7 +41,7 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
           </p>
         </div>
         <div>
-          <p>Email: {user.email}</p>
+          <p>{user.email}</p>
         </div>
 
         <div className="flex">

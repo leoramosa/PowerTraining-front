@@ -10,6 +10,9 @@ const AuthInitializer: React.FC = () => {
     const storedUser = localStorage.getItem("authUser");
     const storedToken = localStorage.getItem("authToken");
 
+    console.log("Stored User:", storedUser);
+    console.log("Stored Token:", storedToken);
+
     if (storedUser && storedToken) {
       const user = JSON.parse(storedUser);
       login(user, storedToken);

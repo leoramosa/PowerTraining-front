@@ -11,7 +11,9 @@ const UsersInitializer: React.FC = () => {
       try {
         const userData = await getUsersDB();
         setUsers(userData.data);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     };
 
     loadUsers();
