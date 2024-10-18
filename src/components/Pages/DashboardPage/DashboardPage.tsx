@@ -1,11 +1,10 @@
 "use client";
-import DashboardAdminPage from "../DashboardAdminPage/DashboardAdminPage";
 
 const DashboardPage = () => {
   return (
     <div className="relative">
       <div className="">
-        <DashboardAdminPage />
+        <div>etamos funcionando bien</div>
       </div>
     </div>
   );
