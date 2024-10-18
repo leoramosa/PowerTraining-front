@@ -82,6 +82,7 @@ export function middleware(req: NextRequest) {
 // Definir en qué rutas se aplica el middleware
 export const config = {
   matcher: [
+    "/dashboard",
     "/dashboard/:path*",
     "/profile/:path*",
     "/pricing/:path*",
