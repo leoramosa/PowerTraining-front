@@ -94,5 +94,6 @@ export const config = {
     "/login",
     "/register",
     "/superadmin/:path*",
+    "/pricing/:path*",
   ], // Rutas protegidas y públicas que queremos manejar
 };
