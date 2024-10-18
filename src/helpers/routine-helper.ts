@@ -6,8 +6,14 @@ import {
 } from "@/interface/IRoutine";
 import IRoutineResponseById from "@/interface/IResponseRoutineById";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
-import { ITrainingDayResById, IRoutineResById, IExerciseResById } from "@/interface/IRoutineByUserId";
+import {
+  ITrainingDayResById,
+  IRoutineResById,
+  IExerciseResById,
+} from "@/interface/IRoutineByUserId";
 import { Statistics } from "@/interface/ICounters";
+//import { getUserById2 } from "@/Services/userService";
+import { IUserResponse } from "@/interface/IUserResponse";
 //import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -182,6 +188,38 @@ export async function createRoutine(routine: IRoutineWizard) {
         console.log(response);
       }
     }
+
+    //Logica envio de mail
+    if (routineObj.startDate && routineObj.endDate) {
+      const currentDate = new Date();
+      const startDate = new Date(routineObj.startDate);
+      const endDate = new Date(routineObj.endDate);
+      if (currentDate >= startDate && currentDate <= endDate) {
+        console.log("ingreso al if")
+
+        const findUser = await fetch(`${APIURL}/users/${routine.routineData.userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(routine.routineData.userId);
+        const resUser:IUserResponse = await findUser.json();
+        console.log(resUser);
+
+        const mail = await fetch(`${APIURL}/users/receiveroutinesByEmail/${resUser.email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(`${APIURL}/users/receiveroutinesByEmail/${resUser.email}`)
+        const resMail = await mail.json();
+        console.log(resMail)
+      }
+    }
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -243,9 +281,11 @@ export async function getRoutineById(
   }
 }
 
-export async function modifyRoutineById(id: number | undefined, routine: IRoutineWizard) {
+export async function modifyRoutineById(
+  id: number | undefined,
+  routine: IRoutineWizard
+) {
   try {
-
     if (!id) {
       throw new Error("Routine ID is required");
     }
@@ -287,7 +327,7 @@ export async function modifyRoutineById(id: number | undefined, routine: IRoutin
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        }
+        },
       });
 
       if (!res2.ok) {
@@ -365,7 +405,6 @@ export async function modifyRoutineById(id: number | undefined, routine: IRoutin
   }
 }
 
-
 export async function getRoutinesByUserId(
   id: string | undefined
 ): Promise<IRoutine[]> {
@@ -392,7 +431,7 @@ export async function getRoutinesByUserId(
       throw new Error(`Failed to fetch routine by id. Status: ${res.status}`);
     }
 
-    const routines: IRoutineResById  = await res.json();
+    const routines: IRoutineResById = await res.json();
 
     // Verificar la estructura de `routine` aquí
     if (!routines || !Array.isArray(routines)) {
@@ -406,23 +445,25 @@ export async function getRoutinesByUserId(
       startDate: routine.startDate,
       endDate: routine.endDate,
       completed: routine.completed,
-      trainingDays: routine.trainingDays.map((training: ITrainingDayResById) => ({
-        id: training.id,
-        date: training.date,
-        description: training.description,
-        exercises: training.exercises.map((exe: IExerciseResById) => ({
-          id: exe.id,
-          series: exe.series,
-          repetitions: exe.repetitions,
-          weight: exe.weight,
-          completed: exe.completed,
-          rpe: exe.rpe ?? null,
-          exercise: exe.exercise,
-        })),
-      })),
+      trainingDays: routine.trainingDays.map(
+        (training: ITrainingDayResById) => ({
+          id: training.id,
+          date: training.date,
+          description: training.description,
+          exercises: training.exercises.map((exe: IExerciseResById) => ({
+            id: exe.id,
+            series: exe.series,
+            repetitions: exe.repetitions,
+            weight: exe.weight,
+            completed: exe.completed,
+            rpe: exe.rpe ?? null,
+            exercise: exe.exercise,
+          })),
+        })
+      ),
     }));
 
-    return routinesByUser2; 
+    return routinesByUser2;
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -430,20 +471,21 @@ export async function getRoutinesByUserId(
   }
 }
 
-
-
 //######################################################################
 //Client requests
 
-
-export async function modifyTrainingExerciseById(id: number | undefined, token: string, rpe: number | null) {
+export async function modifyTrainingExerciseById(
+  id: number | undefined,
+  token: string,
+  rpe: number | null
+) {
   if (!id) {
     throw new Error("Training id is required");
   }
-  if(!rpe){
+  if (!rpe) {
     throw new Error("Trainig data rpe is required");
   }
-  console.log(rpe)
+  console.log(rpe);
   try {
     const res = await fetch(`${APIURL}/user-routine-exercises/${id}`, {
       method: "PATCH",
@@ -453,13 +495,15 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
       },
       body: JSON.stringify({
         completed: true,
-        rpe: rpe
-      })
+        rpe: rpe,
+      }),
     });
     if (!res.ok) {
-      throw new Error(`Failed to modify this training exercise. Status: ${res.status}`);
+      throw new Error(
+        `Failed to modify this training exercise. Status: ${res.status}`
+      );
     }
-    console.log("pegando al enpoind ok")
+    console.log("pegando al enpoind ok");
   } catch (error: unknown) {
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
@@ -467,8 +511,10 @@ export async function modifyTrainingExerciseById(id: number | undefined, token: 
   }
 }
 
-
-export async function modifyRoutineCompletedById(id: number | undefined, token: string): Promise<IRoutine> {
+export async function modifyRoutineCompletedById(
+  id: number | undefined,
+  token: string
+): Promise<IRoutine> {
   if (!id) {
     throw new Error("Routine id is required");
   }
@@ -485,11 +531,13 @@ export async function modifyRoutineCompletedById(id: number | undefined, token: 
         description: routine.description,
         startDate: routine.startDate,
         endDate: routine.endDate,
-        completed: true
-      })
+        completed: true,
+      }),
     });
     if (!res.ok) {
-      throw new Error(`Failed to modify this training exercise. Status: ${res.status}`);
+      throw new Error(
+        `Failed to modify this training exercise. Status: ${res.status}`
+      );
     }
     const newRoutine = res.json();
     return newRoutine;
@@ -513,7 +561,9 @@ export async function getCountersHome(): Promise<Statistics> {
       },
     });
     if (!res.ok) {
-      throw new Error(`Failed to fetch routine stattics. Status: ${res.status}`);
+      throw new Error(
+        `Failed to fetch routine stattics. Status: ${res.status}`
+      );
     }
     const counters: Statistics = await res.json();
     return counters;

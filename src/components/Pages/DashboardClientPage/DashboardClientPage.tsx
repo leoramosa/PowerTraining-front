@@ -32,17 +32,21 @@ const DashboardClientPage = () => {
           return (
             totalExercises +
             routine.trainingDays.reduce((daysExercises, day) => {
-              return daysExercises + day.exercises.length;
+              // Filtrar solo los ejercicios completados
+              const completedInDay = day.exercises.filter(exercise => exercise.completed).length;
+              return daysExercises + completedInDay;
             }, 0)
           );
         }, 0);
+        
+        console.log(exercises);
 
         const weeks = data.reduce((totalWeeks, routine) => {
           const daysInRoutine = routine.trainingDays.length;
           const weeksInRoutine = Math.ceil(daysInRoutine / 7);
           return totalWeeks + weeksInRoutine;
         }, 0);
-        setTargetCounts({ routines, weeks, exercises });
+        setTargetCounts({ weeks, routines, exercises });
       } catch (error) {
         console.error("Error fetching statistics:", error);
       }
@@ -56,7 +60,7 @@ const DashboardClientPage = () => {
       console.log(weeks, routines, exercises);
       const exercisesCountInterval = setInterval(() => {
         setExercisesCount((prevCount: number) => {
-          if (prevCount < weeks) {
+          if (prevCount < exercises) {
             return prevCount + valueIncrement;
           } else {
             clearInterval(exercisesCountInterval);
@@ -78,10 +82,10 @@ const DashboardClientPage = () => {
 
       const weeksCountInterval = setInterval(() => {
         setWeeksCount((prevCount: number) => {
-          if (prevCount < exercises) {
+          if (prevCount < weeks) {
             return prevCount + valueIncrement;
           } else {
-            clearInterval(exercisesCountInterval);
+            clearInterval(weeksCountInterval);
             return prevCount;
           }
         });
@@ -114,13 +118,13 @@ const DashboardClientPage = () => {
 
       <div className="flex  pt-5 space-x-4">
         {/* Card for Active Routine */}
-        <Link href="/dashboard/routines" className="w-1/2">
+        <Link href="/dashboard/client/routine" className="w-1/2">
           <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
             <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
               <LiaDumbbellSolid className="text-4xl text-primary" />
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
-              <p className="text-3xl font-bold">Active Routines</p>
+              <p className="text-3xl font-bold">Routines</p>
               <p className="text-5xl font-bold text-primary">{routinesCount}</p>
               <p className="text-sm">All routines</p>
             </div>
@@ -128,7 +132,7 @@ const DashboardClientPage = () => {
         </Link>
 
         {/* Card for Exercises Done */}
-        <Link href="/dashboard/client/routines" className="w-1/2">
+        <Link href="/dashboard/client/routine" className="w-1/2">
           <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
             <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
               <FaDumbbell className="text-3xl text-primary" />
@@ -143,7 +147,7 @@ const DashboardClientPage = () => {
           </div>
         </Link>
 
-        <Link href="/dashboard/routines" className="w-1/2">
+        <Link href="/dashboard/client/routine" className="w-1/2">
           <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
             <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
               <FaCalendarWeek className="text-3xl text-primary" />
