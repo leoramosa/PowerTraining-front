@@ -177,6 +177,7 @@ const CardRoutineBody: React.FC<{
 
             try {
               await deleteRoutineById(id, token ? token : "");
+              setCurrentPage(1);
               fetchRoutines();
 
               // Muestra el toast de éxito

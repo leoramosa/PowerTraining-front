@@ -8,6 +8,7 @@ import IRoutineResponseById from "@/interface/IResponseRoutineById";
 import { IRoutine } from "@/interface/IRoutineClientRequest";
 import { ITrainingDayResById, IRoutineResById, IExerciseResById } from "@/interface/IRoutineByUserId";
 import { Statistics } from "@/interface/ICounters";
+import { IUserResponse } from "@/interface/IUserResponse";
 //import exercises from "./exercises";
 
 const APIURL = process.env.NEXT_PUBLIC_API_URL;
@@ -180,6 +181,36 @@ export async function createRoutine(routine: IRoutineWizard) {
         }
         const response = await res3.json();
         console.log(response);
+      }
+    }
+
+    //Logica envio de mail
+    if (routineObj.startDate && routineObj.endDate) {
+      const currentDate = new Date();
+      const startDate = new Date(routineObj.startDate);
+      const endDate = new Date(routineObj.endDate);
+      if (currentDate >= startDate && currentDate <= endDate) {
+        console.log("ingreso al if")
+        const findUser = await fetch(`${APIURL}/users/${routine.routineData.userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(routine.routineData.userId);
+        const resUser:IUserResponse = await findUser.json();
+        console.log(resUser);
+        const mail = await fetch(`${APIURL}/users/receiveroutinesByEmail/${resUser.email}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(`${APIURL}/users/receiveroutinesByEmail/${resUser.email}`)
+        const resMail = await mail.json();
+        console.log(resMail)
       }
     }
   } catch (error: unknown) {
