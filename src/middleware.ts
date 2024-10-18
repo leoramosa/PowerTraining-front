@@ -44,7 +44,6 @@ export function middleware(req: NextRequest) {
   // Validar acceso a rutas restringidas según el rol
   if (decodedToken) {
     const adminRoutes = [
-      "/dashboard",
       "/dashboard/exercise",
       "/dashboard/reports",
       "/dashboard/routine",
@@ -81,7 +80,6 @@ export function middleware(req: NextRequest) {
 // Definir en qué rutas se aplica el middleware
 export const config = {
   matcher: [
-    "/dashboard",
     "/dashboard/:path*",
     "/profile/:path*",
     "/pricing/:path*",

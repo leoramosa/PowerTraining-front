@@ -8,6 +8,7 @@ import {
   IUserData,
   ILoginProps,
 } from "../interface/IUsers";
+import { IUserDataResponse } from "@/interface/IUsersListResponse";
 
 export async function createUser(userData: IRegisterProps) {
   const response = await fetch(`${API_URL}/users`, {
@@ -191,3 +192,41 @@ export const getUserById2 = async (id: string, token: string) => {
     throw new Error(error.message || "Error desconocido");
   }
 };
+
+export async function getUsersPaginationDB(
+  limit: number = 5,
+  page: number = 1,
+  token: string
+): Promise<IUserDataResponse> {
+  try {
+    let url = `${API_URL}/users/usersWithCount`;
+    const queryParams = new URLSearchParams();
+    queryParams.append("limit", limit.toString());
+    queryParams.append("page", page.toString());
+    url += `?${queryParams.toString()}`;
+
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Error al obtener el usuario");
+    }
+    const resData = await res.json();
+    console.log("Fetched users data:", resData);
+    return resData;
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error in getUsersDB:", error);
+      throw new Error(`Failed to get users: ${error.message}`);
+    } else {
+      console.error("Unexpected error:", error);
+      throw new Error("An unexpected error occurred");
+    }
+  }
+}

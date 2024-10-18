@@ -71,6 +71,11 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
     }
   }, [routines, currentDate]);
 
+  useEffect(()=>{
+    if(!routines || routines.length === 0) setDisabledPdf(true)
+    else setDisabledPdf(false)
+  },[routines])
+
   const goNext = () => {
     setCurrentRoutineIndex((prevIndex) =>
       prevIndex < orderedRoutines.length - 1 ? prevIndex + 1 : prevIndex
@@ -84,6 +89,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
   };
 
   useEffect(() => {
+
     const startIndexR = Math.max(0, currentRoutineIndex - 1);
     setStartIndex(startIndexR);
     const endIndexR = Math.min(
@@ -181,7 +187,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
         </div>
         <div>
           <button
-            disabled={disabledPdf || (!routines || routines.length === 0)}
+            disabled={disabledPdf}
             onClick={handlePdfDownload}
             className={` mt-3 ${
               !disabledPdf
