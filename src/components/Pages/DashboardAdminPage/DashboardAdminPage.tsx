@@ -5,7 +5,7 @@ import Link from "next/link";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
-import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
+// import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore"; // Tu store
@@ -159,7 +159,7 @@ const DashboardAdminPage = () => {
       </div>
 
       <div className="bg-white shadow-lg rounded-lg mt-5 p-5">
-        <DashboardUserProgress />
+        {/* <DashboardUserProgress /> */}
       </div>
 
       {showBlur && user?.role === "Admin" && (
