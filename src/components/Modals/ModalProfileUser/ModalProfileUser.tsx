@@ -54,7 +54,7 @@ const ModalProfileUser: React.FC<Props> = ({ user, onClose }) => {
               label="Last name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder="Nombre"
+              placeholder="Last Name"
             />
           </div>
         </div>

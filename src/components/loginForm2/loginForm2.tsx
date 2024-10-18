@@ -68,7 +68,7 @@ const LoginForm: React.FC<AuthFormProps> = ({}) => {
       login(user, token);
       router.push("/dashboard");
     }
-  }, [session, login]);
+  }, [session, login, router]);
   // const [userName, setUserName] = useState("");
 
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {

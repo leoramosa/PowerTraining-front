@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:underline">
+              <Link href="/pricing" className="hover:underline">
                 Pricing
               </Link>
             </li>
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
             <input
               type="email"
               placeholder="Your email address"
-              className="w-full p-2 mb-2 text-gray-800 rounded-lg"
+              className="w-full p-2 mb-2 text-gray-800 rounded-lg text-center"
             />
             <button
               type="submit"

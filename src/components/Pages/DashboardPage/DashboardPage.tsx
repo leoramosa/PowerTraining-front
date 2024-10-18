@@ -27,7 +27,7 @@ const DashboardPage = () => {
         {user?.role === "User" && <DashboardClientPage />}
       </div>
       {showBlur && user?.role === "Admin" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-50 w-full">
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
           <h2 className="text-white text-2xl mb-4">
             You need to subscribe first!
           </h2>
