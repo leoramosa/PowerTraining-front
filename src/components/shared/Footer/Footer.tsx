@@ -25,50 +25,36 @@ const Footer: React.FC = () => {
                 Home
               </Link>
             </li>
-            <li>
-              <Link href="/pricing" className="hover:underline">
-                Pricing
-              </Link>
-            </li>
+
             <li>
               <Link href="/login" className="hover:underline">
-                Sing In
+                Sign In
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:underline">
-                My Account
+              <Link href="/register" className="hover:underline">
+                Sign Up
               </Link>
             </li>
           </ul>
         </div>
 
         <div className="text-center">
-          <h2 className="text-lg font-bold mb-4">Exercises</h2>
+          <h2 className="text-lg font-bold mb-4">Trainer</h2>
           <ul className="text-gray-300">
             <li>
-              <Link href="/" className="hover:underline">
-                lorem lorem
+              <Link href="/register/trainer" className="hover:underline">
+                Register
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:underline">
-                lorem lorem
+              <Link href="/pricing" className="hover:underline">
+                Pricing
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:underline">
-                lorem lorem
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="hover:underline">
-                lorem lorem
-              </Link>
-            </li>
-            <li>
-              <Link href="/" className="hover:underline">
-                lorem lorem
+              <Link href="/dashboard" className="hover:underline">
+                Dashboard
               </Link>
             </li>
           </ul>

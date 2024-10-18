@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuthStore } from "@/stores/userAuthStore";
 import EditProfileModal from "@/components/Modals/ModalProfileUser/ModalProfileUser";
 import InputFormLogin from "../inputs/InputFormLogin/InputFormLogin";
@@ -10,17 +10,9 @@ const UserProfile = () => {
   const user = useAuthStore((state) => state.user);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  
-
-  useEffect(() => {
-    if (!user) {
-      console.error("Datos del usuario no disponibles");
-    } else {
-      console.log("Datos del usuario cargados:", user);
-    }
-  });
-
-  if (!user) return <div>Loading...</div>;
+  {
+    if (!user) return <div>Loading...</div>;
+  }
 
   return (
     <div className=" bg-white rounded-lg h-full shadow-lg pb-10">
@@ -107,9 +99,9 @@ const UserProfile = () => {
       <div className=" px-10">
         <p> Password</p>
         <Link href="/reset-password">
-        <button className="bg-gray-800 rounded-lg p-2 py-2 mt-2 block text-md text-white">
-          Change password
-        </button>
+          <button className="bg-gray-800 rounded-lg p-2 py-2 mt-2 block text-md text-white">
+            Change password
+          </button>
         </Link>
       </div>
     </div>

@@ -234,7 +234,7 @@ const LoginForm: React.FC<AuthFormProps> = ({}) => {
               <button
                 type="button"
                 onClick={handleGoogleSignIn}
-                className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-[#414040] hover:border-gray-600 hover:border text-white py-3 mt-5"
+                className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-gray-700 hover:border-gray-600 hover:border text-white py-3 mt-5"
               >
                 <GoogleLogo />
                 Or sign in with Google
