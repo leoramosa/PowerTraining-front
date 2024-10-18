@@ -1,28 +1,36 @@
 "use client";
 import { useEffect, useState } from "react";
-import { IUserFilters } from "@/interface/IUsers";
-import { getUsersDB } from "@/Services/userService";
-import { useUsersStore } from "@/stores/usersStore"; // Ensure correct import
+import { IUser, IUserFilters } from "@/interface/IUsers";
+import { getUsersDB, getUsersPaginationDB } from "@/Services/userService";
+//import { useUsersStore } from "@/stores/usersStore"; // Ensure correct import
 import ListUser from "@/components/ListUser/ListUser";
 import SearchInput from "@/components/search/SearchInput";
-import ButtonPrimary from "@/components/buttons/ButtonPrimary/ButtonPrimary";
 import { useAuthStore } from "@/stores/userAuthStore";
 import { useRouter } from "next/navigation";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import Pagination from "../pagination/Pagination";
+import { toast } from "sonner";
 
 const ListRowUser: React.FC = () => {
-  const { users, setUsers } = useUsersStore();
+
+  const filterInitialValues = {
+    name: "",
+    email: "",
+    lastname: "",
+  };
+
+  //const { users, setUsers } = useUsersStore();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [limit] = useState<number>(5);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [filters, setFilters] = useState<IUserFilters>({});
+  const [filters, setFilters] = useState<IUserFilters>(filterInitialValues);
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchSelect, setSearchSelect] = useState<string>("");
   const user = useAuthStore((state) => state.user);
-
   const router = useRouter();
   const { token } = useAuthStore();
   const { subscription, fetchSubscription } = useSubscriptionStore();
+  const [listUsers, setListUsers] = useState<IUser[]>([]);
 
   useEffect(() => {
     if (user && token) {
@@ -37,29 +45,35 @@ const ListRowUser: React.FC = () => {
     return Math.ceil(totalCount / limit);
   };
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
+  const fetchUsers = async () => {
+    try {
+      if(Object.values(filters).every(value => value === "")){
+        const response = await getUsersPaginationDB(limit, currentPage, token ? token : "");
+        console.log("Response from getUsersDB:", response); // Log the response
+        setTotalPages(calculateTotalPages(response.count, limit));
+        setListUsers(response.data);
+      } else {
         const response = await getUsersDB(limit, currentPage, filters);
         console.log("Response from getUsersDB:", response); // Log the response
-
-        if (Array.isArray(response)) {
-          // Respuesta sin filtros
-          setTotalPages(calculateTotalPages(response.length, limit));
-          setUsers(response);
-        } else if (response && Array.isArray(response.data)) {
-          // Respuesta con filtros
-          setTotalPages(calculateTotalPages(response.count, limit));
-          setUsers(response.data);
-        } else {
-          console.error("Unexpected response format:", response);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
+        setTotalPages(calculateTotalPages(response.count, limit));
+        setListUsers(response.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchUsers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     fetchUsers();
-  }, [currentPage, limit, filters, setUsers]);
+    console.log("------> filters",filters)
+  }, [currentPage, limit, filters]);
 
   // Log totalPages whenever it changes
   useEffect(() => {
@@ -77,20 +91,32 @@ const ListRowUser: React.FC = () => {
   };
 
   const handleClickSearch = () => {
-    if (searchSelect && searchValue) {
+    /*if (searchSelect && searchValue) {
       setFilters({ [searchSelect]: searchValue });
     } else {
       setCurrentPage(1);
       setFilters({});
-    }
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    }*/
+    setCurrentPage(1);
+    toast.promise(
+      new Promise(async (resolve, reject) => {
+        try {
+          if (searchSelect && searchValue) {
+            setFilters({ [searchSelect]: searchValue });
+          } else {
+            setFilters(filterInitialValues);
+          }
+          resolve("Users fetched successfully!");
+        } catch (error) {
+          reject("Error fetching users, please try again.");
+        }
+      }),
+      {
+        loading: "Searching for exercises...",
+        success: (msg) => String(msg),
+        error: (msg) => String(msg),
+      }
+    );
   };
 
   const optionsSearch = [
@@ -111,21 +137,15 @@ const ListRowUser: React.FC = () => {
           onChangeSelect={handleSelectSearchChange}
         />
       </div>
-      <ListUser users={users} />
+      <ListUser users={listUsers} />
       <div className="flex justify-center items-center mt-4">
-        <ButtonPrimary
-          type="button"
-          text="Previous"
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        />
-        <span className="mx-2">Page {currentPage}</span>
-        <ButtonPrimary
-          type="button"
-          text="Next"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        />
+        {listUsers && listUsers.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        )}
       </div>
       {showBlur && (
         <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">

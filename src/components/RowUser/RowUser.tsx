@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IUser } from "@/interface/IUsers";
 import { deleteUser } from "@/Services/userService";
 import ItemInfo from "../ItemInfo/ItemInfo";
@@ -13,7 +13,7 @@ interface RowUserProps {
 const RowUser: React.FC<RowUserProps> = ({ user }) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
-
+  console.log(user.id);
   const handleDeleteUser = async () => {
     try {
       await deleteUser(user.id);
@@ -28,6 +28,10 @@ const RowUser: React.FC<RowUserProps> = ({ user }) => {
     console.log("Editing User ID:", id); // Verifica si esto se imprime en la consola
     setEditingUserId(id);
   };
+
+  useEffect(()=>{
+    console.log("------> id", editingUserId)
+  },[editingUserId])
 
   if (isDeleted || !user) return null; //
 
