@@ -23,8 +23,11 @@ const DashboardPage = () => {
   return (
     <div className="relative">
       <div className={`${showBlur ? "backdrop-blur-sm opacity-90" : ""} `}>
-        {user?.role === "Admin" && <DashboardAdminPage />}
-        {user?.role === "User" && <DashboardClientPage />}
+        {user?.role === "Admin" ? (
+          <DashboardAdminPage />
+        ) : (
+          <DashboardClientPage />
+        )}
       </div>
       {showBlur && user?.role === "Admin" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-black backdrop-blur-lg bg-opacity-70 z-20 w-full">
