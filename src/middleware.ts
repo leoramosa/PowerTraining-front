@@ -22,7 +22,7 @@ export function middleware(req: NextRequest) {
 
   // Si hay token y el usuario intenta acceder a rutas públicas, redirigimos a /dashboard
   if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
   // Si no hay token y el usuario intenta acceder a rutas protegidas, lo redirigimos a /login
