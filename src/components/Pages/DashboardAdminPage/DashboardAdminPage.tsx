@@ -6,11 +6,14 @@ import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
 import { getCountersHome } from "@/helpers/routine-helper";
+import { useAuthStore } from "@/stores/userAuthStore";
 
 const DashboardAdminPage = () => {
   const [userCount, setUserCount] = useState<number>(0);
   const [routinesCount, setRoutinesCount] = useState<number>(0);
   const [exercisesCount, setExercisesCount] = useState<number>(0);
+
+  const user = useAuthStore((state) => state.user);
 
   const [targetCounts, setTargetCounts] = useState<{
     users: number;
@@ -76,6 +79,10 @@ const DashboardAdminPage = () => {
       };
     }
   }, [targetCounts]);
+
+  {
+    if (!user) return <div>Loading...</div>;
+  }
 
   return (
     <div className=" ">
