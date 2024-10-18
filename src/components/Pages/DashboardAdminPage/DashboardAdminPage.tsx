@@ -1,84 +1,83 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { FaDumbbell } from "react-icons/fa";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import DashboardUserProgress from "@/components/DashboardUserProgress/DashboardUserProgress";
-import { getCountersHome } from "@/helpers/routine-helper";
+// import { getCountersHome } from "@/helpers/routine-helper";
 import { useAuthStore } from "@/stores/userAuthStore";
 
 const DashboardAdminPage = () => {
-  const [userCount, setUserCount] = useState<number>(0);
-  const [routinesCount, setRoutinesCount] = useState<number>(0);
-  const [exercisesCount, setExercisesCount] = useState<number>(0);
+  // const [userCount, setUserCount] = useState<number>(0);
+  // const [routinesCount, setRoutinesCount] = useState<number>(0);
+  // const [exercisesCount, setExercisesCount] = useState<number>(0);
 
   const user = useAuthStore((state) => state.user);
 
-  const [targetCounts, setTargetCounts] = useState<{
-    users: number;
-    routines: number;
-    exercises: number;
-  } | null>(null);
-  const valueIncrement: number = 1;
+  // const [targetCounts, setTargetCounts] = useState<{
+  //   users: number;
+  //   routines: number;
+  //   exercises: number;
+  // } | null>(null);
+  // const valueIncrement: number = 1;
 
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        const data = await getCountersHome();
-        console.log(data);
-        setTargetCounts(data);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-    fetchStatistics();
-  }, []);
+  // useEffect(() => {
+  //   const fetchStatistics = async () => {
+  //     try {
+  //       const data = await getCountersHome();
+  //       console.log(data);
+  //       setTargetCounts(data);
+  //     } catch (error) {
+  //       console.error("Error fetching statistics:", error);
+  //     }
+  //   };
+  //   fetchStatistics();
+  // }, []);
 
-  useEffect(() => {
-    if (targetCounts) {
-      const { users, routines, exercises } = targetCounts;
+  // useEffect(() => {
+  //   if (targetCounts) {
+  //     const { users, routines, exercises } = targetCounts;
 
-      const userCountInterval = setInterval(() => {
-        setUserCount((prevCount) => {
-          if (prevCount < users) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(userCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  //     const userCountInterval = setInterval(() => {
+  //       setUserCount((prevCount) => {
+  //         if (prevCount < users) {
+  //           return prevCount + valueIncrement;
+  //         } else {
+  //           clearInterval(userCountInterval);
+  //           return prevCount;
+  //         }
+  //       });
+  //     }, 30);
 
-      const routinesCountInterval = setInterval(() => {
-        setRoutinesCount((prevCount) => {
-          if (prevCount < routines) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(routinesCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  //     const routinesCountInterval = setInterval(() => {
+  //       setRoutinesCount((prevCount) => {
+  //         if (prevCount < routines) {
+  //           return prevCount + valueIncrement;
+  //         } else {
+  //           clearInterval(routinesCountInterval);
+  //           return prevCount;
+  //         }
+  //       });
+  //     }, 30);
 
-      const exercisesCountInterval = setInterval(() => {
-        setExercisesCount((prevCount) => {
-          if (prevCount < exercises) {
-            return prevCount + valueIncrement;
-          } else {
-            clearInterval(exercisesCountInterval);
-            return prevCount;
-          }
-        });
-      }, 30);
+  //     const exercisesCountInterval = setInterval(() => {
+  //       setExercisesCount((prevCount) => {
+  //         if (prevCount < exercises) {
+  //           return prevCount + valueIncrement;
+  //         } else {
+  //           clearInterval(exercisesCountInterval);
+  //           return prevCount;
+  //         }
+  //       });
+  //     }, 30);
 
-      return () => {
-        clearInterval(userCountInterval);
-        clearInterval(routinesCountInterval);
-        clearInterval(exercisesCountInterval);
-      };
-    }
-  }, [targetCounts]);
+  //     return () => {
+  //       clearInterval(userCountInterval);
+  //       clearInterval(routinesCountInterval);
+  //       clearInterval(exercisesCountInterval);
+  //     };
+  //   }
+  // }, [targetCounts]);
 
   {
     if (!user) return <div>Loading...</div>;
@@ -108,7 +107,7 @@ const DashboardAdminPage = () => {
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Users</p>
-              <p className="text-5xl font-bold text-primary">{userCount}</p>
+              {/* <p className="text-5xl font-bold text-primary">{userCount}</p> */}
               <p className="text-sm">registered</p>
             </div>
           </div>
@@ -121,7 +120,7 @@ const DashboardAdminPage = () => {
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Routines</p>
-              <p className="text-5xl font-bold text-primary">{routinesCount}</p>
+              {/* <p className="text-5xl font-bold text-primary">{routinesCount}</p> */}
               {/* Muestra la cantidad real de rutinas */}
               <p className="text-sm">total</p>
             </div>
@@ -135,9 +134,9 @@ const DashboardAdminPage = () => {
             </div>
             <div className="text-left pl-5 flex flex-col justify-center items-start">
               <p className="text-3xl font-bold">Exercises</p>
-              <p className="text-5xl font-bold text-primary">
+              {/* <p className="text-5xl font-bold text-primary">
                 {exercisesCount}
-              </p>
+              </p> */}
               <p className="text-sm">available</p>
             </div>
           </div>
