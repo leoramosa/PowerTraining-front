@@ -15,7 +15,6 @@ export function middleware(req: NextRequest) {
     "/reset-password",
     "/reset-password-confirm",
     "/register/trainer",
-    "/pricing",
   ]; // Rutas públicas
 
   // Verificamos si estamos en una ruta pública
