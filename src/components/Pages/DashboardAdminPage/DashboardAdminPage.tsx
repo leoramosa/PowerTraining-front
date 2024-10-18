@@ -17,7 +17,7 @@ const DashboardAdminPage = () => {
     routines: number;
     exercises: number;
   } | null>(null);
-  const valueIncrement: number = 2;
+  const valueIncrement: number = 1;
 
   useEffect(() => {
     const fetchStatistics = async () => {

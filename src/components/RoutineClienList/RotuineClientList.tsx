@@ -181,7 +181,7 @@ const RoutineClientList: React.FC<RoutineListProps> = ({
         </div>
         <div>
           <button
-            disabled={disabledPdf}
+            disabled={disabledPdf || (!routines || routines.length === 0)}
             onClick={handlePdfDownload}
             className={` mt-3 ${
               !disabledPdf
