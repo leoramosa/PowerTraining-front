@@ -5,43 +5,46 @@ import Logoweb from "../../../../public/images/logo-white.png";
 import { GoArrowRight } from "react-icons/go";
 import { CiViewList } from "react-icons/ci";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FaUserCircle, FaRegUser } from "react-icons/fa";
+import {
+  FaSearch,
+  FaShoppingCart,
+  FaUserCircle,
+  FaRegUser,
+} from "react-icons/fa";
 import GoogleLogo from "@/components/shared/Icons/GoogleLogo/GoogleLogo";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
 import { useAuthStore } from "@/stores/userAuthStore";
-import { signIn, useSession, signOut } from "next-auth/react";
 
 const Navbar: React.FC = () => {
+  const [searchOpen, setSearchOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOpenTwo, setDropdownOpenTwo] = useState(false);
-  const { data: session } = useSession();
-  const login = useAuthStore((state) => state.login);
+
   const user = useAuthStore((state) => state.user);
-  const router = useRouter();
+  console.log("Datos del usuario:", user);
 
   useEffect(() => {
-    if (session && session.user && session.authTokenProvider) {
-      const user = {
-        id: session.user.id,
-        name: session.user.name || "",
-        lastName: session.user.lastName || "",
-        birthDay: session.user.birthDay || "",
-        password: session.user.password || "",
-        email: session.user.email || "",
-        role: session.user.role,
-        isSubscribed: session.user.isSubscribed,
-      };
-      const token = session.authTokenProvider;
-      //document.cookie = `authToken=${token}; path=/; secure; HttpOnly; SameSite=Strict`;
-      //setCookie("authToken", token, 7);
-      // Guarda los datos en el store
-      login(user, token);
-      router.push("/dashboard");
+    if (user) {
+      console.log("Datos del usuario:", user);
+      if (user.role === "User") {
+        console.log("El usuario tiene el rol User");
+      } else {
+        console.log("El usuario  es Admin");
+      }
     }
-  }, [session, login, router]);
+  }, [user]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     const userElement = document.getElementById("user-web");
+  //     if (userElement) {
+  //       userElement.innerText = user.name;
+  //     }
+  //   }
+  // });
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to logout?");
@@ -66,10 +69,6 @@ const Navbar: React.FC = () => {
     setDropdownOpenTwo(false);
   };
 
-  const handleGoogleSignIn = () => {
-    signIn("google");
-  };
-
   return (
     <nav className="bg-black w-full z-40">
       <div
@@ -86,38 +85,33 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Mobile Search Icon */}
-          <div className="flex lg:hidden items-center space-x-4">
+          <div className="flex lg:hidden">
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="text-white"
+            >
+              <FaSearch size={20} />
+            </button>
+
             {user ? (
-              <div className="relative ">
+              <div className="relative flex">
                 <button
-                  className="text-white ml-4 flex items-center"
+                  className="text-white ml-4"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                   <FaUserCircle size={20} />
-
-                  <span id="user-web" className="user-web ml-2">
-                    {user.name}
-                  </span>
-                  <IoIosArrowDown className="ml-1" />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg z-50">
+                  <div className="absolute mt-[45px] right-0 w-48 bg-white text-black rounded-md shadow-lg">
                     <Link
-                      href="/dashboard"
-                      className="dropdown-item px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"
-                      onClick={closeDropdown}
-                    >
-                      <CiViewList className="mr-2 text-gray-400" />
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/dashboard/profile"
+                      href="/myaccount"
                       className="px-4 py-2 hover:bg-gray-100 flex items-center"
                       onClick={closeDropdown}
                     >
                       <FaRegUser className="mr-2 text-gray-400" />
-                      Profile
+                      My Profile
                     </Link>
+
                     <button
                       onClick={handleLogout}
                       className="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -134,7 +128,7 @@ const Navbar: React.FC = () => {
                   className="flex items-center"
                   onClick={() => setDropdownOpenTwo(!dropdownOpenTwo)}
                 >
-                  Hello! <FaUserCircle className="ml-1" size={20} />
+                  <FaUserCircle size={20} />
                 </button>
                 {dropdownOpenTwo && (
                   <div className="fixed text-white top-0 left-0 flex w-full h-[100vh] bg-black bg-opacity-90 backdrop-blur-md shadow-lg z-90">
@@ -148,7 +142,6 @@ const Navbar: React.FC = () => {
                       <div className="pb-5 w-full px-10">
                         <Link href="/login">
                           <button
-                            onClick={closeDropdownTwo}
                             className="w-full rounded-lg py-4 border-2 border-primary text-primary hover:bg-primary hover:text-black"
                             type="submit"
                           >
@@ -164,10 +157,7 @@ const Navbar: React.FC = () => {
                           </button>
                         </Link>
                         <hr className="my-7" />
-                        <button
-                          onClick={handleGoogleSignIn}
-                          className="flex justify-center w-full rounded-lg bg-gray-600 text-white py-3 mt-7"
-                        >
+                        <button className="flex justify-center w-full rounded-lg bg-gray-600 text-white py-3 mt-7">
                           <GoogleLogo />
                           Or sign in with Google
                         </button>
@@ -177,10 +167,19 @@ const Navbar: React.FC = () => {
                 )}
               </div>
             )}
+
+            <button className="text-white ml-4">
+              <FaShoppingCart size={20} />
+            </button>
           </div>
         </div>
 
         {/* Desktop and Tablet Search */}
+        <div
+          className={`flex items-center lg:mt-0 lg:flex-row ${
+            searchOpen ? "flex-col" : "hidden lg:flex lg:w-2/5"
+          } lg:space-x-4`}
+        ></div>
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-4 ">

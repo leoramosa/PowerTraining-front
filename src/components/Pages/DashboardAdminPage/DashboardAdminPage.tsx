@@ -9,15 +9,15 @@ import { getCountersHome } from "@/helpers/routine-helper";
 
 const DashboardAdminPage = () => {
   const [userCount, setUserCount] = useState<number>(0);
-  const [routinesCount, setRoutinesCount] = useState<number>(0);
-  const [exercisesCount, setExercisesCount] = useState<number>(0);
+  const [routinesCount, setRoutinesCount] = useState<number>(0); 
+  const [exercisesCount, setExercisesCount] = useState<number>(0); 
 
   const [targetCounts, setTargetCounts] = useState<{
     users: number;
     routines: number;
     exercises: number;
   } | null>(null);
-  const valueIncrement: number = 1;
+  const valueIncrement: number = 2;
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -122,7 +122,7 @@ const DashboardAdminPage = () => {
         </Link>
 
         <Link href="/dashboard/exercise" className="w-1/3">
-          <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-600">
+          <div className="flex h-42 p-5 border-2 border-gray-100 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 text-gray-60">
             <div className="flex-shrink-0 p-4 rounded-lg bg-gray-900 flex items-center justify-center">
               <FaDumbbell className="text-4xl text-primary" />
             </div>

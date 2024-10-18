@@ -4,6 +4,8 @@ import ClientChat from "@/components/Chat/ClientChat/ClientChat";
 export default function Home() {
   return (
     <>
+      <ClientChat />
+
       <Banner />
       <CardExerciseBody />
       <ClientChat />

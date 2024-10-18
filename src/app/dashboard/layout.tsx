@@ -13,6 +13,33 @@ export default function dashLayout({
         <div className="flex-1 ml-5 bg-white shadow-lg relative rounded-lg ">
           {children}
         </div>
+        {/* <div className="w-72  ml-5 ">
+          <div className="pb-5">
+            <p className="text-black text-[12px]">Recently registered</p>
+            <p className="text-black text-2xl">New users</p>
+          </div>
+          <div className="bg-white w-full flex items-center p-3 shadow-lg rounded-lg mb-3">
+            <AvatarUser name="lelso" />
+            <div className="pl-2">
+              <p className="">Leonardo R.</p>
+              <span className="text-[12px] text-gray-400">leo33@gmail.com</span>
+            </div>
+          </div>
+          <div className="bg-white w-full flex items-center p-3 shadow-lg rounded-lg mb-3">
+            <AvatarUser name="lelso" />
+            <div className="pl-2">
+              <p className="">Maria S.</p>
+              <span className="text-[12px] text-gray-400">leo33@gmail.com</span>
+            </div>
+          </div>
+          <div className="bg-white w-full flex items-center p-3 shadow-lg rounded-lg mb-3">
+            <AvatarUser name="lelso" />
+            <div className="pl-2">
+              <p className="">Maria S.</p>
+              <span className="text-[12px] text-gray-400">leo33@gmail.com</span>
+            </div>
+          </div>
+        </div> */}
       </div>
     </div>
   );

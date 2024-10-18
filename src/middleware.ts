@@ -91,6 +91,5 @@ export const config = {
     "/register/trainer",
     "/login",
     "/register",
-    "/superadmin/:path*",
   ], // Rutas protegidas y públicas que queremos manejar
 };

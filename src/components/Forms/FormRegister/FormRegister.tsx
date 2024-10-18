@@ -133,7 +133,7 @@ const FormRegisterForm: React.FC = () => {
 
           <button
             onClick={handleGoogleSignIn}
-            className="flex justify-center w-full rounded-md border border-gray-900   hover:bg-gray-700 hover:border-gray-600 hover:border text-white py-3 mt-5"
+            className="flex justify-center w-full rounded-md border border-gray-900  hover:bg-black hover:border-gray-600 hover:border text-white py-3 mt-5"
           >
             <GoogleLogo />
             Register with Google

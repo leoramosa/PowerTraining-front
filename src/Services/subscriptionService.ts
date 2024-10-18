@@ -34,6 +34,7 @@ export async function ActiveSubscription(
 
     return activeSubscription;
   } catch (error: any) {
+    console.error("Error obteniendo la suscripción activa:", error);
     throw new Error(error.message);
   }
 }

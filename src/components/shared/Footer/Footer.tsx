@@ -25,36 +25,50 @@ const Footer: React.FC = () => {
                 Home
               </Link>
             </li>
-
             <li>
-              <Link href="/login" className="hover:underline">
-                Sign In
+              <Link href="/" className="hover:underline">
+                Pricing
               </Link>
             </li>
             <li>
-              <Link href="/register" className="hover:underline">
-                Sign Up
+              <Link href="/login" className="hover:underline">
+                Sing In
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="hover:underline">
+                My Account
               </Link>
             </li>
           </ul>
         </div>
 
         <div className="text-center">
-          <h2 className="text-lg font-bold mb-4">Trainer</h2>
+          <h2 className="text-lg font-bold mb-4">Exercises</h2>
           <ul className="text-gray-300">
             <li>
-              <Link href="/register/trainer" className="hover:underline">
-                Register
+              <Link href="/" className="hover:underline">
+                lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/pricing" className="hover:underline">
-                Pricing
+              <Link href="/" className="hover:underline">
+                lorem lorem
               </Link>
             </li>
             <li>
-              <Link href="/dashboard" className="hover:underline">
-                Dashboard
+              <Link href="/" className="hover:underline">
+                lorem lorem
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="hover:underline">
+                lorem lorem
+              </Link>
+            </li>
+            <li>
+              <Link href="/" className="hover:underline">
+                lorem lorem
               </Link>
             </li>
           </ul>
@@ -67,7 +81,7 @@ const Footer: React.FC = () => {
             <input
               type="email"
               placeholder="Your email address"
-              className="w-full p-2 mb-2 text-gray-800 rounded-lg text-center"
+              className="w-full p-2 mb-2 text-gray-800 rounded-lg"
             />
             <button
               type="submit"

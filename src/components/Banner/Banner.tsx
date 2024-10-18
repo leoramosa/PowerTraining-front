@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 const Banner = () => {
@@ -10,11 +9,9 @@ const Banner = () => {
           <p className="text-white text-4xl sm:text-7xl font-bold">
             Train at your <span className="text-primary">pace</span>
           </p>
-          <Link href="/login">
-            <button className="text-black text-bold mt-10 text-2xl bg-primary px-8 py-2 rounded-full">
-              Get Started
-            </button>
-          </Link>
+          <button className="text-black text-bold mt-10 text-2xl bg-primary px-8 py-2 rounded-full">
+            Start free trial
+          </button>
         </div>
       </div>
       <Image

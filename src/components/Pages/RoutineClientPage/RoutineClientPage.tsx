@@ -44,7 +44,7 @@ const RoutineClientPage = () => {
   }, []); 
 
   if (loading) {
-    return <p className="p-5 text-normal font-medium">Loading...</p>; 
+    return <p>Loading...</p>; 
   }
 
   if (error) {
